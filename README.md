@@ -24,6 +24,8 @@ npm install -D webpack-target-webextension
 
 ## Usage
 
+You might also need to remove the `@babel/plugin-syntax-dynamic-import` plugin.
+
 ```js
 // webpack.config.js
 
