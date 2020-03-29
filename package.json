@@ -1,0 +1,34 @@
+{
+  "name": "webpack-target-webextension",
+  "version": "0.1.0",
+  "description": "WebExtension Target for Webpack 4. Supports code-splitting with native dynamic import.",
+  "keywords": [
+    "webpack",
+    "webextension",
+    "extension",
+    "target",
+    "dynamic-import",
+    "code-splitting",
+    "chrome",
+    "firefox",
+    "chrome-extension",
+    "firefox-extension"
+  ],
+  "scripts": {
+    "build": "rm -rf extension/dist & webpack --mode production --config ./extension/webpack.config.js"
+  },
+  "main": "index.js",
+  "repository": "https://github.com/crimx/webpack-target-webextension",
+  "author": "CRIMX <straybugs@gmail.com>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=10.0.0"
+  },
+  "devDependencies": {
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11"
+  },
+  "peerDependencies": {
+    "webpack": "4.x"
+  }
+}
