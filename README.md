@@ -42,3 +42,12 @@ module.exports = {
   target: WebExtensionTarget(nodeConfig)
 }
 ```
+
+```js
+// manifest.json
+
+{
+  // make sure chunks are accessible
+  "web_accessible_resources": ["assets/*"],
+}
+```
