@@ -37,8 +37,15 @@ const nodeConfig = {}
 
 module.exports = {
   node: nodeConfig
+  // Need to set manually as the default values of these fields rely on `web` target.
+  // See https://v4.webpack.js.org/configuration/resolve/#resolvemainfields
+  resolve: {
+    mainFields: ['browser', 'module', 'main'],
+    aliasFields: ['browser']
+  },
   output: {
-    // set it relative to manifest.json in production
+    globalObject: 'window'
+    // set it relative to extension root
     publicPath: '/assets/',
   },
   target: WebExtensionTarget(nodeConfig)
