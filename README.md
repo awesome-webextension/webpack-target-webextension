@@ -2,24 +2,36 @@
 
 [![npm-version](https://img.shields.io/npm/v/webpack-target-webextension.svg)](https://www.npmjs.com/package/webpack-target-webextension)
 
-WebExtension Target for Webpack 4. Supports code-splitting with native dynamic import.
+WebExtension Target for Webpack 4. Supports code-splitting with native dynamic import(with `tabs.executeScript` as fallback).
 
 You can use the [neutrino-webextension preset](https://github.com/crimx/neutrino-webextension) directly which uses this library.
 
 The code is based on the official web target.
+
+## Limitation
+
+In content scripts native dynamic import subjects to target page content security policy. This library adds `tabs.executeScript` as fallback method should native dynamic import fails.
+
+But do note that `tabs.executeScript` does not work for pages without tab, like background page and browser action page(also known as popup page). This is fine since they are all extension internal pages where native dynamic import should always work.
+
+## Caveats
+
+Native dynamic import is [buggy](https://bugzilla.mozilla.org/show_bug.cgi?id=1536094) in Firefox. A workaround is to write a postbuild script targeting only Firefox build. It collects all the dynamic chunks and appends them to every entries in htmls and the `manifest.json` script lists.
+
+The Firefox addons-linter is also [making aggressive errors](https://github.com/mozilla/addons-linter/issues/2498) on dynamic import. A workaround is to just replace the `import` with other name. Since all the dynamic chunks are loaded in Firefox the `import()` code should never be run.
 
 ## Installation
 
 yarn
 
 ```bash
-yarn add -D webpack-target-webextension
+yarn add webpack-target-webextension
 ```
 
 npm
 
 ```bash
-npm install -D webpack-target-webextension
+npm install webpack-target-webextension
 ```
 
 ## Usage
@@ -37,7 +49,7 @@ const nodeConfig = {}
 
 module.exports = {
   node: nodeConfig
-  // Need to set manually as the default values of these fields rely on `web` target.
+  // Need to set these fields manually as their default values rely on `web` target.
   // See https://v4.webpack.js.org/configuration/resolve/#resolvemainfields
   resolve: {
     mainFields: ['browser', 'module', 'main'],
@@ -45,7 +57,7 @@ module.exports = {
   },
   output: {
     globalObject: 'window'
-    // set it relative to extension root
+    // relative to extension root
     publicPath: '/assets/',
   },
   target: WebExtensionTarget(nodeConfig)
@@ -56,7 +68,17 @@ module.exports = {
 // manifest.json
 
 {
-  // make sure chunks are accessible
+  // Make sure chunks are accessible.
+  // For example, if webpack outputs js and css to `assets`:
   "web_accessible_resources": ["assets/*"],
 }
+```
+
+```js
+// src/background.js
+
+// For fallback `tabs.executeScript`
+import 'webpack-target-webextension/lib/background'
+
+// ... your code
 ```
