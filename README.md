@@ -60,6 +60,10 @@ module.exports = {
     // relative to extension root
     publicPath: '/assets/',
   },
+  optimization: {
+    // Chrome bug https://bugs.chromium.org/p/chromium/issues/detail?id=1108199
+    splitChunks: { automaticNameDelimiter: '-' },
+  },
   target: WebExtensionTarget(nodeConfig)
 }
 ```
@@ -81,4 +85,45 @@ module.exports = {
 import 'webpack-target-webextension/lib/background'
 
 // ... your code
+```
+
+### Hot Module Reload and development tips
+
+This target supports HMR too, but you need to tweak manifest.json and open some webpack options to make it work.
+
+#### Changes in manifest.json
+
+**Those changes are only needed in development!! Don't add them in production!!**
+
+Please include this line in the manifest to make sure HMR manifest and new chunks are able to downloaded.
+
+```json
+"web_accessible_resources": ["*.js", "*.json"],
+```
+
+Please include this line if you want to use `eval` based sourcemaps.
+
+```json
+"content_security_policy": "script-src 'self' blob: filesystem: 'unsafe-eval';",
+```
+
+#### Changes in webpack config
+
+```js
+devServer: {
+    // Have to write disk cause plugin cannot be loaded over network
+    writeToDisk: true,
+    hot: true,
+    hotOnly: true,
+    // WDS does not support chrome-extension:// browser-extension://
+    disableHostCheck: true,
+    injectClient: true,
+    injectHot: true,
+    headers: {
+        // We're doing CORS request for HMR
+        'Access-Control-Allow-Origin': '*',
+    },
+    // If the content script runs in https, webpack will connect https://localhost:HMR_PORT
+    https: true,
+},
 ```
