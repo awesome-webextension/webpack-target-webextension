@@ -15,7 +15,8 @@
     "firefox-extension"
   ],
   "scripts": {
-    "build": "rm -rf extension/dist & webpack --mode production --config ./extension/webpack.config.js"
+    "dev-hot": "webpack-dev-server --mode development --config ./examples/hmr/webpack.config.js",
+    "build": "rm -rf examples/extension/dist & webpack --mode production --config ./examples/extension/webpack.config.js"
   },
   "main": "index.js",
   "repository": "https://github.com/crimx/webpack-target-webextension",
@@ -25,8 +26,9 @@
     "node": ">=10.0.0"
   },
   "devDependencies": {
-    "webpack": "^4.42.1",
-    "webpack-cli": "^3.3.11"
+    "webpack": "^4.44.2",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
   },
   "peerDependencies": {
     "webpack": "4.x"

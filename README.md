@@ -111,19 +111,20 @@ Please include this line if you want to use `eval` based sourcemaps.
 
 ```js
 devServer: {
-    // Have to write disk cause plugin cannot be loaded over network
-    writeToDisk: true,
-    hot: true,
-    hotOnly: true,
-    // WDS does not support chrome-extension:// browser-extension://
-    disableHostCheck: true,
-    injectClient: true,
-    injectHot: true,
-    headers: {
-        // We're doing CORS request for HMR
-        'Access-Control-Allow-Origin': '*',
-    },
-    // If the content script runs in https, webpack will connect https://localhost:HMR_PORT
-    https: true,
+  // Have to write disk cause plugin cannot be loaded over network
+  writeToDisk: true,
+  hot: true,
+  hotOnly: true,
+  // WDS does not support chrome-extension:// browser-extension://
+  disableHostCheck: true,
+  injectClient: true,
+  injectHot: true,
+  headers: {
+    // We're doing CORS request for HMR
+    'Access-Control-Allow-Origin': '*'
+  },
+  // If the content script runs in https, webpack will connect https://localhost:HMR_PORT
+  // More on https://webpack.js.org/configuration/dev-server/#devserverhttps
+  https: true
 },
 ```
