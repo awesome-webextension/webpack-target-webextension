@@ -85,10 +85,9 @@ docs/.vuepress/dist
 # DynamoDB Local files
 .dynamodb/
 
-# build directory
-dist
-build
-
 typedoc
 
 examples/**/yarn.lock
+
+examples/extension/dist/
+examples/hmr/js/
