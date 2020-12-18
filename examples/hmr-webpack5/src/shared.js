@@ -1,4 +1,4 @@
 export function log() {
   // change this to see hot updates
-  return 'version 0'
+  return 'version 1'
 }

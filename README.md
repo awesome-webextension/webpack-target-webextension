@@ -128,3 +128,7 @@ devServer: {
   https: true
 },
 ```
+
+#### Webpack 5 support
+
+Support for Webpack 5 is still in development. It will break any time.
