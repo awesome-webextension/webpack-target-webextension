@@ -26,11 +26,11 @@
     "node": ">=10.0.0"
   },
   "devDependencies": {
-    "webpack": "^4.44.2",
-    "webpack-cli": "^3.3.12",
+    "webpack": "^5.10.3",
+    "webpack-cli": "^4.2.0",
     "webpack-dev-server": "^3.11.0"
   },
   "peerDependencies": {
-    "webpack": "4.x"
+    "webpack": "4.x || ^5.0.0"
   }
 }

@@ -1,13 +1,9 @@
-const WebExtTemplatePlugin = require('./lib/WebExtTemplatePlugin')
-const FunctionModulePlugin = require('webpack/lib/FunctionModulePlugin')
-const NodeSourcePlugin = require('webpack/lib/node/NodeSourcePlugin')
-const LoaderTargetPlugin = require('webpack/lib/LoaderTargetPlugin')
+const webpackMajorVersion = require('./lib/webpack-version')
 
-module.exports = nodeConfig => compiler => {
-  new WebExtTemplatePlugin().apply(compiler)
-  new FunctionModulePlugin().apply(compiler)
-  if (nodeConfig) {
-    new NodeSourcePlugin(nodeConfig).apply(compiler)
-  }
-  new LoaderTargetPlugin('web').apply(compiler)
-}
+module.exports =
+  webpackMajorVersion === 4
+    ? (nodeConfig) => (compiler) => {
+        const WebExtPlugin5 = require('./lib/webpack4/index')
+        new WebExtPlugin5(nodeConfig).apply(compiler)
+      }
+    : require('./lib/webpack5/index')
