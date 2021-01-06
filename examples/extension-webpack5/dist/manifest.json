@@ -1,15 +1,15 @@
 {
   "version": "1.0.0",
   "background": {
-    "scripts": ["dist/background.js"]
+    "scripts": ["background.js"]
   },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["dist/content.js"]
+      "js": ["content.js"]
     }
   ],
-  "web_accessible_resources": ["dist/*"],
+  "web_accessible_resources": ["/*.js"],
   "manifest_version": 2,
   "name": "webextension-target",
   "description": "webextension target",
