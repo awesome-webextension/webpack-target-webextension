@@ -2,7 +2,7 @@
 
 [![npm-version](https://img.shields.io/npm/v/webpack-target-webextension.svg)](https://www.npmjs.com/package/webpack-target-webextension)
 
-WebExtension Target for Webpack 4. Supports code-splitting with native dynamic import(with `tabs.executeScript` as fallback).
+WebExtension Target for Webpack 4 (Support for Webpack 5 is experimental). Supports code-splitting with native dynamic import(with `tabs.executeScript` as fallback) and Hot Module Reload.
 
 You can use the [neutrino-webextension preset](https://github.com/crimx/neutrino-webextension) directly which uses this library.
 
@@ -132,3 +132,28 @@ devServer: {
 #### Webpack 5 support
 
 Support for Webpack 5 is still in development. It will break any time.
+
+See example in examples/
+
+```js
+const path = require('path')
+const WebExtensionTarget = require('webpack-target-webextension')
+
+module.exports = {
+  entry: {
+    content: path.resolve(__dirname, 'src', 'content'),
+    background: path.resolve(__dirname, 'src', 'background'),
+  },
+  optimization: {
+    minimize: false,
+    // Chrome bug https://bugs.chromium.org/p/chromium/issues/detail?id=1108199
+    splitChunks: { automaticNameDelimiter: '-' },
+  },
+  output: {
+    filename: '[name].js',
+    publicPath: '/',
+    path: path.resolve(__dirname, 'dist'),
+  },
+  plugins: [new WebExtensionTarget()],
+}
+```

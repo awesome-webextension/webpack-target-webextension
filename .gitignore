@@ -89,5 +89,6 @@ typedoc
 
 examples/**/yarn.lock
 
-examples/**/dist/
+examples/**/dist/*
+!examples/**/dist/manifest.json
 examples/hmr/js/
