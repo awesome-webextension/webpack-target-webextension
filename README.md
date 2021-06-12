@@ -14,11 +14,7 @@ In content scripts native dynamic import subjects to target page content securit
 
 But do note that `tabs.executeScript` does not work for pages without tab, like background page and browser action page(also known as popup page). This is fine since they are all extension internal pages where native dynamic import should always work.
 
-## Caveats
-
-Native dynamic import is [buggy](https://bugzilla.mozilla.org/show_bug.cgi?id=1536094) in Firefox. A workaround is to write a postbuild script targeting only Firefox build. It collects all the dynamic chunks and appends them to every entries in htmls and the `manifest.json` script lists.
-
-The Firefox addons-linter is also [making aggressive errors](https://github.com/mozilla/addons-linter/issues/2498) on dynamic import. A workaround is to just replace the `import` with other name. Since all the dynamic chunks are loaded in Firefox the `import()` code should never be run.
+Native dynamic import in Firefox before 89 is [buggy](https://bugzilla.mozilla.org/show_bug.cgi?id=1536094). If unfortunately you have to support the old versions a workaround is to write a postbuild script targeting only Firefox build. It collects all the dynamic chunks and appends them to every entries in htmls and the `manifest.json` script lists.
 
 ## Installation
 
