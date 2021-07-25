@@ -20,6 +20,8 @@ Native dynamic import is [buggy](https://bugzilla.mozilla.org/show_bug.cgi?id=15
 
 The Firefox addons-linter is also [making aggressive errors](https://github.com/mozilla/addons-linter/issues/2498) on dynamic import. A workaround is to just replace the `import` with other name. Since all the dynamic chunks are loaded in Firefox the `import()` code should never be run.
 
+In webpack 5, you need to enable `output.environment.dynamicImport` to *true*.
+
 ## Installation
 
 yarn
