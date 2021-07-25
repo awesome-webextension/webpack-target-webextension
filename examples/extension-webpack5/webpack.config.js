@@ -2,6 +2,7 @@ const path = require('path')
 const WebExtensionTarget = require('../..')
 // const WebExtensionTarget = require('webpack-target-webextension')
 
+/** @type {import('webpack').Configuration} */
 module.exports = {
   entry: {
     content: path.resolve(__dirname, 'src', 'content'),
@@ -16,6 +17,8 @@ module.exports = {
     filename: '[name].js',
     publicPath: '/',
     path: path.resolve(__dirname, 'dist'),
+    // Remove this if your environment does not support dynamicImport
+    environment: { dynamicImport: true },
   },
   target: 'web',
   plugins: [new WebExtensionTarget()],

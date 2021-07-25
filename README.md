@@ -16,6 +16,8 @@ But do note that `tabs.executeScript` does not work for pages without tab, like 
 
 Native dynamic import in Firefox before 89 is [buggy](https://bugzilla.mozilla.org/show_bug.cgi?id=1536094). If unfortunately you have to support the old versions a workaround is to write a postbuild script targeting only Firefox build. It collects all the dynamic chunks and appends them to every entries in htmls and the `manifest.json` script lists.
 
+In webpack 5, you need to enable `output.environment.dynamicImport` to *true*.
+
 ## Installation
 
 yarn
