@@ -1,6 +1,6 @@
 {
   "name": "webpack-target-webextension",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "WebExtension Target for Webpack 4. Supports code-splitting with native dynamic import.",
   "keywords": [
     "webpack",
@@ -26,9 +26,9 @@
     "node": ">=10.0.0"
   },
   "devDependencies": {
-    "webpack": "^5",
-    "webpack-cli": "^4.2.0",
-    "webpack-dev-server": "^3.11.0"
+    "webpack": "^5.46.0",
+    "webpack-cli": "^4.7.2",
+    "webpack-dev-server": "^3.11.2"
   },
   "peerDependencies": {
     "webpack": "4.x || ^5.0.0"
