@@ -15,7 +15,7 @@ module.exports = {
   },
   output: {
     filename: '[name].js',
-    publicPath: '/',
+    // publicPath: '/',
     path: path.resolve(__dirname, 'dist'),
     // Remove this if your environment does not support dynamicImport
     environment: { dynamicImport: true },
