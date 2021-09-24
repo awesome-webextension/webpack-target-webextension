@@ -15,7 +15,7 @@ export interface BackgroundOptions {
    * @defaultValue true
    * Load fallback support code for dynamic chunk loading in content script.
    */
-  chunkLoaderFallback?: boolean
+  classicLoader?: boolean
 }
 
 export interface WebExtensionPluginOptions {

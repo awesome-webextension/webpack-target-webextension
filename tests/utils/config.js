@@ -5,12 +5,14 @@ const CopyPlugin = require('copy-webpack-plugin')
 /**
  * @param {string} folder
  * @param {string} output
+ * @param {(config: import('webpack').Configuration) => void} [modify]
  * @returns {import('webpack').Configuration}
  */
-module.exports = (folder, output = folder.replace('fixtures', 'snapshot')) => {
+module.exports = (folder, output = folder.replace('fixtures', 'snapshot'), modify) => {
   const isMV3 = folder.includes('mv3')
   const manifest = join(__dirname, isMV3 ? '../fixtures/manifest-mv3.json' : '../fixtures/manifest-mv2.json')
-  return {
+  /** @type {import('webpack').Configuration} */
+  const config = {
     mode: 'development',
     context: join(__dirname, '../', folder),
     devtool: false,
@@ -28,4 +30,6 @@ module.exports = (folder, output = folder.replace('fixtures', 'snapshot')) => {
       }),
     ],
   }
+  modify && modify(config)
+  return config
 }

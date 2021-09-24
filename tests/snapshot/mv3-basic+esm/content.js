@@ -91,6 +91,12 @@
 /******/ 		var classicLoader = (url, done, chunkId) => {
 /******/ 			__send__({ type: 'WTW_INJECT', file: url }).then(done, (e) => done(Object.assign(e, { type: 'missing' })))
 /******/ 		}
+/******/ 		var dynamicImportLoader = (url, done, chunkId) => {
+/******/ 			import(url).then(() => done(), (e) => {
+/******/ 				console.warn('jsonp chunk loader failed to use dynamic import.', e)
+/******/ 				fallbackLoader(url, done, chunkId)
+/******/ 			})
+/******/ 		}
 /******/ 		var scriptLoader = (url, done, chunkId) => {
 /******/ 			var script = document.createElement('script')
 /******/ 			script.src = url
@@ -105,6 +111,8 @@
 /******/ 		if (location.protocol.includes('-extension:')) __webpack_require__.l = isWorker ? workerLoader : scriptLoader
 /******/ 		else if (!isWorker) __webpack_require__.l = classicLoader
 /******/ 		else { throw new TypeError('Unable to determinate the chunk loader: content script + Worker') }
+/******/ 		var fallbackLoader = __webpack_require__.l
+/******/ 		__webpack_require__.l = dynamicImportLoader
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
@@ -144,7 +152,7 @@
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
-/******/ 			"background": 0
+/******/ 			"content": 0
 /******/ 		};
 /******/ 		
 /******/ 		__webpack_require__.f.j = (chunkId, promises) => {
@@ -226,57 +234,15 @@
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
 /******/ 	
-/******/ 	/* webpack/runtime/chunk loader fallback */
-/******/ 	(() => {
-/******/ 		  const isModern = typeof browser !== 'undefined';
-/******/ 		  const runtime = isModern ? browser : chrome;
-/******/ 		  const root = runtime.runtime.getURL('/');
-/******/ 		  runtime.runtime.onMessage.addListener((message, sender, sendResponse) => {
-/******/ 		    const cond = message && message.type === 'WTW_INJECT' && sender && sender.tab && sender.tab.id != null;
-/******/ 		    if (!cond) return;
-/******/ 		    let file = message.file;
-/******/ 		
-/******/ 		    try {
-/******/ 		      file = new URL(file).pathname;
-/******/ 		    } catch {}
-/******/ 		
-/******/ 		    if (!file) return;
-/******/ 		    const details = {
-/******/ 		      frameId: sender.frameId,
-/******/ 		      file
-/******/ 		    };
-/******/ 		
-/******/ 		    if (runtime.scripting) {
-/******/ 		      runtime.scripting.executeScript({
-/******/ 		        target: {
-/******/ 		          tabId: sender.tab.id
-/******/ 		        },
-/******/ 		        files: [file]
-/******/ 		      }).then(sendResponse);
-/******/ 		    } else {
-/******/ 		      if (isModern) {
-/******/ 		        runtime.tabs.executeScript(sender.tab.id, details).then(sendResponse);
-/******/ 		      } else {
-/******/ 		        runtime.tabs.executeScript(sender.tab.id, details, sendResponse);
-/******/ 		      }
-/******/ 		    }
-/******/ 		
-/******/ 		    return true;
-/******/ 		  });
-/******/ 	})();
-/******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-/*!***********************!*\
-  !*** ./background.js ***!
-  \***********************/
+/*!********************!*\
+  !*** ./content.js ***!
+  \********************/
 __webpack_require__.e(/*! import() */ "log_js").then(__webpack_require__.bind(__webpack_require__, /*! ./log */ "./log.js")).then(({ log }) => {
-  log('this is background script')
-  chrome.runtime.onMessage.addListener((message) => {
-    log(`receive message from content script`, message)
-  })
+  log('this is content script')
+  chrome.runtime.sendMessage('Hi!')
 })
-new Worker(new URL(/* worker import */ __webpack_require__.p + __webpack_require__.u("worker_js"), __webpack_require__.b))
 
 /******/ })()
 ;

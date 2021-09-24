@@ -80,6 +80,41 @@
 /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/load script */
+/******/ 	(() => {
+/******/ 		var isBrowser = typeof browser === 'object'
+/******/ 		var runtime = isBrowser ? browser : typeof chrome === 'object' ? chrome : { get runtime() { throw new Error("No chrome or browser runtime found") } }
+/******/ 		var __send__ = (msg) => {
+/******/ 			if (isBrowser) return runtime.runtime.sendMessage(msg)
+/******/ 			return new Promise(r => runtime.runtime.sendMessage(msg, r))
+/******/ 		}
+/******/ 		var classicLoader = (url, done, chunkId) => {
+/******/ 			__send__({ type: 'WTW_INJECT', file: url }).then(done, (e) => done(Object.assign(e, { type: 'missing' })))
+/******/ 		}
+/******/ 		var dynamicImportLoader = (url, done, chunkId) => {
+/******/ 			import(url).then(() => done(), (e) => {
+/******/ 				console.warn('jsonp chunk loader failed to use dynamic import.', e)
+/******/ 				fallbackLoader(url, done, chunkId)
+/******/ 			})
+/******/ 		}
+/******/ 		var scriptLoader = (url, done, chunkId) => {
+/******/ 			var script = document.createElement('script')
+/******/ 			script.src = url
+/******/ 			script.onload = done
+/******/ 			script.onerror = done
+/******/ 			document.body.appendChild(script)
+/******/ 		}
+/******/ 		var workerLoader = (url, done, chunkId) => {
+/******/ 			try { importScripts(url); done() } catch (e) { done(e) }
+/******/ 		}
+/******/ 		var isWorker = typeof importScripts === 'function'
+/******/ 		if (location.protocol.includes('-extension:')) __webpack_require__.l = isWorker ? workerLoader : scriptLoader
+/******/ 		else if (!isWorker) __webpack_require__.l = classicLoader
+/******/ 		else { throw new TypeError('Unable to determinate the chunk loader: content script + Worker') }
+/******/ 		var fallbackLoader = __webpack_require__.l
+/******/ 		__webpack_require__.l = dynamicImportLoader
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
@@ -109,45 +144,94 @@
 /******/ 		__webpack_require__.p = scriptUrl;
 /******/ 	})();
 /******/ 	
-/******/ 	/* webpack/runtime/importScripts chunk loading */
+/******/ 	/* webpack/runtime/jsonp chunk loading */
 /******/ 	(() => {
-/******/ 		__webpack_require__.b = self.location + "";
+/******/ 		__webpack_require__.b = document.baseURI || self.location.href;
 /******/ 		
-/******/ 		// object to store loaded chunks
-/******/ 		// "1" means "already loaded"
+/******/ 		// object to store loaded and loading chunks
+/******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
-/******/ 			"background": 1
+/******/ 			"background": 0
 /******/ 		};
 /******/ 		
-/******/ 		// importScripts chunk loading
-/******/ 		var installChunk = (data) => {
-/******/ 			var [chunkIds, moreModules, runtime] = data;
-/******/ 			for(var moduleId in moreModules) {
-/******/ 				if(__webpack_require__.o(moreModules, moduleId)) {
-/******/ 					__webpack_require__.m[moduleId] = moreModules[moduleId];
+/******/ 		__webpack_require__.f.j = (chunkId, promises) => {
+/******/ 				// JSONP chunk loading for javascript
+/******/ 				var installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
+/******/ 				if(installedChunkData !== 0) { // 0 means "already installed".
+/******/ 		
+/******/ 					// a Promise means "currently loading".
+/******/ 					if(installedChunkData) {
+/******/ 						promises.push(installedChunkData[2]);
+/******/ 					} else {
+/******/ 						if(true) { // all chunks have JS
+/******/ 							// setup Promise in chunk cache
+/******/ 							var promise = new Promise((resolve, reject) => (installedChunkData = installedChunks[chunkId] = [resolve, reject]));
+/******/ 							promises.push(installedChunkData[2] = promise);
+/******/ 		
+/******/ 							// start chunk loading
+/******/ 							var url = __webpack_require__.p + __webpack_require__.u(chunkId);
+/******/ 							// create error before stack unwound to get useful stacktrace later
+/******/ 							var error = new Error();
+/******/ 							var loadingEnded = (event) => {
+/******/ 								if(__webpack_require__.o(installedChunks, chunkId)) {
+/******/ 									installedChunkData = installedChunks[chunkId];
+/******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
+/******/ 									if(installedChunkData) {
+/******/ 										var errorType = event && (event.type === 'load' ? 'missing' : event.type);
+/******/ 										var realSrc = event && event.target && event.target.src;
+/******/ 										error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
+/******/ 										error.name = 'ChunkLoadError';
+/******/ 										error.type = errorType;
+/******/ 										error.request = realSrc;
+/******/ 										installedChunkData[1](error);
+/******/ 									}
+/******/ 								}
+/******/ 							};
+/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
+/******/ 						} else installedChunks[chunkId] = 0;
+/******/ 					}
 /******/ 				}
-/******/ 			}
-/******/ 			if(runtime) runtime(__webpack_require__);
-/******/ 			while(chunkIds.length)
-/******/ 				installedChunks[chunkIds.pop()] = 1;
-/******/ 			parentChunkLoadingFunction(data);
-/******/ 		};
-/******/ 		__webpack_require__.f.i = (chunkId, promises) => {
-/******/ 			// "1" is the signal for "already loaded"
-/******/ 			if(!installedChunks[chunkId]) {
-/******/ 				if(true) { // all chunks have JS
-/******/ 					importScripts(__webpack_require__.p + __webpack_require__.u(chunkId));
-/******/ 				}
-/******/ 			}
 /******/ 		};
 /******/ 		
-/******/ 		var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
-/******/ 		var parentChunkLoadingFunction = chunkLoadingGlobal.push.bind(chunkLoadingGlobal);
-/******/ 		chunkLoadingGlobal.push = installChunk;
+/******/ 		// no prefetching
+/******/ 		
+/******/ 		// no preloaded
 /******/ 		
 /******/ 		// no HMR
 /******/ 		
 /******/ 		// no HMR manifest
+/******/ 		
+/******/ 		// no on chunks loaded
+/******/ 		
+/******/ 		// install a JSONP callback for chunk loading
+/******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
+/******/ 			var [chunkIds, moreModules, runtime] = data;
+/******/ 			// add "moreModules" to the modules object,
+/******/ 			// then flag all "chunkIds" as loaded and fire callback
+/******/ 			var moduleId, chunkId, i = 0;
+/******/ 			if(chunkIds.some((id) => (installedChunks[id] !== 0))) {
+/******/ 				for(moduleId in moreModules) {
+/******/ 					if(__webpack_require__.o(moreModules, moduleId)) {
+/******/ 						__webpack_require__.m[moduleId] = moreModules[moduleId];
+/******/ 					}
+/******/ 				}
+/******/ 				if(runtime) var result = runtime(__webpack_require__);
+/******/ 			}
+/******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
+/******/ 			for(;i < chunkIds.length; i++) {
+/******/ 				chunkId = chunkIds[i];
+/******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
+/******/ 					installedChunks[chunkId][0]();
+/******/ 				}
+/******/ 				installedChunks[chunkIds[i]] = 0;
+/******/ 			}
+/******/ 		
+/******/ 		}
+/******/ 		
+/******/ 		var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
+/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/chunk loader fallback */
@@ -189,23 +273,18 @@
 /******/ 		  });
 /******/ 	})();
 /******/ 	
-/******/ 	/* webpack/runtime/eagerly load chunks */
-/******/ 	(() => {
-/******/ 		__webpack_require__.e("log_js");
-/******/ 	})();
-/******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
 /*!***********************!*\
   !*** ./background.js ***!
   \***********************/
-setTimeout(async () => {
-  const { log } = await __webpack_require__.e(/*! import() */ "log_js").then(__webpack_require__.bind(__webpack_require__, /*! ./log */ "./log.js"))
+__webpack_require__.e(/*! import() */ "log_js").then(__webpack_require__.bind(__webpack_require__, /*! ./log */ "./log.js")).then(({ log }) => {
   log('this is background script')
   chrome.runtime.onMessage.addListener((message) => {
     log(`receive message from content script`, message)
   })
-}, 200)
+})
+new Worker(new URL(/* worker import */ __webpack_require__.p + __webpack_require__.u("worker_js"), __webpack_require__.b))
 
 /******/ })()
 ;

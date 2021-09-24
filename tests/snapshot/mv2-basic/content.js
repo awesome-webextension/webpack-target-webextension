@@ -84,15 +84,14 @@
 /******/ 	(() => {
 /******/ 		var isBrowser = typeof browser === 'object'
 /******/ 		var runtime = isBrowser ? browser : typeof chrome === 'object' ? chrome : { get runtime() { throw new Error("No chrome or browser runtime found") } }
-/******/ 		var send = (msg) => {
+/******/ 		var __send__ = (msg) => {
 /******/ 			if (isBrowser) return runtime.runtime.sendMessage(msg)
 /******/ 			return new Promise(r => runtime.runtime.sendMessage(msg, r))
 /******/ 		}
-/******/ 		
-/******/ 		var contentScriptLoader = (url, done, chunkId) => {
-/******/ 			send({ type: 'WTW_INJECT', file: url }).then(done, (e) => done(Object.assign(e, { type: 'missing' })))
+/******/ 		var classicLoader = (url, done, chunkId) => {
+/******/ 			__send__({ type: 'WTW_INJECT', file: url }).then(done, (e) => done(Object.assign(e, { type: 'missing' })))
 /******/ 		}
-/******/ 		var normalLoader = (url, done, chunkId) => {
+/******/ 		var scriptLoader = (url, done, chunkId) => {
 /******/ 			var script = document.createElement('script')
 /******/ 			script.src = url
 /******/ 			script.onload = done
@@ -103,11 +102,9 @@
 /******/ 			try { importScripts(url); done() } catch (e) { done(e) }
 /******/ 		}
 /******/ 		var isWorker = typeof importScripts === 'function'
-/******/ 		if (location.protocol.includes('-extension:')) __webpack_require__.l = isWorker ? workerLoader : normalLoader
-/******/ 		else if (!isWorker) __webpack_require__.l = contentScriptLoader
-/******/ 		else { throw new TypeError('Unreachable loader: content script + Worker') }
-/******/ 		
-/******/ 	
+/******/ 		if (location.protocol.includes('-extension:')) __webpack_require__.l = isWorker ? workerLoader : scriptLoader
+/******/ 		else if (!isWorker) __webpack_require__.l = classicLoader
+/******/ 		else { throw new TypeError('Unable to determinate the chunk loader: content script + Worker') }
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
