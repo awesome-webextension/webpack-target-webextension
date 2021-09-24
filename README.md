@@ -2,11 +2,12 @@
 
 [![npm-version](https://img.shields.io/npm/v/webpack-target-webextension.svg)](https://www.npmjs.com/package/webpack-target-webextension)
 
-WebExtension Target for Webpack 4 (Support for Webpack 5 is experimental). Supports code-splitting with native dynamic import(with `tabs.executeScript` as fallback) and Hot Module Reload.
+WebExtension Target for Webpack 5. Supports code-splitting with dynamic import (with `tabs.executeScript` as fallback) and Hot Module Reload.
 
-You can use the [neutrino-webextension preset](https://github.com/crimx/neutrino-webextension) directly which uses this library.
+For webpack 4 support, please use 0.2.1.
 
-The code is based on the official web target.
+<!-- Neutrino-webextension is still using 0.1.3 with webpack 4. -->
+<!-- You can use the [neutrino-webextension preset](https://github.com/crimx/neutrino-webextension) directly which uses this library. -->
 
 ## Limitation
 
@@ -128,8 +129,6 @@ devServer: {
 ```
 
 #### Webpack 5 support
-
-Support for Webpack 5 is still in development. It will break any time.
 
 See example in examples/
 

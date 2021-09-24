@@ -16,7 +16,8 @@
   ],
   "scripts": {
     "dev-hot": "webpack-dev-server --mode development --config ./examples/hmr/webpack.config.js",
-    "build": "rm -rf examples/extension/dist & webpack --mode production --config ./examples/extension/webpack.config.js"
+    "build": "rm -rf examples/extension/dist & webpack --mode production --config ./examples/extension/webpack.config.js",
+    "test": "jest"
   },
   "main": "index.js",
   "repository": "https://github.com/crimx/webpack-target-webextension",
@@ -33,16 +34,16 @@
   ],
   "license": "MIT",
   "engines": {
-    "node": ">=10.0.0"
+    "node": ">=14.17.6"
   },
   "devDependencies": {
-    "@types/webpack-4": "npm:@types/webpack@4",
+    "@types/jest": "^27.0.2",
+    "jest": "^27.2.1",
     "webpack": "^5.53.0",
-    "webpack-4": "npm:webpack@4",
     "webpack-cli": "^4.8.0",
     "webpack-dev-server": "^4.2.1"
   },
   "peerDependencies": {
-    "webpack": "4.x || ^5.0.0"
+    "webpack": "^5.0.0"
   }
 }
