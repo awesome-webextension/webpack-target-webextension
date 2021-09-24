@@ -1,4 +1,5 @@
 import { Compiler } from 'webpack'
+import { Webpack4UsedImports } from './lib/webpack4/webpack4-used'
 declare class Webpack5 {
   apply(compiler: Compiler): void
 }
@@ -6,7 +7,7 @@ declare class Webpack5 {
 // export interface Webpack4NodeConfig {}
 interface Plugin {
   /** Webpack 4 */
-  (nodeConfig: any): (compiler: Compiler) => void
+  (nodeConfig: any, imports?: Webpack4UsedImports): (compiler: Compiler) => void
   /** Webpack 5 */
   new (): Webpack5
 }
