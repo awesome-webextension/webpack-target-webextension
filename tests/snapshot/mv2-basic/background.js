@@ -190,7 +190,7 @@ const hasBrowser = typeof browser !== 'undefined'
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
 /******/ 	(() => {
-/******/ 		// no baseURI
+/******/ 		__webpack_require__.b = document.baseURI || self.location.href;
 /******/ 		
 /******/ 		// object to store loaded and loading chunks
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
@@ -294,9 +294,10 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.e(/*! import() */ "log_js").then(__webpack_require__.bind(__webpack_require__, /*! ./log */ "./log.js")).then(({ log }) => {
   log('this is background script')
   chrome.runtime.onMessage.addListener((message) => {
-    log(`receive message "${message}" from content script`)
+    log(`receive message from content script`, message)
   })
 })
+new Worker(new URL(/* worker import */ __webpack_require__.p + __webpack_require__.u("worker_js"), __webpack_require__.b))
 
 })();
 
