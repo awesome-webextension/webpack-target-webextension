@@ -11,6 +11,11 @@ export interface BackgroundOptions {
    * Load all chunks at the beginning.
    */
   eagerChunkLoading?: boolean
+  /**
+   * @defaultValue true
+   * Load fallback support code for dynamic chunk loading in content script.
+   */
+  chunkLoaderFallback?: boolean
 }
 
 export interface WebExtensionPluginOptions {

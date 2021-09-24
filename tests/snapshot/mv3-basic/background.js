@@ -1,42 +1,5 @@
 /******/ (() => { // webpackBootstrap
-/******/ 	var __webpack_modules__ = ({
-
-/***/ "../../../lib/background.js":
-/*!**********************************!*\
-  !*** ../../../lib/background.js ***!
-  \**********************************/
-/***/ (() => {
-
-/** Add this to background scripts */
-
-const hasBrowser = typeof browser !== 'undefined'
-
-;(hasBrowser ? browser : chrome).runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message && message.type === 'WTW_INJECT' && sender && sender.tab && sender.tab.id != null) {
-    let file = message.file
-    try {
-      file = new URL(file).pathname
-    } catch {}
-    if (file) {
-      const details = {
-        frameId: sender.frameId,
-        file,
-      }
-      const callback = () => sendResponse()
-      if (hasBrowser) {
-        browser.tabs.executeScript(sender.tab.id, details).then(callback)
-      } else {
-        chrome.tabs.executeScript(sender.tab.id, details, callback)
-      }
-      return true
-    }
-  }
-})
-
-
-/***/ })
-
-/******/ 	});
+/******/ 	var __webpack_modules__ = ({});
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
@@ -66,18 +29,6 @@ const hasBrowser = typeof browser !== 'undefined'
 /******/ 	__webpack_require__.m = __webpack_modules__;
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/compat get default export */
-/******/ 	(() => {
-/******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__webpack_require__.n = (module) => {
-/******/ 			var getter = module && module.__esModule ?
-/******/ 				() => (module['default']) :
-/******/ 				() => (module);
-/******/ 			__webpack_require__.d(getter, { a: getter });
-/******/ 			return getter;
-/******/ 		};
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -199,6 +150,34 @@ const hasBrowser = typeof browser !== 'undefined'
 /******/ 		// no HMR manifest
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/chunk loader fallback */
+/******/ 	(() => {
+/******/ 		  const hasBrowser = typeof browser !== 'undefined';
+/******/ 		  (hasBrowser ? browser : chrome).runtime.onMessage.addListener((message, sender, sendResponse) => {
+/******/ 		    const cond = message && message.type === 'WTW_INJECT' && sender && sender.tab && sender.tab.id != null;
+/******/ 		    if (!cond) return;
+/******/ 		    let file = message.file;
+/******/ 		
+/******/ 		    try {
+/******/ 		      file = new URL(file).pathname;
+/******/ 		    } catch {}
+/******/ 		
+/******/ 		    if (!file) return;
+/******/ 		    const details = {
+/******/ 		      frameId: sender.frameId,
+/******/ 		      file
+/******/ 		    };
+/******/ 		
+/******/ 		    if (hasBrowser) {
+/******/ 		      browser.tabs.executeScript(sender.tab.id, details).then(sendResponse);
+/******/ 		    } else {
+/******/ 		      chrome.tabs.executeScript(sender.tab.id, details, sendResponse);
+/******/ 		    }
+/******/ 		
+/******/ 		    return true;
+/******/ 		  });
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/eagerly load chunks */
 /******/ 	(() => {
 /******/ 		__webpack_require__.e("log_js");
@@ -206,17 +185,9 @@ const hasBrowser = typeof browser !== 'undefined'
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be in strict mode.
-(() => {
-"use strict";
 /*!***********************!*\
   !*** ./background.js ***!
   \***********************/
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var webpack_target_webextension_lib_background__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! webpack-target-webextension/lib/background */ "../../../lib/background.js");
-/* harmony import */ var webpack_target_webextension_lib_background__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(webpack_target_webextension_lib_background__WEBPACK_IMPORTED_MODULE_0__);
-
-
 setTimeout(async () => {
   const { log } = await __webpack_require__.e(/*! import() */ "log_js").then(__webpack_require__.bind(__webpack_require__, /*! ./log */ "./log.js"))
   log('this is background script')
@@ -224,8 +195,6 @@ setTimeout(async () => {
     log(`receive message from content script`, message)
   })
 }, 200)
-
-})();
 
 /******/ })()
 ;

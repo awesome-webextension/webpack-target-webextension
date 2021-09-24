@@ -15,11 +15,6 @@ module.exports = (folder, output = folder.replace('fixtures', 'snapshot')) => {
     context: join(__dirname, '../', folder),
     devtool: false,
     entry: { background: './background.js', content: './content.js' },
-    resolve: {
-      alias: {
-        'webpack-target-webextension/lib/background': join(__dirname, '../../lib/background.js'),
-      },
-    },
     output: {
       path: join(__dirname, '../', output),
       clean: true,
