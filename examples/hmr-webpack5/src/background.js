@@ -1,4 +1,3 @@
-import 'webpack-target-webextension/lib/background'
 import { log } from './shared'
 
 console.log(log())

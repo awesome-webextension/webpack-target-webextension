@@ -1,5 +1,5 @@
 const { resolve } = require('path')
-const WebExtensionTarget = require('../..')
+const WebExtensionTarget = require('../..').default
 // const WebExtensionTarget = require('webpack-target-webextension')
 
 module.exports = {
@@ -9,29 +9,15 @@ module.exports = {
     options: resolve(__dirname, 'src/options.js'),
   },
   mode: 'development',
-  optimization: {},
   output: {
     path: resolve(__dirname, 'dist/'),
     publicPath: 'dist/',
+    environment: { dynamicImport: true },
   },
   devServer: {
-    // Have to write disk cause plugin cannot be loaded over network
-    writeToDisk: true,
-    compress: false,
     hot: true,
-    hotOnly: true,
-    // WDS does not support chrome-extension:// browser-extension://
-    disableHostCheck: true,
-    injectClient: true,
-    injectHot: true,
-    headers: {
-      // We're doing CORS request for HMR
-      'Access-Control-Allow-Origin': '*',
-    },
-    // If the content script runs in https, webpack will connect https://localhost:HMR_PORT
-    https: false,
   },
-  plugins: [new WebExtensionTarget()],
+  plugins: [new WebExtensionTarget({ background: { entry: 'background' } })],
 }
 
 // only for this example

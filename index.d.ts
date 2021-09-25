@@ -21,6 +21,11 @@ export interface BackgroundOptions {
 export interface WebExtensionPluginOptions {
   /** Append a thunk for Manifest V3 entry. */
   background?: BackgroundOptions
+  /**
+   * Configure HMR automatically for you.
+   * @defaultValue true
+   */
+  hmrConfig?: boolean
 }
 export default class Webpack5 {
   constructor(options?: WebExtensionPluginOptions)
