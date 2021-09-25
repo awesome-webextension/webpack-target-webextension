@@ -8,8 +8,6 @@ module.exports = {
   },
   optimization: {
     minimize: false,
-    // Chrome bug https://bugs.chromium.org/p/chromium/issues/detail?id=1108199
-    splitChunks: { automaticNameDelimiter: '-' },
   },
   output: {
     filename: '[name].js',

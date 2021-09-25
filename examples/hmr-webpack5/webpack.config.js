@@ -9,10 +9,7 @@ module.exports = {
     options: resolve(__dirname, 'src/options.js'),
   },
   mode: 'development',
-  optimization: {
-    // Chrome bug https://bugs.chromium.org/p/chromium/issues/detail?id=1108199
-    splitChunks: { automaticNameDelimiter: '-' },
-  },
+  optimization: {},
   output: {
     path: resolve(__dirname, 'dist/'),
     publicPath: 'dist/',
