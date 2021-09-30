@@ -1,19 +1,39 @@
 import { Compiler } from 'webpack'
 
 export interface BackgroundOptions {
-  /** The entry point name of your background */
-  entry: string
+  /** Undocumented. */
   noWarningDynamicEntry?: boolean
-  /** @defaultValue 2 */
+  /**
+   * The entry point of the background scripts
+   * in your webpack config.
+   */
+  entry: string
+  /**
+   * Using Manifest V2 or V3.
+   *
+   * If using Manifest V3,
+   * the entry you provided will be packed as a Worker.
+   *
+   * @defaultValue 2
+   */
   manifest?: 2 | 3
   /**
+   * Only affects in Manifest V3.
+   *
+   * Load all chunks at the beginning
+   * to workaround the chrome bug
+   * https://bugs.chromium.org/p/chromium/issues/detail?id=1198822.
+   *
    * @defaultValue true
-   * Load all chunks at the beginning.
    */
   eagerChunkLoading?: boolean
   /**
+   * Add the support code that use
+   * `chrome.scripting.executeScript` (MV3) or
+   * `chrome.tabs.executeScript` (MV2) when
+   * dynamic import does not work for chunk loading
+   * in the content script.
    * @defaultValue true
-   * Load fallback support code for dynamic chunk loading in content script.
    */
   classicLoader?: boolean
 }

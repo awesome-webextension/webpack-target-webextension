@@ -4,7 +4,7 @@
 
 WebExtension Plugin for Webpack 5. Supports code-splitting and Hot Module Reload.
 
-Looking for webpack 4 support? Please install [v0.2.1](https://github.com/awesome-webextension/webpack-target-webextension/tree/a738d2ce96795cd032eb0ad3d6b6be74376550db).
+Looking for webpack 4 support? Please install 0.2.1. [Document for 0.2.1](https://github.com/awesome-webextension/webpack-target-webextension/tree/a738d2ce96795cd032eb0ad3d6b6be74376550db).
 
 ## Installation
 
@@ -14,4 +14,112 @@ Choose the package manager you're using.
 yarn add -D webpack-target-webextension
 npm install -D webpack-target-webextension
 pnpm install -D webpack-target-webextension
+```
+
+## Features & How to configure
+
+### Code splitting
+
+#### Content script
+
+You need to configure at least one of the following
+to make code-splitting work for the content script.
+
+1. dynamic `import()`
+   - Requires [Firefox 89](https://bugzilla.mozilla.org/show_bug.cgi?id=1536094) and
+     Chrome 63(?).
+   - Set `output.environment.dynamicImport` to `true` in your webpack config.
+2. via `chrome.tabs.executeScript`
+   - Firefox requires `"tabs"` permission in the `manifest.json`.
+   - Requires [`options.background`](#options-background) to be configured
+     and [`options.background.classicLoader`](#options-background) is not **false** (defaults to **true**).
+3. via `chrome.scripting.executeScript`
+   - **Chrome only**.
+   - It will fallback to _method 2_ when there is no `chrome.scripting`.
+   - Requires `"scripting"` permission in the `manifest.json`.
+   - Requires [`options.background`](#options-background) to be configured
+     and [`options.background.classicLoader`](#options-background) is not **false** (defaults to **true**).
+
+
+#### Background worker (Manifest V3)
+
+Support code-splitting out of the box,
+but it will load **all** chunks (but not execute them).
+
+See https://bugs.chromium.org/p/chromium/issues/detail?id=1198822 for the reason.
+
+This fix can be turned off by setting
+[`options.background.eagerChunkLoading`](#options-background) to **false**.
+
+### Hot Module Reload
+
+> ⚠ It's not possible to support HMR for Manifest V3 background worker before
+> this bug is fixed. https://bugs.chromium.org/p/chromium/issues/detail?id=1198822
+
+This plugin works with Hot Module Reload.
+It will modify your `devServer` configuration to adapt to the Web Extension environment.
+To disable this behavior, set [`options.hmrConfig`](#options-hmrConfig) to **false**.
+
+### Public path
+
+This plugin supports the public path when `output.path` is set.
+
+## <a id="options"></a>Options
+
+### <a id="options-background"></a>`options`.`background`
+
+Example:
+
+```ts
+new WebExtensionPlugin({
+  background: { entry: 'background', manifest: 2 },
+})
+```
+
+```ts
+export interface BackgroundOptions {
+  /**
+   * The entry point of the background scripts
+   * in your webpack config.
+   */
+  entry: string
+  /**
+   * Using Manifest V2 or V3.
+   *
+   * If using Manifest V3,
+   * the entry you provided will be packed as a Worker.
+   *
+   * @defaultValue 2
+   */
+  manifest?: 2 | 3
+  /**
+   * Only affects in Manifest V3.
+   *
+   * Load all chunks at the beginning
+   * to workaround the chrome bug
+   * https://bugs.chromium.org/p/chromium/issues/detail?id=1198822.
+   *
+   * @defaultValue true
+   */
+  eagerChunkLoading?: boolean
+  /**
+   * Add the support code that use
+   * `chrome.scripting.executeScript` (MV3) or
+   * `chrome.tabs.executeScript` (MV2) when
+   * dynamic import does not work for chunk loading
+   * in the content script.
+   * @defaultValue true
+   */
+  classicLoader?: boolean
+}
+```
+
+### <a id="options-hmrConfig"></a>`options`.`hmrConfig`
+
+Default value: **true**
+
+Example:
+
+```ts
+new WebExtensionPlugin({ hmrConfig: false })
 ```
