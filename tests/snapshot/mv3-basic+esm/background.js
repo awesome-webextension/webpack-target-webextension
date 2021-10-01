@@ -154,7 +154,6 @@
 /******/ 	(() => {
 /******/ 		  const isModern = typeof browser !== 'undefined';
 /******/ 		  const runtime = isModern ? browser : chrome;
-/******/ 		  const root = runtime.runtime.getURL('/');
 /******/ 		  runtime.runtime.onMessage.addListener((message, sender, sendResponse) => {
 /******/ 		    const cond = message && message.type === 'WTW_INJECT' && sender && sender.tab && sender.tab.id != null;
 /******/ 		    if (!cond) return;
