@@ -32,12 +32,12 @@ to make code-splitting work for the content script.
    - You must set `web_accessible_resources` to your JS files in your `manifest.json`.
    - ⚠ Normal web sites can access your resources in `web_accessible_resources` too.
    - Example: [./examples/code-splitting-way-1](./examples/code-splitting-way-1)
-2. via `chrome.tabs.executeScript`
+2. via `chrome.tabs.executeScript` (Manifest V2)
    - Firefox requires `"tabs"` permission in the `manifest.json`.
    - Requires [`options.background`](#options-background) to be configured
      and [`options.background.classicLoader`](#options-background) is not **false** (defaults to **true**).
    - Example: [./examples/code-splitting-way-2](./examples/code-splitting-way-2)
-3. via `chrome.scripting.executeScript`
+3. via `chrome.scripting.executeScript` (Manifest V3)
    - **Chrome only**.
    - It will fallback to _method 2_ when there is no `chrome.scripting`.
    - Requires `"scripting"` permission in the `manifest.json`.
@@ -56,6 +56,8 @@ See https://bugs.chromium.org/p/chromium/issues/detail?id=1198822 for the reason
 This fix can be turned off by setting
 [`options.background.eagerChunkLoading`](#options-background) to **false**.
 
+Example: [./examples/code-splitting-way-3](./examples/code-splitting-way-3)
+
 ### Hot Module Reload
 
 > ⚠ It's not possible to support HMR for Manifest V3 background worker before
@@ -64,6 +66,16 @@ This fix can be turned off by setting
 This plugin works with Hot Module Reload.
 It will modify your `devServer` configuration to adapt to the Web Extension environment.
 To disable this behavior, set [`options.hmrConfig`](#options-hmrConfig) to **false**.
+
+You need to add `*.json` to your `web_accessible_resources` in order to download HMR manifest.
+
+Example: [./examples/hmr-mv2](./examples/hmr-mv2)
+
+### Source map
+
+To use source map based on `eval`, you must use Manifest V2 and have `script-src 'self' 'unsafe-eval';` in your CSP (content security policy).
+
+> ⚠ DO NOT add `unsafe-eval` to your CSP in production mode!
 
 ### Public path
 

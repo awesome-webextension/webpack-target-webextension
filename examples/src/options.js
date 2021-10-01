@@ -1,3 +1,4 @@
+import './hmr'
 console.log('Hello from background')
 
 // Assets

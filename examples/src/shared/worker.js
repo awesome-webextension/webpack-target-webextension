@@ -1,3 +1,4 @@
+import '../hmr'
 console.log('[Worker test] [Inside Worker] I am a Worker!')
 
 // Assets
