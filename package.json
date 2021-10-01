@@ -15,9 +15,8 @@
     "firefox-extension"
   ],
   "scripts": {
-    "dev-hot": "webpack-dev-server --mode development --config ./examples/hmr-webpack5/webpack.config.js",
-    "build": "rm -rf examples/extension/dist & webpack --mode production --config ./examples/extension/webpack.config.js",
-    "test": "jest"
+    "test": "jest",
+    "test-ci": "node ./tests/ci.js"
   },
   "main": "index.js",
   "repository": "https://github.com/crimx/webpack-target-webextension",
