@@ -13,4 +13,10 @@ setTimeout(async () => {
 }, 200)
 
 // Worker
-new Worker(new URL('./shared/worker.js', import.meta.url))
+try {
+  new Worker(new URL('./shared/worker.js', import.meta.url))
+} catch (e) {
+  console.warn(
+    '[Worker test] Create new Worker is not supported in MV3. See https://bugs.chromium.org/p/chromium/issues/detail?id=1219164'
+  )
+}
