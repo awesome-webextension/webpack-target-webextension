@@ -1,5 +1,8 @@
 const { execSync } = require('child_process')
 const { join } = require('path')
-execSync('yarn jest', {
-  cwd: join(__dirname, '../'),
-})
+
+const cwd = join(__dirname, '../')
+execSync('yarn jest', { cwd })
+
+const out = execSync('git status', { cwd })
+if (out.length) throw new Error(`No files should be changed after CI test. Please update snapshot locally.`)
