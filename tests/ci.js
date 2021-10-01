@@ -4,5 +4,5 @@ const { join } = require('path')
 const cwd = join(__dirname, '../')
 execSync('yarn jest', { cwd })
 
-const out = execSync('git status', { cwd })
+const out = execSync('git diff', { cwd })
 if (out.length) throw new Error(`No files should be changed after CI test. Please update snapshot locally.`)
