@@ -33,7 +33,6 @@ to make code-splitting work for the content script.
    - ⚠ Normal web sites can access your resources in `web_accessible_resources` too.
    - Example: [./examples/code-splitting-way-1](./examples/code-splitting-way-1)
 2. via `chrome.tabs.executeScript` (Manifest V2)
-   - Firefox requires `"tabs"` permission in the `manifest.json`.
    - Requires [`options.background`](#options-background) to be configured
      and [`options.background.classicLoader`](#options-background) is not **false** (defaults to **true**).
    - Example: [./examples/code-splitting-way-2](./examples/code-splitting-way-2)
