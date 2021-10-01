@@ -51,3 +51,4 @@ export default class Webpack5 {
   constructor(options?: WebExtensionPluginOptions)
   apply(compiler: Compiler): void
 }
+export = Webpack5

@@ -29,6 +29,9 @@ to make code-splitting work for the content script.
    - Requires [Firefox 89](https://bugzilla.mozilla.org/show_bug.cgi?id=1536094) and
      Chrome 63(?).
    - Set `output.environment.dynamicImport` to `true` in your webpack config.
+   - You must set `web_accessible_resources` in your `manifest.json` to allow imports.
+   - ⚠ Normal web sites can access your resources in `web_accessible_resources` too.
+   - Example: [./examples/code-splitting-way-1](./examples/code-splitting-way-1)
 2. via `chrome.tabs.executeScript`
    - Firefox requires `"tabs"` permission in the `manifest.json`.
    - Requires [`options.background`](#options-background) to be configured
