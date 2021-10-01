@@ -16,8 +16,6 @@ We made a big write to support Manifest V3.
   1. Add `new WebExtensionTarget()` to your plugins.
   1. Reconfigure this plugin.
 - Drop Node 14- support.
-  - Support Node 14 (LTS) means we accept bug reports on those platforms.
-  - Currently, this plugin is only tested under Node 16.
 - `webpack-target-webextension/lib/background` has been removed.
   - Remove `import 'webpack-target-webextension/lib/background'` from your project.
   - Configure `background` as in the README documented.
