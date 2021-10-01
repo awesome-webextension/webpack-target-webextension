@@ -69,7 +69,9 @@ To disable this behavior, set [`options.hmrConfig`](#options-hmrConfig) to **fal
 
 You need to add `*.json` to your `web_accessible_resources` in order to download HMR manifest.
 
-Example: [./examples/hmr-mv2](./examples/hmr-mv2)
+Example: Manifest V2 [./examples/hmr-mv2](./examples/hmr-mv2)
+
+Example: Manifest V3 [./examples/hmr-mv3](./examples/hmr-mv3)
 
 ### Source map
 
