@@ -1,7 +1,7 @@
 {
   "name": "webpack-target-webextension",
   "version": "0.4.4",
-  "description": "WebExtension Target for Webpack 4. Supports code-splitting with native dynamic import.",
+  "description": "WebExtension plugin for Webpack. Supports code-splitting and dynamic import.",
   "keywords": [
     "webpack",
     "webextension",
@@ -15,22 +15,36 @@
     "firefox-extension"
   ],
   "scripts": {
-    "dev-hot": "webpack-dev-server --mode development --config ./examples/hmr/webpack.config.js",
-    "build": "rm -rf examples/extension/dist & webpack --mode production --config ./examples/extension/webpack.config.js"
+    "test": "jest",
+    "test-ci": "node ./tests/ci.js"
   },
   "main": "index.js",
   "repository": "https://github.com/crimx/webpack-target-webextension",
   "author": "CRIMX <straybugs@gmail.com>",
+  "maintainers": [
+    {
+      "name": "Jack Works",
+      "url": "https://github.com/Jack-Works"
+    },
+    {
+      "name": "CRIMX",
+      "email": "straybugs@gmail.com"
+    }
+  ],
   "license": "MIT",
   "engines": {
-    "node": ">=10.0.0"
+    "node": ">=14.17.6"
   },
   "devDependencies": {
-    "webpack": "^5.46.0",
-    "webpack-cli": "^4.7.2",
-    "webpack-dev-server": "^3.11.2"
+    "@types/jest": "^27.0.2",
+    "copy-webpack-plugin": "^9.0.1",
+    "jest": "^27.2.1",
+    "webpack": "^5.53.0",
+    "webpack-cli": "^4.8.0",
+    "webpack-dev-server": "^4.2.1",
+    "webpack-target-webextension": "link:./"
   },
   "peerDependencies": {
-    "webpack": "4.x || ^5.0.0"
+    "webpack": "^5.0.0"
   }
 }

@@ -1,157 +1,143 @@
-# [webpack-target-webextension](https://github.com/crimx/webpack-target-webextension)
+# webpack-target-webextension
 
 [![npm-version](https://img.shields.io/npm/v/webpack-target-webextension.svg)](https://www.npmjs.com/package/webpack-target-webextension)
 
-WebExtension Target for Webpack 4 (Support for Webpack 5 is experimental). Supports code-splitting with native dynamic import(with `tabs.executeScript` as fallback) and Hot Module Reload.
+WebExtension Plugin for Webpack 5. Supports code-splitting and Hot Module Reload.
 
-You can use the [neutrino-webextension preset](https://github.com/crimx/neutrino-webextension) directly which uses this library.
-
-The code is based on the official web target.
-
-## Limitation
-
-In content scripts native dynamic import subjects to target page content security policy. This library adds `tabs.executeScript` as fallback method should native dynamic import fails.
-
-But do note that `tabs.executeScript` does not work for pages without tab, like background page and browser action page(also known as popup page). This is fine since they are all extension internal pages where native dynamic import should always work.
-
-Native dynamic import in Firefox before 89 is [buggy](https://bugzilla.mozilla.org/show_bug.cgi?id=1536094). If unfortunately you have to support the old versions a workaround is to write a postbuild script targeting only Firefox build. It collects all the dynamic chunks and appends them to every entries in htmls and the `manifest.json` script lists.
-
-In webpack 5, you need to enable `output.environment.dynamicImport` to *true*.
+Looking for webpack 4 support? Please install 0.2.1. [Document for 0.2.1](https://github.com/awesome-webextension/webpack-target-webextension/tree/a738d2ce96795cd032eb0ad3d6b6be74376550db).
 
 ## Installation
 
-yarn
+Choose the package manager you're using.
 
 ```bash
-yarn add webpack-target-webextension
+yarn add -D webpack-target-webextension
+npm install -D webpack-target-webextension
+pnpm install -D webpack-target-webextension
 ```
 
-npm
+## Features & How to configure
 
-```bash
-npm install webpack-target-webextension
+### Code splitting
+
+#### Content script
+
+You need to configure at least one of the following
+to make code-splitting work for the content script.
+
+1. dynamic `import()`
+   - Requires [Firefox 89](https://bugzilla.mozilla.org/show_bug.cgi?id=1536094) and
+     Chrome 63(?).
+   - Set `output.environment.dynamicImport` to `true` in your webpack config.
+   - You must set `web_accessible_resources` to your JS files in your `manifest.json`.
+   - ⚠ Normal web sites can access your resources in `web_accessible_resources` too.
+   - Example: [./examples/code-splitting-way-1](./examples/code-splitting-way-1)
+2. via `chrome.tabs.executeScript` (Manifest V2)
+   - Requires [`options.background`](#options-background) to be configured
+     and [`options.background.classicLoader`](#options-background) is not **false** (defaults to **true**).
+   - Example: [./examples/code-splitting-way-2](./examples/code-splitting-way-2)
+3. via `chrome.scripting.executeScript` (Manifest V3)
+   - **Chrome only**.
+   - It will fallback to _method 2_ when there is no `chrome.scripting`.
+   - Requires `"scripting"` permission in the `manifest.json`.
+   - Requires [`options.background`](#options-background) to be configured
+     and [`options.background.classicLoader`](#options-background) is not **false** (defaults to **true**).
+   - Example: [./examples/code-splitting-way-3](./examples/code-splitting-way-3)
+
+
+#### Background worker (Manifest V3)
+
+Support code-splitting out of the box,
+but it will load **all** chunks (but not execute them).
+
+See https://bugs.chromium.org/p/chromium/issues/detail?id=1198822 for the reason.
+
+This fix can be turned off by setting
+[`options.background.eagerChunkLoading`](#options-background) to **false**.
+
+Example: [./examples/code-splitting-way-3](./examples/code-splitting-way-3)
+
+### Hot Module Reload
+
+> ⚠ It's not possible to support HMR for Manifest V3 background worker before
+> this bug is fixed. https://bugs.chromium.org/p/chromium/issues/detail?id=1198822
+
+This plugin works with Hot Module Reload.
+It will modify your `devServer` configuration to adapt to the Web Extension environment.
+To disable this behavior, set [`options.hmrConfig`](#options-hmrConfig) to **false**.
+
+You need to add `*.json` to your `web_accessible_resources` in order to download HMR manifest.
+
+Example: Manifest V2 [./examples/hmr-mv2](./examples/hmr-mv2)
+
+Example: Manifest V3 [./examples/hmr-mv3](./examples/hmr-mv3)
+
+### Source map
+
+To use source map based on `eval`, you must use Manifest V2 and have `script-src 'self' 'unsafe-eval';` in your CSP (content security policy).
+
+> ⚠ DO NOT add `unsafe-eval` to your CSP in production mode!
+
+### Public path
+
+This plugin supports the public path when `output.path` is set.
+
+## <a id="options"></a>Options
+
+### <a id="options-background"></a>`options`.`background`
+
+Example:
+
+```ts
+new WebExtensionPlugin({
+  background: { entry: 'background', manifest: 2 },
+})
 ```
 
-## Usage
-
-You might also need to remove the `@babel/plugin-syntax-dynamic-import` plugin.
-
-```js
-// webpack.config.js
-
-const path = require('path')
-const WebExtensionTarget = require('')
-
-// Optional webpack node config
-const nodeConfig = {}
-
-module.exports = {
-  node: nodeConfig
-  // Need to set these fields manually as their default values rely on `web` target.
-  // See https://v4.webpack.js.org/configuration/resolve/#resolvemainfields
-  resolve: {
-    mainFields: ['browser', 'module', 'main'],
-    aliasFields: ['browser']
-  },
-  output: {
-    globalObject: 'window'
-    // relative to extension root
-    publicPath: '/assets/',
-  },
-  optimization: {
-    // Chrome bug https://bugs.chromium.org/p/chromium/issues/detail?id=1108199
-    splitChunks: { automaticNameDelimiter: '-' },
-  },
-  target: WebExtensionTarget(nodeConfig)
+```ts
+export interface BackgroundOptions {
+  /**
+   * The entry point of the background scripts
+   * in your webpack config.
+   */
+  entry: string
+  /**
+   * Using Manifest V2 or V3.
+   *
+   * If using Manifest V3,
+   * the entry you provided will be packed as a Worker.
+   *
+   * @defaultValue 2
+   */
+  manifest?: 2 | 3
+  /**
+   * Only affects in Manifest V3.
+   *
+   * Load all chunks at the beginning
+   * to workaround the chrome bug
+   * https://bugs.chromium.org/p/chromium/issues/detail?id=1198822.
+   *
+   * @defaultValue true
+   */
+  eagerChunkLoading?: boolean
+  /**
+   * Add the support code that use
+   * `chrome.scripting.executeScript` (MV3) or
+   * `chrome.tabs.executeScript` (MV2) when
+   * dynamic import does not work for chunk loading
+   * in the content script.
+   * @defaultValue true
+   */
+  classicLoader?: boolean
 }
 ```
 
-```js
-// manifest.json
+### <a id="options-hmrConfig"></a>`options`.`hmrConfig`
 
-{
-  // Make sure chunks are accessible.
-  // For example, if webpack outputs js and css to `assets`:
-  "web_accessible_resources": ["assets/*"],
-}
-```
+Default value: **true**
 
-```js
-// src/background.js
+Example:
 
-// For fallback `tabs.executeScript`
-import 'webpack-target-webextension/lib/background'
-
-// ... your code
-```
-
-### Hot Module Reload and development tips
-
-This target supports HMR too, but you need to tweak manifest.json and open some webpack options to make it work.
-
-#### Changes in manifest.json
-
-**Those changes are only needed in development!! Don't add them in production!!**
-
-Please include this line in the manifest to make sure HMR manifest and new chunks are able to downloaded.
-
-```json
-"web_accessible_resources": ["*.js", "*.json"],
-```
-
-Please include this line if you want to use `eval` based sourcemaps.
-
-```json
-"content_security_policy": "script-src 'self' blob: filesystem: 'unsafe-eval';",
-```
-
-#### Changes in webpack config
-
-```js
-devServer: {
-  // Have to write disk cause plugin cannot be loaded over network
-  writeToDisk: true,
-  hot: true,
-  hotOnly: true,
-  // WDS does not support chrome-extension:// browser-extension://
-  disableHostCheck: true,
-  injectClient: true,
-  injectHot: true,
-  headers: {
-    // We're doing CORS request for HMR
-    'Access-Control-Allow-Origin': '*'
-  },
-  // If the content script runs in https, webpack will connect https://localhost:HMR_PORT
-  // More on https://webpack.js.org/configuration/dev-server/#devserverhttps
-  https: true
-},
-```
-
-#### Webpack 5 support
-
-Support for Webpack 5 is still in development. It will break any time.
-
-See example in examples/
-
-```js
-const path = require('path')
-const WebExtensionTarget = require('webpack-target-webextension')
-
-module.exports = {
-  entry: {
-    content: path.resolve(__dirname, 'src', 'content'),
-    background: path.resolve(__dirname, 'src', 'background'),
-  },
-  optimization: {
-    minimize: false,
-    // Chrome bug https://bugs.chromium.org/p/chromium/issues/detail?id=1108199
-    splitChunks: { automaticNameDelimiter: '-' },
-  },
-  output: {
-    filename: '[name].js',
-    publicPath: '/',
-    path: path.resolve(__dirname, 'dist'),
-  },
-  plugins: [new WebExtensionTarget()],
-}
+```ts
+new WebExtensionPlugin({ hmrConfig: false })
 ```
