@@ -47,6 +47,8 @@ to make code-splitting work for the content script.
 
 #### Background worker (Manifest V3)
 
+> ⚠ Not working with `"background.type"` set to `"module"` (native ES Module service worker). Tracking issue: [#24](https://github.com/awesome-webextension/webpack-target-webextension/issues/24)
+
 Support code-splitting out of the box,
 but it will load **all** chunks (but not execute them).
 
