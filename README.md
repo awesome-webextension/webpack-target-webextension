@@ -64,7 +64,10 @@ Example: [./examples/code-splitting-way-3](./examples/code-splitting-way-3)
 > ⚠ It's not possible to support HMR for Manifest V3 background worker before
 > this bug is fixed. https://bugs.chromium.org/p/chromium/issues/detail?id=1198822
 
+> ⚠ In content script of Firefox, the HMR WebSocket server might be blocked by the Content Security Policy and prevent the reset of the code to be executed. Please disable hmr if you encountered this problem.
+
 This plugin works with Hot Module Reload.
+Please set `devServer.hot` to `"only"` (or `true`) to enable it.
 It will modify your `devServer` configuration to adapt to the Web Extension environment.
 To disable this behavior, set [`options.hmrConfig`](#options-hmrConfig) to **false**.
 

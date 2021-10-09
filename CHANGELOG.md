@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.5.0] - Not released
+## [1.0.0] - Not released
 
 We made a big write to support Manifest V3.
 
@@ -20,8 +20,8 @@ We made a big write to support Manifest V3.
   - Remove `import 'webpack-target-webextension/lib/background'` from your project.
   - Configure `background` as in the README documented.
   - If you don't want it anymore, set `background.chunkLoaderFallback` to **false**.
-- If you configured your `devServer` as pre-0.5.0 document suggested,
-  you can try to remove them. `0.5.0` provides out-of-box auto configure to enable HMR.
+- If you configured your `devServer` as pre-1.0.0 document suggested,
+  you can try to remove them. `1.0.0` provides out-of-box auto configure to enable HMR.
   - Set `hmrConfig` to **false** to disable this feature.
 
 ## [0.4.4] - 2021-07-25
