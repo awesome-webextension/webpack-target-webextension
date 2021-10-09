@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.0.0] - Not released
+## [1.0.0]
 
 We made a big write to support Manifest V3.
 
