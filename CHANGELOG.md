@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.1]
+
+Fix chunk loading in MV3 background worker.
+
 ## [1.0.0]
 
 We made a big write to support Manifest V3.
