@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.2]
+
+Fix false positive of browser when a dom id is browser (#28).
+
 ## [1.0.1]
 
 Fix chunk loading in MV3 background worker.
