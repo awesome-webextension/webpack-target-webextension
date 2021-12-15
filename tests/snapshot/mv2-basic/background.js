@@ -82,8 +82,9 @@
 /******/ 	
 /******/ 	/* webpack/runtime/load script */
 /******/ 	(() => {
-/******/ 		var isBrowser = typeof browser === 'object'
-/******/ 		var runtime = isBrowser ? browser : typeof chrome === 'object' ? chrome : { get runtime() { throw new Error("No chrome or browser runtime found") } }
+/******/ 		var isBrowser = !!(() => { try { if (typeof browser.runtime.getURL === "function") return true } catch(e) {} })()
+/******/ 		var isChrome = !!(() => { try { if (typeof chrome.runtime.getURL === "function") return true } catch(e) {} })()
+/******/ 		var runtime = isBrowser ? browser : isChrome ? chrome : { get runtime() { throw new Error("No chrome or browser runtime found") } }
 /******/ 		var __send__ = (msg) => {
 /******/ 			if (isBrowser) return runtime.runtime.sendMessage(msg)
 /******/ 			return new Promise(r => runtime.runtime.sendMessage(msg, r))
@@ -120,8 +121,9 @@
 /******/ 	
 /******/ 	/* webpack/runtime/publicPath */
 /******/ 	(() => {
-/******/ 		var isBrowser = typeof browser === 'object'
-/******/ 		var runtime = isBrowser ? browser : typeof chrome === 'object' ? chrome : { get runtime() { throw new Error("No chrome or browser runtime found") } }
+/******/ 		var isBrowser = !!(() => { try { if (typeof browser.runtime.getURL === "function") return true } catch(e) {} })()
+/******/ 		var isChrome = !!(() => { try { if (typeof chrome.runtime.getURL === "function") return true } catch(e) {} })()
+/******/ 		var runtime = isBrowser ? browser : isChrome ? chrome : { get runtime() { throw new Error("No chrome or browser runtime found") } }
 /******/ 		var scriptUrl;
 /******/ 		if (__webpack_require__.g.importScripts) scriptUrl = __webpack_require__.g.location + "";
 /******/ 		var document = __webpack_require__.g.document;
@@ -228,7 +230,11 @@
 /******/ 	
 /******/ 	/* webpack/runtime/chunk loader fallback */
 /******/ 	(() => {
-/******/ 		  const isModern = typeof browser !== 'undefined';
+/******/ 		  const isModern = !!(() => {
+/******/ 		    try {
+/******/ 		      if (typeof browser.runtime.getURL === 'function') return true;
+/******/ 		    } catch (err) {}
+/******/ 		  })();
 /******/ 		  const runtime = isModern ? browser : chrome;
 /******/ 		  runtime.runtime.onMessage.addListener((message, sender, sendResponse) => {
 /******/ 		    const cond = message && message.type === 'WTW_INJECT' && sender && sender.tab && sender.tab.id != null;
