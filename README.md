@@ -77,6 +77,8 @@ Example: Manifest V2 [./examples/hmr-mv2](./examples/hmr-mv2)
 
 Example: Manifest V3 [./examples/hmr-mv3](./examples/hmr-mv3)
 
+Example: Draw UI in the content scripts with React and get React HRM. [./examples/react-hmr](./examples/react-hmr)
+
 ### Source map
 
 To use source map based on `eval`, you must use Manifest V2 and have `script-src 'self' 'unsafe-eval';` in your CSP (content security policy).
