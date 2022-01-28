@@ -87,8 +87,6 @@ docs/.vuepress/dist
 
 typedoc
 
-examples/**/yarn.lock
-
 examples/**/dist/*
 !examples/**/dist/manifest.json
 examples/hmr/js/
