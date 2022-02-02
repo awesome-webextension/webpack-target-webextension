@@ -2,8 +2,8 @@ const WebExtension = require('webpack-target-webextension')
 const webpack = require('webpack')
 const { join } = require('path')
 const ReactRefreshTypeScript = require('react-refresh-typescript')
-const RefreshPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 const ReactRefreshPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 /** @type {webpack.Configuration} */
@@ -14,6 +14,13 @@ const config = {
   },
   module: {
     rules: [
+      {
+        test: /\.css$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          "css-loader",
+        ],
+      },
       {
         test: /\.tsx?$/,
         use: {
@@ -42,6 +49,7 @@ const config = {
     },
   },
   plugins: [
+    new MiniCssExtractPlugin(),
     new WebExtension({ background: { entry: 'background' } }),
     isDevelopment && new ReactRefreshPlugin(),
   ].filter(Boolean),
