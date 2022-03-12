@@ -1,8 +1,8 @@
-body > div {
-	position: fixed;
-	right: 24px;
-	bottom: 24px;
-	width: 400px;
-	height: 250px;
-	border: 1px solid green;
+#extension-root {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  width: 400px;
+  height: 250px;
+  border: 1px solid green;
 }

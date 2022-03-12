@@ -3,12 +3,11 @@ const webpack = require('webpack')
 const { join } = require('path')
 const ReactRefreshTypeScript = require('react-refresh-typescript')
 const ReactRefreshPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const isDevelopment = process.env.NODE_ENV !== 'production'
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
-/** @type {webpack.Configuration} */
-const config = {
-  devtool: 'eval-cheap-source-map',
+/** @returns {webpack.Configuration} */
+const config = (a, env) => ({
+  devtool: env.mode === 'production' ? undefined : 'eval-cheap-source-map',
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
   },
@@ -16,10 +15,7 @@ const config = {
     rules: [
       {
         test: /\.css$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          "css-loader",
-        ],
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
       },
       {
         test: /\.tsx?$/,
@@ -28,7 +24,7 @@ const config = {
           options: {
             transpileOnly: true,
             getCustomTransformers: () => ({
-              before: [isDevelopment && ReactRefreshTypeScript()].filter(Boolean),
+              before: [env.mode === 'development' && ReactRefreshTypeScript()].filter(Boolean),
             }),
           },
         },
@@ -51,10 +47,13 @@ const config = {
   plugins: [
     new MiniCssExtractPlugin(),
     new WebExtension({ background: { entry: 'background' } }),
-    isDevelopment && new ReactRefreshPlugin(),
+    env.mode === 'development' && new ReactRefreshPlugin(),
   ].filter(Boolean),
   devServer: {
     hot: 'only',
   },
-}
+  optimization: {
+    minimize: false
+  }
+})
 module.exports = config
