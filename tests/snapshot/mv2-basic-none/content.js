@@ -84,7 +84,8 @@
 /******/ 	(() => {
 /******/ 		var isBrowser = !!(() => { try { if (typeof browser.runtime.getURL === "function") return true } catch(e) {} })()
 /******/ 		var isChrome = !!(() => { try { if (typeof chrome.runtime.getURL === "function") return true } catch(e) {} })()
-/******/ 		var runtime = isBrowser ? browser : isChrome ? chrome : { get runtime() { throw new Error("No chrome or browser runtime found") } }
+/******/ 		var isChildCompiler = !(typeof self === 'object' && self.addEventListener)
+/******/ 		var runtime = isBrowser ? browser : isChrome ? chrome : isChildCompiler ? { runtime: { getURL(x) { return x } } } : { get runtime() { throw new Error("No chrome or browser runtime found") } }
 /******/ 		var classicLoader = () => {
 /******/ 			throw new Error("No loader for content script is found. You must set output.environment.dynamicImport to enable ES Module loader, or specify the background entry in your webpack config to enable the classic loader.")
 /******/ 		}
@@ -119,7 +120,8 @@
 /******/ 	(() => {
 /******/ 		var isBrowser = !!(() => { try { if (typeof browser.runtime.getURL === "function") return true } catch(e) {} })()
 /******/ 		var isChrome = !!(() => { try { if (typeof chrome.runtime.getURL === "function") return true } catch(e) {} })()
-/******/ 		var runtime = isBrowser ? browser : isChrome ? chrome : { get runtime() { throw new Error("No chrome or browser runtime found") } }
+/******/ 		var isChildCompiler = !(typeof self === 'object' && self.addEventListener)
+/******/ 		var runtime = isBrowser ? browser : isChrome ? chrome : isChildCompiler ? { runtime: { getURL(x) { return x } } } : { get runtime() { throw new Error("No chrome or browser runtime found") } }
 /******/ 		var scriptUrl;
 /******/ 		if (__webpack_require__.g.importScripts) scriptUrl = __webpack_require__.g.location + "";
 /******/ 		var document = __webpack_require__.g.document;
