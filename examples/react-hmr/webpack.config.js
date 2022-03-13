@@ -4,6 +4,7 @@ const { join } = require('path')
 const ReactRefreshTypeScript = require('react-refresh-typescript')
 const ReactRefreshPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 /** @returns {webpack.Configuration} */
 const config = (a, env) => ({
@@ -46,6 +47,7 @@ const config = (a, env) => ({
   },
   plugins: [
     new MiniCssExtractPlugin(),
+    new HtmlWebpackPlugin({ filename: 'options.html', chunks: ['options'] }),
     new WebExtension({ background: { entry: 'background' } }),
     env.mode === 'development' && new ReactRefreshPlugin(),
   ].filter(Boolean),

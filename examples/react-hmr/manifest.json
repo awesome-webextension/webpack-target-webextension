@@ -15,7 +15,7 @@
   ],
   "permissions": ["<all_urls>"],
   "options_ui": {
-    "page": "options.html",
+    "page": "dist/options.html",
     "open_in_tab": true
   }
 }

@@ -6,6 +6,7 @@
     "devDependencies": {
         "@pmmmwh/react-refresh-webpack-plugin": "^0.5.4",
         "css-loader": "^6.6.0",
+        "html-webpack-plugin": "^5.5.0",
         "mini-css-extract-plugin": "^2.5.3",
         "react-refresh": "^0.11.0",
         "react-refresh-typescript": "^2.0.3",
