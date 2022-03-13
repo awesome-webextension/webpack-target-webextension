@@ -82,10 +82,9 @@
 /******/ 	
 /******/ 	/* webpack/runtime/load script */
 /******/ 	(() => {
-/******/ 		var isBrowser = !!(() => { try { if (typeof browser.runtime.getURL === "function") return true } catch(e) {} })()
-/******/ 		var isChrome = !!(() => { try { if (typeof chrome.runtime.getURL === "function") return true } catch(e) {} })()
-/******/ 		var isChildCompiler = !(typeof self === 'object' && self.addEventListener)
-/******/ 		var runtime = isBrowser ? browser : isChrome ? chrome : isChildCompiler ? { runtime: { getURL(x) { return x } } } : { get runtime() { throw new Error("No chrome or browser runtime found") } }
+/******/ 		var noBrowser = !(() => { try { return browser.runtime.getURL("/") } catch(e) {} })()
+/******/ 		var noChrome = !(() => { try { return chrome.runtime.getURL("/") } catch(e) {} })()
+/******/ 		var runtime = noBrowser ? noChrome ? { get runtime() { throw new Error("No chrome or browser runtime found") } } : chrome : browser
 /******/ 		var __send__ = (msg) => {
 /******/ 			if (isBrowser) return runtime.runtime.sendMessage(msg)
 /******/ 			return new Promise(r => runtime.runtime.sendMessage(msg, r))
@@ -130,10 +129,9 @@
 /******/ 	
 /******/ 	/* webpack/runtime/publicPath */
 /******/ 	(() => {
-/******/ 		var isBrowser = !!(() => { try { if (typeof browser.runtime.getURL === "function") return true } catch(e) {} })()
-/******/ 		var isChrome = !!(() => { try { if (typeof chrome.runtime.getURL === "function") return true } catch(e) {} })()
-/******/ 		var isChildCompiler = !(typeof self === 'object' && self.addEventListener)
-/******/ 		var runtime = isBrowser ? browser : isChrome ? chrome : isChildCompiler ? { runtime: { getURL(x) { return x } } } : { get runtime() { throw new Error("No chrome or browser runtime found") } }
+/******/ 		var noBrowser = !(() => { try { return browser.runtime.getURL("/") } catch(e) {} })()
+/******/ 		var noChrome = !(() => { try { return chrome.runtime.getURL("/") } catch(e) {} })()
+/******/ 		var runtime = noBrowser ? noChrome ? { get runtime() { throw new Error("No chrome or browser runtime found") } } : chrome : browser
 /******/ 		var scriptUrl;
 /******/ 		if (__webpack_require__.g.importScripts) scriptUrl = __webpack_require__.g.location + "";
 /******/ 		var document = __webpack_require__.g.document;

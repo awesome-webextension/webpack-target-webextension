@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.3]
+
+Add `weakRuntimeCheck` option to support using with `mini-css-extract-plugin`.
+
 ## [1.0.2]
 
 Fix false positive of browser when a dom id is browser (#28).

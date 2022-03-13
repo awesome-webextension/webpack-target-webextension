@@ -48,14 +48,18 @@ const config = (a, env) => ({
   plugins: [
     new MiniCssExtractPlugin(),
     new HtmlWebpackPlugin({ filename: 'options.html', chunks: ['options'] }),
-    new WebExtension({ background: { entry: 'background' } }),
+    new WebExtension({
+      background: { entry: 'background' },
+      // Remove this if you're not using mini-css-extract-plugin.
+      weakRuntimeCheck: true
+    }),
     env.mode === 'development' && new ReactRefreshPlugin(),
   ].filter(Boolean),
   devServer: {
     hot: 'only',
   },
   optimization: {
-    minimize: false
-  }
+    minimize: false,
+  },
 })
 module.exports = config
