@@ -6,7 +6,7 @@
     "scripts": ["./dist/background.js"]
   },
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self';",
-  "web_accessible_resources": ["/dist/*.json", "/dist/*.js"],
+  "web_accessible_resources": ["/dist/*.json", "/dist/*.js", "/dist/*.css"],
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
@@ -15,7 +15,7 @@
   ],
   "permissions": ["<all_urls>"],
   "options_ui": {
-    "page": "options.html",
+    "page": "dist/options.html",
     "open_in_tab": true
   }
 }

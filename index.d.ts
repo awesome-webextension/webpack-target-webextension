@@ -46,6 +46,13 @@ export interface WebExtensionPluginOptions {
    * @defaultValue true
    */
   hmrConfig?: boolean
+  /**
+   * Use a weak runtime check, in case the code will be evaluated during the compile.
+   *
+   * Enable this option when you're using mini-css-extract-plugin.
+   * @defaultValue false
+   */
+  weakRuntimeCheck?: boolean
 }
 export default class Webpack5 {
   constructor(options?: WebExtensionPluginOptions)
