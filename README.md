@@ -151,4 +151,4 @@ new WebExtensionPlugin({ hmrConfig: false })
 
 ### <a id="options-weakRuntimeCheck"></a>`options`.`weakRuntimeCheck`
 
-If you need to use this plugin with `mini-css-extract-plugin`, please enable this option.
+If you need to use this plugin with `mini-css-extract-plugin` or `HtmlWebpackPlugin`, please enable this option.
