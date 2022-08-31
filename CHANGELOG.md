@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.4]
+
+Fixed [#33](https://github.com/awesome-webextension/webpack-target-webextension/issues/33).
+
 ## [1.0.3]
 
 Add `weakRuntimeCheck` option to support using with `mini-css-extract-plugin`.
