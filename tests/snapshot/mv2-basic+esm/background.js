@@ -254,19 +254,21 @@
 /******/ 		    } catch {}
 /******/ 		
 /******/ 		    if (!file) return;
-/******/ 		    const details = {
-/******/ 		      frameId: sender.frameId,
-/******/ 		      file
-/******/ 		    };
 /******/ 		
 /******/ 		    if (runtime.scripting) {
 /******/ 		      runtime.scripting.executeScript({
 /******/ 		        target: {
-/******/ 		          tabId: sender.tab.id
+/******/ 		          tabId: sender.tab.id,
+/******/ 		          frameIds: [sender.frameId]
 /******/ 		        },
 /******/ 		        files: [file]
 /******/ 		      }).then(sendResponse);
 /******/ 		    } else {
+/******/ 		      const details = {
+/******/ 		        frameId: sender.frameId,
+/******/ 		        file
+/******/ 		      };
+/******/ 		
 /******/ 		      if (isModern) {
 /******/ 		        runtime.tabs.executeScript(sender.tab.id, details).then(sendResponse);
 /******/ 		      } else {
