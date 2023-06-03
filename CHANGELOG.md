@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.5]
+
+Fixed [#36](https://github.com/awesome-webextension/webpack-target-webextension/pull/36).
+
 ## [1.0.4]
 
 Fixed [#33](https://github.com/awesome-webextension/webpack-target-webextension/issues/33).
