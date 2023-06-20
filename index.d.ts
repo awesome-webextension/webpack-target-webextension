@@ -6,8 +6,10 @@ export interface BackgroundOptions {
   /**
    * The entry point of the background scripts
    * in your webpack config.
+   * @deprecated
+   * Use pageEntry and serviceWorkerEntry instead.
    */
-  entry: string
+  entry?: string
   /**
    * Using Manifest V2 or V3.
    *
@@ -15,8 +17,17 @@ export interface BackgroundOptions {
    * the entry you provided will be packed as a Worker.
    *
    * @defaultValue 2
+   * @deprecated
    */
   manifest?: 2 | 3
+  /**
+   * The entry point of the background page.
+   */
+  pageEntry?: string
+  /**
+   * The entry point of the service worker.
+   */
+  serviceWorkerEntry?: string
   /**
    * Only affects in Manifest V3.
    *

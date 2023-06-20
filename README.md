@@ -37,7 +37,6 @@ to make code-splitting work for the content script.
      and [`options.background.classicLoader`](#options-background) is not **false** (defaults to **true**).
    - Example: [./examples/code-splitting-way-2](./examples/code-splitting-way-2)
 3. via `chrome.scripting.executeScript` (Manifest V3)
-   - **Chrome only**.
    - It will fallback to _method 2_ when there is no `chrome.scripting`.
    - Requires `"scripting"` permission in the `manifest.json`.
    - Requires [`options.background`](#options-background) to be configured
@@ -50,7 +49,7 @@ to make code-splitting work for the content script.
 > ⚠ Not working with `"background.type"` set to `"module"` (native ES Module service worker). Tracking issue: [#24](https://github.com/awesome-webextension/webpack-target-webextension/issues/24)
 
 Support code-splitting out of the box,
-but it will load **all** chunks (but not execute them).
+but it will load **all** chunks (without executing them).
 
 See https://bugs.chromium.org/p/chromium/issues/detail?id=1198822 for the reason.
 
@@ -97,17 +96,21 @@ Example:
 
 ```ts
 new WebExtensionPlugin({
-  background: { entry: 'background', manifest: 2 },
+  background: { pageEntry: 'background', serviceWorkerEntry: 'background-worker' },
 })
 ```
 
 ```ts
 export interface BackgroundOptions {
+  /** Undocumented. */
+  noWarningDynamicEntry?: boolean
   /**
    * The entry point of the background scripts
    * in your webpack config.
+   * @deprecated
+   * Use pageEntry and serviceWorkerEntry instead.
    */
-  entry: string
+  entry?: string
   /**
    * Using Manifest V2 or V3.
    *
@@ -115,8 +118,17 @@ export interface BackgroundOptions {
    * the entry you provided will be packed as a Worker.
    *
    * @defaultValue 2
+   * @deprecated
    */
   manifest?: 2 | 3
+  /**
+   * The entry point of the background page.
+   */
+  pageEntry?: string
+  /**
+   * The entry point of the service worker.
+   */
+  serviceWorkerEntry?: string
   /**
    * Only affects in Manifest V3.
    *
