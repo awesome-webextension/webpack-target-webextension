@@ -85,8 +85,12 @@
 /******/ 		var isBrowser = !!(() => { try { return browser.runtime.getURL("/") } catch(e) {} })()
 /******/ 		var isChrome = !!(() => { try { return chrome.runtime.getURL("/") } catch(e) {} })()
 /******/ 		var runtime = isBrowser ? browser : isChrome ? chrome : { get runtime() { throw new Error("No chrome or browser runtime found") } }
-/******/ 		var classicLoader = () => {
-/******/ 			throw new Error("No loader for content script is found. You must set output.environment.dynamicImport to enable ES Module loader, or specify the background entry in your webpack config to enable the classic loader.")
+/******/ 		var __send__ = (msg) => {
+/******/ 			if (isBrowser) return runtime.runtime.sendMessage(msg)
+/******/ 			return new Promise(r => runtime.runtime.sendMessage(msg, r))
+/******/ 		}
+/******/ 		var classicLoader = (url, done, chunkId) => {
+/******/ 			__send__({ type: 'WTW_INJECT', file: url }).then(done, (e) => done(Object.assign(e, { type: 'missing' })))
 /******/ 		}
 /******/ 		var scriptLoader = (url, done, chunkId) => {
 /******/ 			var script = document.createElement('script')
@@ -141,7 +145,7 @@
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
-/******/ 			"content": 0
+/******/ 			"background": 0
 /******/ 		};
 /******/ 		
 /******/ 		__webpack_require__.f.j = (chunkId, promises) => {
@@ -223,15 +227,62 @@
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/chunk loader fallback */
+/******/ 	(() => {
+/******/ 		  const isBrowser = !!(() => {
+/******/ 		    try {
+/******/ 		      if (typeof browser.runtime.getURL === 'function') return true;
+/******/ 		    } catch (err) {}
+/******/ 		  })();
+/******/ 		  const runtime = isBrowser ? browser : chrome;
+/******/ 		  runtime.runtime.onMessage.addListener((message, sender, sendResponse) => {
+/******/ 		    const cond = message && message.type === 'WTW_INJECT' && sender && sender.tab && sender.tab.id != null;
+/******/ 		    if (!cond) return;
+/******/ 		    let file = message.file;
+/******/ 		
+/******/ 		    try {
+/******/ 		      file = new URL(file).pathname;
+/******/ 		    } catch {}
+/******/ 		
+/******/ 		    if (!file) return;
+/******/ 		
+/******/ 		    if (runtime.scripting) {
+/******/ 		      runtime.scripting.executeScript({
+/******/ 		        target: {
+/******/ 		          tabId: sender.tab.id,
+/******/ 		          frameIds: [sender.frameId]
+/******/ 		        },
+/******/ 		        files: [file]
+/******/ 		      }).then(sendResponse);
+/******/ 		    } else {
+/******/ 		      const details = {
+/******/ 		        frameId: sender.frameId,
+/******/ 		        file
+/******/ 		      };
+/******/ 		
+/******/ 		      if (isBrowser) {
+/******/ 		        runtime.tabs.executeScript(sender.tab.id, details).then(sendResponse);
+/******/ 		      } else {
+/******/ 		        runtime.tabs.executeScript(sender.tab.id, details, sendResponse);
+/******/ 		      }
+/******/ 		    }
+/******/ 		
+/******/ 		    return true;
+/******/ 		  });
+/******/ 	})();
+/******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-/*!********************!*\
-  !*** ./content.js ***!
-  \********************/
-__webpack_require__.e(/*! import() */ "log_js").then(__webpack_require__.bind(__webpack_require__, /*! ./log */ "./log.js")).then(({ log }) => {
-  log('this is content script')
-  chrome.runtime.sendMessage('Hi!')
-})
+/*!***********************!*\
+  !*** ./background.js ***!
+  \***********************/
+setTimeout(async () => {
+  const { log } = await __webpack_require__.e(/*! import() */ "log_js").then(__webpack_require__.bind(__webpack_require__, /*! ./log */ "./log.js"))
+  log('this is background script')
+  chrome.runtime.onMessage.addListener((message) => {
+    log(`receive message from content script`, message)
+  })
+}, 200)
 
 /******/ })()
 ;

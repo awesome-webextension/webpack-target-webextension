@@ -24,7 +24,7 @@ module.exports = (folder, output = folder.replace('fixtures', 'snapshot'), modif
     },
     plugins: [
       new WebExtensionPlugin(arg ?? {
-        background: { entry: 'background', manifest: isMV3 ? 3 : 2 },
+        background: { ...(isMV3 ? { serviceWorkerEntry: 'background' } : { pageEntry: 'background' }) },
       }),
       new CopyPlugin({
         patterns: [{ from: manifest, to: 'manifest.json' }],
