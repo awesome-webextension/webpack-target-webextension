@@ -89,17 +89,17 @@
 /******/ 			if (isBrowser) return runtime.runtime.sendMessage(msg)
 /******/ 			return new Promise(r => runtime.runtime.sendMessage(msg, r))
 /******/ 		}
-/******/ 		var classicLoader = (url, done, chunkId) => {
+/******/ 		var classicLoader = (url, done) => {
 /******/ 			__send__({ type: 'WTW_INJECT', file: url }).then(done, (e) => done(Object.assign(e, { type: 'missing' })))
 /******/ 		}
-/******/ 		var scriptLoader = (url, done, chunkId) => {
+/******/ 		var scriptLoader = (url, done) => {
 /******/ 			var script = document.createElement('script')
 /******/ 			script.src = url
 /******/ 			script.onload = done
 /******/ 			script.onerror = done
 /******/ 			document.body.appendChild(script)
 /******/ 		}
-/******/ 		var workerLoader = (url, done, chunkId) => {
+/******/ 		var workerLoader = (url, done) => {
 /******/ 			try { importScripts(url); done() } catch (e) { done(e) }
 /******/ 		}
 /******/ 		var isWorker = typeof importScripts === 'function'
