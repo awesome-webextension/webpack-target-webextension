@@ -180,7 +180,8 @@
 /******/ 		    } else {
 /******/ 		      const details = {
 /******/ 		        frameId: sender.frameId,
-/******/ 		        file
+/******/ 		        file,
+/******/ 		        matchAboutBlank: true
 /******/ 		      };
 /******/ 		
 /******/ 		      if (isBrowser) {
