@@ -1,9 +1,9 @@
 const webpack = require('webpack')
 const config = require('./utils/config')
-test('mv3 basic test', (callback) => {
+test('mv2 + mv3 basic test', (callback) => {
   webpack(
     config(
-      './fixtures/mv3-basic',
+      './fixtures/mv3-both',
       './snapshot/mv3-both',
       (config) => {
         config.entry.backgroundWorker = './background.js'
