@@ -56,14 +56,6 @@ const x = 1
 /******/ 		};
 /******/ 	})();
 /******/ 	
-/******/ 	/* webpack/runtime/ensure chunk */
-/******/ 	(() => {
-/******/ 		// The chunk loading function for additional chunks
-/******/ 		// Since all referenced chunks are already included
-/******/ 		// in this file, this function is empty here.
-/******/ 		__webpack_require__.e = () => (Promise.resolve());
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
 /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
@@ -123,11 +115,6 @@ const x = 1
 /******/ 		
 /******/ 		    return true;
 /******/ 		  });
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/eagerly load chunks */
-/******/ 	(() => {
-/******/ 		__webpack_require__.e("background")
 /******/ 	})();
 /******/ 	
 /************************************************************************/

@@ -197,8 +197,7 @@
 /******/ 	
 /******/ 	/* webpack/runtime/eagerly load chunks */
 /******/ 	(() => {
-/******/ 		__webpack_require__.e("backgroundWorker")
-/******/ 		__webpack_require__.e("log_js")
+/******/ 		__webpack_require__.f.i("log_js")
 /******/ 	})();
 /******/ 	
 /************************************************************************/
