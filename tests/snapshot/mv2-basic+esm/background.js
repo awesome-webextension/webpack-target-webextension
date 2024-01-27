@@ -108,13 +108,13 @@
 /******/ 				}
 /******/ 				catch {
 /******/ 					if (!bug816121warned) {
-/******/ 						console.warn("Chrome bug https://bugs.chromium.org/p/chromium/issues/detail?id=816121 hit.")
+/******/ 						console.warn("Chrome bug https://crbug.com/816121 hit.")
 /******/ 						bug816121warned = true
 /******/ 					}
 /******/ 					return fallbackLoader(url, done, key, chunkId)
 /******/ 				}
 /******/ 			}, (e) => {
-/******/ 				console.warn('jsonp chunk loader failed to use dynamic import.', e)
+/******/ 				console.warn('Dynamic import loader failed. Using fallback loader (see https://github.com/awesome-webextension/webpack-target-webextension#content-script).', e)
 /******/ 				fallbackLoader(url, done, key, chunkId)
 /******/ 			})
 /******/ 		}
