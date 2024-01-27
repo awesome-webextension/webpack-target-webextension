@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.1.1
+
+- Add [a workaround](https://github.com/awesome-webextension/webpack-target-webextension/pull/42) for [a Chrome bug of loading content script in a sandboxed iframe](https://github.com/awesome-webextension/webpack-target-webextension/issues/41).
+- Fix [compatibility with mini-css-extract-plugin in Manifest v3](https://github.com/awesome-webextension/webpack-target-webextension/issues/43)
+- Add a warning if `background.pageEntry` and `background.serviceWorkerEntry` are the same.
+
+  The only chunk loading method `serviceWorkerEntry` supports is  `importScripts` ([ES Module is not supported yet](https://github.com/awesome-webextension/webpack-target-webextension/issues/24)) and `pageEntry` only supports `<script>` or `import()`.
+
+  The chunk loading methods they supported have no intersection, therefore this config is impossible to work. This will be a hard error in the next version.
+
 ## 1.1.0
 
 - Deprecate `background.entry` and `background.manifest` in the config.
