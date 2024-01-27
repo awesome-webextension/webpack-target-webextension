@@ -88,14 +88,14 @@
 /******/ 		var classicLoader = () => {
 /******/ 			throw new Error("No loader for content script is found. You must set output.environment.dynamicImport to enable ES Module loader, or specify the background entry in your webpack config to enable the classic loader.")
 /******/ 		}
-/******/ 		var scriptLoader = (url, done, chunkId) => {
+/******/ 		var scriptLoader = (url, done) => {
 /******/ 			var script = document.createElement('script')
 /******/ 			script.src = url
 /******/ 			script.onload = done
 /******/ 			script.onerror = done
 /******/ 			document.body.appendChild(script)
 /******/ 		}
-/******/ 		var workerLoader = (url, done, chunkId) => {
+/******/ 		var workerLoader = (url, done) => {
 /******/ 			try { importScripts(url); done() } catch (e) { done(e) }
 /******/ 		}
 /******/ 		var isWorker = typeof importScripts === 'function'
