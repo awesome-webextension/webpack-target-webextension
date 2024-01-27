@@ -19,7 +19,10 @@
     "test-ci": "node ./tests/ci.js"
   },
   "main": "index.js",
-  "repository": "https://github.com/crimx/webpack-target-webextension",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/crimx/webpack-target-webextension.git"
+  },
   "author": "CRIMX <straybugs@gmail.com>",
   "maintainers": [
     {
