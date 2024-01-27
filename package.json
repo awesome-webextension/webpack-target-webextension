@@ -46,5 +46,10 @@
   },
   "peerDependencies": {
     "webpack": "^5.0.0"
-  }
+  },
+  "files": [
+    "lib",
+    "index.js",
+    "index.d.ts"
+  ]
 }
