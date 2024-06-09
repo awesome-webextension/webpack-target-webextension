@@ -1,7 +1,11 @@
 import { value } from './shared/constant.js'
 
 const isWorker = typeof importScripts === 'function'
-const isMV3 = typeof chrome === 'object' && chrome.runtime.getManifest().manifest_version === 3
+const isMV3 =
+  typeof chrome === 'object' &&
+  chrome !== null &&
+  typeof chrome.runtime === 'object' &&
+  chrome.runtime.getManifest().manifest_version === 3
 
 if (import.meta.webpackHot) {
   import.meta.webpackHot.accept('./shared/constant.js', () => {

@@ -5,15 +5,18 @@ const { join } = require('path')
 /** @type {webpack.Configuration} */
 const config = {
   entry: {
-    background: join(__dirname, '../src/background.js'),
-    content: join(__dirname, '../src/content.js'),
-    options: join(__dirname, '../src/options.js'),
+    main: join(__dirname, '../src/main.js'),
   },
   optimization: {
-    // minimize: false,
+    minimize: false,
   },
   output: {
     path: join(__dirname, './dist'),
+    // Main world content script must know where they came from.
+    // Replace with your own extension ID. If you want to set this in runtime, see https://webpack.js.org/guides/public-path/
+    // Set it to publicPath: "/dist/" works only for scripts loading and new URL("./asset.txt", import.meta.url) will be broken.
+    publicPath: 'chrome-extension://jknoiechepeohmcaoeehjaecapdplcia/dist/',
+
     // Set output.environment.dynamicImport to true
     // to enable native chunk loading via import()
     // And you need to set

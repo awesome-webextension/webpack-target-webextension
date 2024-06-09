@@ -43,6 +43,13 @@ to make code-splitting work for the content script.
      and [`options.background.classicLoader`](#options-background) is not **false** (defaults to **true**).
    - Example: [./examples/code-splitting-way-3](./examples/code-splitting-way-3)
 
+##### Main world content script
+
+You have to configure the content script in the first way mentioned above (dynamic `import()`).
+
+You also need to set `output.publicPath` manually (like `chrome-extension://jknoiechepeohmcaoeehjaecapdplcia/dist/`, the full URL is necessary).
+
+See Example: [./examples/code-splitting-main-world](./examples/code-splitting-main-world).
 
 #### Background worker (Manifest V3)
 
@@ -51,7 +58,7 @@ to make code-splitting work for the content script.
 Support code-splitting out of the box,
 but it will load **all** chunks (without executing them).
 
-See https://bugs.chromium.org/p/chromium/issues/detail?id=1198822 for the reason.
+See <https://bugs.chromium.org/p/chromium/issues/detail?id=1198822> for the reason.
 
 This fix can be turned off by setting
 [`options.background.eagerChunkLoading`](#options-background) to **false**.
@@ -61,7 +68,7 @@ Example: [./examples/code-splitting-way-3](./examples/code-splitting-way-3)
 ### Hot Module Reload
 
 > ⚠ It's not possible to support HMR for Manifest V3 background worker before
-> this bug is fixed. https://bugs.chromium.org/p/chromium/issues/detail?id=1198822
+> this bug is fixed. <https://bugs.chromium.org/p/chromium/issues/detail?id=1198822>
 
 > ⚠ In content script of Firefox, the HMR WebSocket server might be blocked by the Content Security Policy and prevent the reset of the code to be executed. Please disable hmr if you encountered this problem.
 
