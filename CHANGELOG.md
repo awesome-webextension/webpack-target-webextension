@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.2
+
+- Support main world content script to be bundled. Also added a guide and example for this.
+
 ## 1.1.1
 
 - Add [a workaround](https://github.com/awesome-webextension/webpack-target-webextension/pull/42) for [a Chrome bug of loading content script in a sandboxed iframe](https://github.com/awesome-webextension/webpack-target-webextension/issues/41).
