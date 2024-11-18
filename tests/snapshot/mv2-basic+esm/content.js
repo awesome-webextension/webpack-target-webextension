@@ -95,6 +95,7 @@
 /******/ 			__send__({ type: 'WTW_INJECT', file: url }).then(done, (e) => done(Object.assign(e, { type: 'missing' })))
 /******/ 		}
 /******/ 		var dynamicImportLoader = (url, done, key, chunkId) => {
+/******/ 			if (url.startsWith(__webpack_require__.p)) url = runtime.runtime.getURL(url.slice(__webpack_require__.p.length))
 /******/ 			import(url).then(() => {
 /******/ 				if (isNotIframe) return done()
 /******/ 				try {

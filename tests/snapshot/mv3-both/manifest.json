@@ -19,6 +19,11 @@
       "resources": ["*.js"],
       "matches": ["<all_urls>"],
       "use_dynamic_url": true
+    },
+    {
+      "resources": ["*.txt"],
+      "matches": ["<all_urls>"],
+      "use_dynamic_url": true
     }
   ]
 }
