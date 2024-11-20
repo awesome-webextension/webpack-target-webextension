@@ -13,12 +13,11 @@
   "name": "webextension-target mv3",
   "description": "webextension target test",
   "host_permissions": ["<all_urls>"],
-  "permissions": ["scripting"],
+  "permissions": ["scripting", "tabs"],
   "web_accessible_resources": [
     {
       "resources": ["*.js"],
-      "matches": ["<all_urls>"],
-      "use_dynamic_url": true
+      "matches": ["<all_urls>"]
     }
   ]
 }
