@@ -125,7 +125,7 @@ module.exports = __webpack_require__.p + "ae771fd2ba5e0558da2f.txt";
 /******/ 		var isChrome = !!(() => { try { return chrome.runtime.getURL("/") } catch(e) {} })()
 /******/ 		var runtime = isBrowser ? browser : isChrome ? chrome : { get runtime() { throw new Error("No chrome or browser runtime found") } }
 /******/ 		var classicLoader = () => {
-/******/ 			throw new Error("[webpack-target-webextension] Failed to load async chunk in the content script. No script loader is found. You can either\n - Set output.environment.dynamicImport to true if your environment supports native ES Module\n - Specify the background entry to enable the fallback loader\n - Set module.parser.javascript.dynamicImportMode to 'eager' to inline all async chunk")
+/******/ 			throw new Error("[webpack-target-webextension] Failed to load async chunk in the content script. No script loader is found. You can either\n - Set output.environment.dynamicImport to true if your environment supports native ES Module\n - Specify the background entry to enable the fallback loader\n - Set module.parser.javascript.dynamicImportMode to 'eager' to inline all async chunks.")
 /******/ 		}
 /******/ 		var scriptLoader = (url, done) => {
 /******/ 			var script = document.createElement('script')
