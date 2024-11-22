@@ -80,12 +80,25 @@ module.exports = __webpack_require__.p + "ae771fd2ba5e0558da2f.txt";
 /******/ 		};
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/ensure chunk */
+/******/ 	(() => {
+/******/ 		__webpack_require__.f = {};
+/******/ 		// This file contains only the entry chunk.
+/******/ 		// The chunk loading function for additional chunks
+/******/ 		__webpack_require__.e = (chunkId) => {
+/******/ 			return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
+/******/ 				__webpack_require__.f[key](chunkId, promises);
+/******/ 				return promises;
+/******/ 			}, []));
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
 /******/ 	(() => {
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames based on template
-/******/ 			return "chunks-" + "2b53a3476bf32db54300" + ".js";
+/******/ 			return "chunks-" + "50f31a9487b49be79acc" + ".js";
 /******/ 		};
 /******/ 	})();
 /******/ 	
@@ -138,120 +151,83 @@ module.exports = __webpack_require__.p + "ae771fd2ba5e0558da2f.txt";
 /******/ 		__webpack_require__.p = scriptUrl;
 /******/ 	})();
 /******/ 	
-/******/ 	/* webpack/runtime/jsonp chunk loading */
+/******/ 	/* webpack/runtime/importScripts chunk loading */
 /******/ 	(() => {
-/******/ 		__webpack_require__.b = document.baseURI || self.location.href;
+/******/ 		__webpack_require__.b = self.location + "";
 /******/ 		
-/******/ 		// object to store loaded and loading chunks
-/******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
-/******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
+/******/ 		// object to store loaded chunks
+/******/ 		// "1" means "already loaded"
 /******/ 		var installedChunks = {
-/******/ 			"background": 0
+/******/ 			"worker_js": 1
 /******/ 		};
 /******/ 		
-/******/ 		// no chunk on demand loading
+/******/ 		// importScripts chunk loading
+/******/ 		var installChunk = (data) => {
+/******/ 			var [chunkIds, moreModules, runtime] = data;
+/******/ 			for(var moduleId in moreModules) {
+/******/ 				if(__webpack_require__.o(moreModules, moduleId)) {
+/******/ 					__webpack_require__.m[moduleId] = moreModules[moduleId];
+/******/ 				}
+/******/ 			}
+/******/ 			if(runtime) runtime(__webpack_require__);
+/******/ 			while(chunkIds.length)
+/******/ 				installedChunks[chunkIds.pop()] = 1;
+/******/ 			parentChunkLoadingFunction(data);
+/******/ 		};
+/******/ 		__webpack_require__.f.i = (chunkId, promises) => {
+/******/ 			// "1" is the signal for "already loaded"
+/******/ 			if(!installedChunks[chunkId]) {
+/******/ 				if(true) { // all chunks have JS
+/******/ 					importScripts(__webpack_require__.p + __webpack_require__.u(chunkId));
+/******/ 				}
+/******/ 			}
+/******/ 		};
 /******/ 		
-/******/ 		// no prefetching
-/******/ 		
-/******/ 		// no preloaded
+/******/ 		var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+/******/ 		var parentChunkLoadingFunction = chunkLoadingGlobal.push.bind(chunkLoadingGlobal);
+/******/ 		chunkLoadingGlobal.push = installChunk;
 /******/ 		
 /******/ 		// no HMR
 /******/ 		
 /******/ 		// no HMR manifest
-/******/ 		
-/******/ 		// no on chunks loaded
-/******/ 		
-/******/ 		// no jsonp function
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/chunk loader fallback */
-/******/ 	(() => {
-/******/ 		  const isBrowser = !!(() => {
-/******/ 		    try {
-/******/ 		      if (typeof browser.runtime.getURL === 'function') return true
-/******/ 		    } catch (err) { }
-/******/ 		  })()
-/******/ 		  const runtime = isBrowser ? browser : chrome
-/******/ 		  runtime.runtime.onMessage.addListener((message, sender, sendResponse) => {
-/******/ 		    const cond = message && message.type === 'WTW_INJECT' && sender && sender.tab && sender.tab.id != null
-/******/ 		    if (!cond) return
-/******/ 		    let file = message.file
-/******/ 		    try {
-/******/ 		      file = new URL(file).pathname
-/******/ 		    } catch {}
-/******/ 		    if (!file) return
-/******/ 		    if (runtime.scripting) {
-/******/ 		      runtime.scripting
-/******/ 		        .executeScript({
-/******/ 		          target: { tabId: sender.tab.id, frameIds: [sender.frameId] },
-/******/ 		          files: [file],
-/******/ 		        })
-/******/ 		        .then(sendResponse)
-/******/ 		    } else {
-/******/ 		      const details = { frameId: sender.frameId, file, matchAboutBlank: true }
-/******/ 		      if (isBrowser) {
-/******/ 		        runtime.tabs.executeScript(sender.tab.id, details).then(sendResponse)
-/******/ 		      } else {
-/******/ 		        runtime.tabs.executeScript(sender.tab.id, details, sendResponse)
-/******/ 		      }
-/******/ 		    }
-/******/ 		    return true
-/******/ 		  })
 /******/ 	})();
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
 // This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
-/*!***********************!*\
-  !*** ./background.js ***!
-  \***********************/
+/*!*******************!*\
+  !*** ./worker.js ***!
+  \*******************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util.js */ "./util.js");
-/// <reference lib="dom" />
-// @ts-check
 
 
+let event
+addEventListener('message', (e) => (event = e))
 
 Promise.resolve()
   .then(
-    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Test A: import.meta.url', () => {
+    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Worker Test A: import.meta.url', () => {
       const url = new URL(/* asset import */ __webpack_require__(/*! ./test.txt */ "./test.txt"), __webpack_require__.b).toString()
       ;(0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)(url.includes('-extension://'), "new URL('./test.txt', import.meta.url)\n", url)
     })
   )
   .then(
-    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Test B: __webpack_public_path__', () => {
-      (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)(__webpack_require__.p.includes('-extension://'), '__webpack_public_path__\n', __webpack_require__.p)
+    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Worker Test B: dynamic import', async () => {
+      console.log("await import('./log.js')\n")
+      const mod = await __webpack_require__.e(/*! import() */ "log_js").then(__webpack_require__.bind(__webpack_require__, /*! ./log.js */ "./log.js"))
+      ;(0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)('file' in mod, mod)
     })
   )
+  .then(() => new Promise((resolve) => setTimeout(resolve, 100)))
   .then(
-    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Test C: new Worker()', async () => {
-      if (typeof Worker === 'undefined') {
-        console.log('Worker is not supported.')
-        return
-      }
-      console.log('new Worker(new URL("./worker", import.meta.url))')
-      const worker = new Worker(new URL(/* worker import */ __webpack_require__.p + __webpack_require__.u("worker_js"), __webpack_require__.b))
-      worker.postMessage('Hello from background!')
-      const messageFromWorker = await new Promise((resolve, reject) => {
-        worker.onerror = reject
-        worker.onmessage = (event) => {
-          resolve(event.data)
-        }
-      })
-      ;(0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)(messageFromWorker === 'Hello from worker!', messageFromWorker)
+    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Worker Test C: message from background', () => {
+      (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)(event?.data === 'Hello from background!', event.data)
     })
   )
-  .then(() => {
-    setInterval(() => {
-      chrome.tabs.query({}, (tabs) => {
-        tabs.forEach((tab) => chrome.tabs.sendMessage(tab.id, 'Hello from background!'))
-      })
-    }, 1000)
-    chrome.runtime.onMessage.addListener((message) => {
-      console.log(`Message from content script:`, message)
-    })
+  .finally(() => {
+    postMessage('Hello from worker!')
   })
 
 })();

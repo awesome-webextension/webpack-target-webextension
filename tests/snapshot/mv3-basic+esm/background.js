@@ -196,45 +196,35 @@ module.exports = __webpack_require__.p + "ae771fd2ba5e0558da2f.txt";
 /******/ 	(() => {
 /******/ 		  const isBrowser = !!(() => {
 /******/ 		    try {
-/******/ 		      if (typeof browser.runtime.getURL === 'function') return true;
-/******/ 		    } catch (err) {}
-/******/ 		  })();
-/******/ 		  const runtime = isBrowser ? browser : chrome;
+/******/ 		      if (typeof browser.runtime.getURL === 'function') return true
+/******/ 		    } catch (err) { }
+/******/ 		  })()
+/******/ 		  const runtime = isBrowser ? browser : chrome
 /******/ 		  runtime.runtime.onMessage.addListener((message, sender, sendResponse) => {
-/******/ 		    const cond = message && message.type === 'WTW_INJECT' && sender && sender.tab && sender.tab.id != null;
-/******/ 		    if (!cond) return;
-/******/ 		    let file = message.file;
-/******/ 		
+/******/ 		    const cond = message && message.type === 'WTW_INJECT' && sender && sender.tab && sender.tab.id != null
+/******/ 		    if (!cond) return
+/******/ 		    let file = message.file
 /******/ 		    try {
-/******/ 		      file = new URL(file).pathname;
+/******/ 		      file = new URL(file).pathname
 /******/ 		    } catch {}
-/******/ 		
-/******/ 		    if (!file) return;
-/******/ 		
+/******/ 		    if (!file) return
 /******/ 		    if (runtime.scripting) {
-/******/ 		      runtime.scripting.executeScript({
-/******/ 		        target: {
-/******/ 		          tabId: sender.tab.id,
-/******/ 		          frameIds: [sender.frameId]
-/******/ 		        },
-/******/ 		        files: [file]
-/******/ 		      }).then(sendResponse);
+/******/ 		      runtime.scripting
+/******/ 		        .executeScript({
+/******/ 		          target: { tabId: sender.tab.id, frameIds: [sender.frameId] },
+/******/ 		          files: [file],
+/******/ 		        })
+/******/ 		        .then(sendResponse)
 /******/ 		    } else {
-/******/ 		      const details = {
-/******/ 		        frameId: sender.frameId,
-/******/ 		        file,
-/******/ 		        matchAboutBlank: true
-/******/ 		      };
-/******/ 		
+/******/ 		      const details = { frameId: sender.frameId, file, matchAboutBlank: true }
 /******/ 		      if (isBrowser) {
-/******/ 		        runtime.tabs.executeScript(sender.tab.id, details).then(sendResponse);
+/******/ 		        runtime.tabs.executeScript(sender.tab.id, details).then(sendResponse)
 /******/ 		      } else {
-/******/ 		        runtime.tabs.executeScript(sender.tab.id, details, sendResponse);
+/******/ 		        runtime.tabs.executeScript(sender.tab.id, details, sendResponse)
 /******/ 		      }
 /******/ 		    }
-/******/ 		
-/******/ 		    return true;
-/******/ 		  });
+/******/ 		    return true
+/******/ 		  })
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/eagerly load chunks */

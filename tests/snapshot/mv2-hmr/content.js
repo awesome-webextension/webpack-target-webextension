@@ -98,7 +98,7 @@ module.exports = __webpack_require__.p + "ae771fd2ba5e0558da2f.txt";
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames based on template
-/******/ 			return "chunks-" + {"log_js":"50f31a9487b49be79acc","worker_js":"2c43a4d1adbfa9c4bdda"}[chunkId] + ".js";
+/******/ 			return "chunks-" + "50f31a9487b49be79acc" + ".js";
 /******/ 		};
 /******/ 	})();
 /******/ 	
@@ -124,38 +124,12 @@ module.exports = __webpack_require__.p + "ae771fd2ba5e0558da2f.txt";
 /******/ 		var isBrowser = !!(() => { try { return browser.runtime.getURL("/") } catch(e) {} })()
 /******/ 		var isChrome = !!(() => { try { return chrome.runtime.getURL("/") } catch(e) {} })()
 /******/ 		var runtime = isBrowser ? browser : isChrome ? chrome : { get runtime() { throw new Error("No chrome or browser runtime found") } }
-/******/ 		var bug816121warned, isNotIframe
-/******/ 		try { isNotIframe = typeof window === "object" ? window.top === window : true } catch(e) { isInIframe = false /* CORS error */ }
 /******/ 		var __send__ = (msg) => {
 /******/ 			if (isBrowser) return runtime.runtime.sendMessage(msg)
 /******/ 			return new Promise(r => runtime.runtime.sendMessage(msg, r))
 /******/ 		}
 /******/ 		var classicLoader = (url, done) => {
 /******/ 			__send__({ type: 'WTW_INJECT', file: url }).then(done, (e) => done(Object.assign(e, { type: 'missing' })))
-/******/ 		}
-/******/ 		var dynamicImportLoader = (url, done, key, chunkId) => {
-/******/ 			import(url).then(() => {
-/******/ 				if (isNotIframe) return done()
-/******/ 				try {
-/******/ 					// It's a Chrome bug, if the import() is called in a sandboxed iframe, it _fails_ the script loading but _resolve_ the Promise.
-/******/ 					// we call __webpack_require__.f.j(chunkId) to check if it is loaded.
-/******/ 					// if it is, this is a no-op. if it is not, it will throw a TypeError because this function requires 2 parameters.
-/******/ 					// This call will not trigger the chunk loading because it is already loading.
-/******/ 					// see https://github.com/awesome-webextension/webpack-target-webextension/issues/41
-/******/ 					chunkId !== undefined && __webpack_require__.f.j(chunkId)
-/******/ 					done()
-/******/ 				}
-/******/ 				catch {
-/******/ 					if (!bug816121warned) {
-/******/ 						console.warn("Chrome bug https://crbug.com/816121 hit.")
-/******/ 						bug816121warned = true
-/******/ 					}
-/******/ 					return fallbackLoader(url, done, key, chunkId)
-/******/ 				}
-/******/ 			}, (e) => {
-/******/ 				console.warn('Dynamic import loader failed. Using fallback loader (see https://github.com/awesome-webextension/webpack-target-webextension#content-script).', e)
-/******/ 				fallbackLoader(url, done, key, chunkId)
-/******/ 			})
 /******/ 		}
 /******/ 		var scriptLoader = (url, done) => {
 /******/ 			var script = document.createElement('script')
@@ -171,8 +145,6 @@ module.exports = __webpack_require__.p + "ae771fd2ba5e0558da2f.txt";
 /******/ 		if (typeof location === 'object' && location.protocol.includes('-extension:')) __webpack_require__.l = isWorker ? workerLoader : scriptLoader
 /******/ 		else if (!isWorker) __webpack_require__.l = classicLoader
 /******/ 		else { throw new TypeError('Unable to determinate the chunk loader: content script + Worker') }
-/******/ 		var fallbackLoader = __webpack_require__.l
-/******/ 		__webpack_require__.l = dynamicImportLoader
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
@@ -215,7 +187,7 @@ module.exports = __webpack_require__.p + "ae771fd2ba5e0558da2f.txt";
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
-/******/ 			"background": 0
+/******/ 			"content": 0
 /******/ 		};
 /******/ 		
 /******/ 		__webpack_require__.f.j = (chunkId, promises) => {
@@ -297,48 +269,13 @@ module.exports = __webpack_require__.p + "ae771fd2ba5e0558da2f.txt";
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
 /******/ 	
-/******/ 	/* webpack/runtime/chunk loader fallback */
-/******/ 	(() => {
-/******/ 		  const isBrowser = !!(() => {
-/******/ 		    try {
-/******/ 		      if (typeof browser.runtime.getURL === 'function') return true
-/******/ 		    } catch (err) { }
-/******/ 		  })()
-/******/ 		  const runtime = isBrowser ? browser : chrome
-/******/ 		  runtime.runtime.onMessage.addListener((message, sender, sendResponse) => {
-/******/ 		    const cond = message && message.type === 'WTW_INJECT' && sender && sender.tab && sender.tab.id != null
-/******/ 		    if (!cond) return
-/******/ 		    let file = message.file
-/******/ 		    try {
-/******/ 		      file = new URL(file).pathname
-/******/ 		    } catch {}
-/******/ 		    if (!file) return
-/******/ 		    if (runtime.scripting) {
-/******/ 		      runtime.scripting
-/******/ 		        .executeScript({
-/******/ 		          target: { tabId: sender.tab.id, frameIds: [sender.frameId] },
-/******/ 		          files: [file],
-/******/ 		        })
-/******/ 		        .then(sendResponse)
-/******/ 		    } else {
-/******/ 		      const details = { frameId: sender.frameId, file, matchAboutBlank: true }
-/******/ 		      if (isBrowser) {
-/******/ 		        runtime.tabs.executeScript(sender.tab.id, details).then(sendResponse)
-/******/ 		      } else {
-/******/ 		        runtime.tabs.executeScript(sender.tab.id, details, sendResponse)
-/******/ 		      }
-/******/ 		    }
-/******/ 		    return true
-/******/ 		  })
-/******/ 	})();
-/******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
 // This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
-/*!***********************!*\
-  !*** ./background.js ***!
-  \***********************/
+/*!********************!*\
+  !*** ./content.js ***!
+  \********************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util.js */ "./util.js");
 /// <reference lib="dom" />
@@ -365,32 +302,10 @@ Promise.resolve()
       ;(0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)('file' in mod, mod)
     })
   )
-  .then(
-    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Test D: new Worker()', async () => {
-      if (typeof Worker === 'undefined') {
-        console.log('Worker is not supported.')
-        return
-      }
-      console.log('new Worker(new URL("./worker", import.meta.url))')
-      const worker = new Worker(new URL(/* worker import */ __webpack_require__.p + __webpack_require__.u("worker_js"), __webpack_require__.b))
-      worker.postMessage('Hello from background!')
-      const messageFromWorker = await new Promise((resolve, reject) => {
-        worker.onerror = reject
-        worker.onmessage = (event) => {
-          resolve(event.data)
-        }
-      })
-      ;(0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)(messageFromWorker === 'Hello from worker!', messageFromWorker)
-    })
-  )
   .then(() => {
-    setInterval(() => {
-      chrome.tabs.query({}, (tabs) => {
-        tabs.forEach((tab) => chrome.tabs.sendMessage(tab.id, 'Hello from background!'))
-      })
-    }, 1000)
+    chrome.runtime.sendMessage('Hello from content script!')
     chrome.runtime.onMessage.addListener((message) => {
-      console.log(`Message from content script:`, message)
+      console.log(`Message from background:`, message)
     })
   })
 

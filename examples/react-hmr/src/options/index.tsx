@@ -1,10 +1,9 @@
 import './options.css'
-import { render } from 'react-dom'
-import { App } from './App'
+import { createRoot } from 'react-dom/client'
 
 setTimeout(initial, 1000)
 function initial() {
   const root = document.createElement('div')
   document.body.appendChild(root)
-  render(<App />, root)
+  createRoot(root).render(<h1 />)
 }

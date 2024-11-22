@@ -49,9 +49,9 @@ const config = (a, env) => ({
     new MiniCssExtractPlugin(),
     new HtmlWebpackPlugin({ filename: 'options.html', chunks: ['options'] }),
     new WebExtension({
-      background: { entry: 'background' },
+      background: { serviceWorkerEntry: 'background' },
       // Remove this if you're not using mini-css-extract-plugin.
-      weakRuntimeCheck: true
+      weakRuntimeCheck: true,
     }),
     env.mode === 'development' && new ReactRefreshPlugin(),
   ].filter(Boolean),

@@ -1,23 +1,25 @@
-const webpack = require('webpack')
-const rspack = require('@rspack/core')
-const { join } = require('path')
-const WebExtensionPlugin = require('../../index').default
-const CopyPlugin = require('copy-webpack-plugin')
+import webpack from 'webpack'
+import * as rspack from '@rspack/core'
+import { join } from 'path'
+import { fileURLToPath } from 'url'
+import WebExtensionPlugin from '../../index.js'
+import CopyPlugin from 'copy-webpack-plugin'
 
+const __dirname = join(fileURLToPath(import.meta.url), '..')
 /**
  * @typedef {Object} Run
- * @property {() => void} done - The callback function.
  * @property {string} input - The input path.
  * @property {string} output - The output path.
- * @property {(config: import('webpack').Configuration) => void} [touch] - Change the default option.
- * @property {import('../../index').WebExtensionPluginOptions} option - Option of WebExtensionPluginOptions.
+ * @property {(config: import('webpack').Configuration | import('@rspack/core').Configuration, isRspack: boolean) => void} [touch] - Change the default option.
+ * @property {import('../../index.js').WebExtensionPluginOptions} option - Option of WebExtensionPluginOptions.
  * @property {(manifest: any) => void} [touchManifest] - Change the manifest file.
  */
 
-/**
- * @param {Run} param0
- */
-module.exports = ({ done, input, output, option, touch, touchManifest }) => {
+export function run(
+  /**
+   * @type {Run} param0
+   */ { input, output, option, touch, touchManifest }
+) {
   const isMV3 = output.includes('mv3')
   const manifest = join(__dirname, isMV3 ? '../fixtures/manifest-mv3.json' : '../fixtures/manifest-mv2.json')
   const copyPluginOptions = {
@@ -49,25 +51,25 @@ module.exports = ({ done, input, output, option, touch, touchManifest }) => {
     },
     plugins: [new WebExtensionPlugin(option), new CopyPlugin(copyPluginOptions)],
   }
-  touch && touch(config)
+  touch && touch(config, false)
 
   /** @type {import('webpack').Configuration} */
   const rspackConfig = {
     ...config,
     module: { parser: { javascript: { dynamicImportMode: 'eager' } } },
     output: {
+      ...config.output,
       path: join(__dirname, '../', output + '-rspack'),
-      clean: true,
-      chunkFilename: 'chunks-[chunkhash].js',
     },
     plugins: [new WebExtensionPlugin(option), new rspack.CopyRspackPlugin(copyPluginOptions)],
   }
+  touch && touch(rspackConfig, true)
 
-  Promise.all([
+  return Promise.all([
     //
     compile(webpack(config)),
     compile(rspack.rspack(rspackConfig)),
-  ]).then(() => done(), done)
+  ])
 }
 /**
  * @param {webpack.Compiler | rspack.Compiler} compiler

@@ -116,7 +116,7 @@ __webpack_require__.p = "";
 // webpack/runtime/rspack_version
 (() => {
 __webpack_require__.rv = function () {
-	return "1.1.1";
+	return "1.1.3";
 };
 
 })();
@@ -148,7 +148,7 @@ var installedChunks = {"worker_js": 1,};
 })();
 // webpack/runtime/rspack_unique_id
 (() => {
-__webpack_require__.ruid = "bundler=rspack@1.1.1";
+__webpack_require__.ruid = "bundler=rspack@1.1.3";
 
 })();
 /************************************************************************/
