@@ -1,6 +1,7 @@
 import { Compiler } from 'webpack'
 
 export interface BackgroundOptions {
+  // TODO: rename to noDynamicEntryWarning
   /** Undocumented. */
   noWarningDynamicEntry?: boolean
   /**
@@ -35,6 +36,8 @@ export interface BackgroundOptions {
    * to workaround the chrome bug
    * https://bugs.chromium.org/p/chromium/issues/detail?id=1198822.
    *
+   * NOT working for rspack.
+   *
    * @defaultValue true
    */
   eagerChunkLoading?: boolean
@@ -57,10 +60,6 @@ export interface WebExtensionPluginOptions {
    * @defaultValue true
    */
   hmrConfig?: boolean
-  /**
-   * Undocumented. For rspack.
-   */
-  noRspackDynamicImportModeWarning?: boolean
   /**
    * Use a weak runtime check, in case the code will be evaluated during the compile.
    *

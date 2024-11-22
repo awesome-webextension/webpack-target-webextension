@@ -32,8 +32,6 @@ export default (_, env) => {
       extensions: ['...', '.ts', '.tsx', '.jsx'],
     },
     module: {
-      // rspack only
-      parser: { javascript: { dynamicImportMode: 'eager' } },
       rules: [
         {
           test: /\.(jsx?|tsx?)$/,
@@ -70,9 +68,6 @@ export default (_, env) => {
     },
     experiments: {
       css: true,
-    },
-    devServer: {
-      liveReload: false,
     },
   })
 }
