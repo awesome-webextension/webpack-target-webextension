@@ -1,26 +1,15 @@
 import { Compiler } from 'webpack'
 
 export interface BackgroundOptions {
-  // TODO: rename to noDynamicEntryWarning
   /** Undocumented. */
-  noWarningDynamicEntry?: boolean
+  noDynamicEntryWarning?: boolean
   /**
-   * The entry point of the background scripts
-   * in your webpack config.
    * @deprecated
-   * Use pageEntry and serviceWorkerEntry instead.
+   * Use pageEntry and/or serviceWorkerEntry instead.
    */
-  entry?: string
-  /**
-   * Using Manifest V2 or V3.
-   *
-   * If using Manifest V3,
-   * the entry you provided will be packed as a Worker.
-   *
-   * @defaultValue 2
-   * @deprecated
-   */
-  manifest?: 2 | 3
+  entry?: never
+  /** @deprecated */
+  manifest?: never
   /**
    * The entry point of the background page.
    */

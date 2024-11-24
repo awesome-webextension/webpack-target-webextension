@@ -6,5 +6,8 @@ execSync('yarn test', { cwd, env: { ...process.env, CI: 'true' } })
 
 if (execSync('git diff', { cwd }).length) {
   execSync('git diff', { cwd, stdio: 'inherit' })
-  throw new Error(`No files should be changed after CI test. Please update snapshot locally.`)
+  setTimeout(() => {
+    console.error(`No files should be changed after CI test. Please update snapshot locally.`)
+    process.exit(1)
+  }, 1000)
 }

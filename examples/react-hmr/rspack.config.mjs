@@ -59,7 +59,6 @@ export default (_, env) => {
       }),
       new WebExtension({
         background: { pageEntry: 'background' },
-        // Remove this if you're not using mini-css-extract-plugin.
       }),
       isProduction ? null : new RefreshPlugin(),
     ].filter(Boolean),

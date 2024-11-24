@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.0.0
+
+- Minimal Node.js requirement changed from 14.17.16 to 18.20.5
+- Deprecated option `BackgroundOptions.entry` is removed. Use `pageEntry` and/or `serviceWorkerEntry` instead.
+- Deprecated option `BackgroundOptions.manifest` is removed.
+- Option `noWarningDynamicEntry` has been renamed to `noDynamicEntryWarning`.
+
 ## 1.1.2
 
 - Support main world content script to be bundled. Also added a guide and example for this.

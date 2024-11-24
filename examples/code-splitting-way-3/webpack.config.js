@@ -21,9 +21,7 @@ const config = {
   plugins: [
     new WebExtension({
       background: {
-        entry: 'background',
-        // !! Add this to support manifest v3
-        manifest: 3,
+        serviceWorkerEntry: 'background',
       },
     }),
   ],
