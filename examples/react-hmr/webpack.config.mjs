@@ -1,15 +1,17 @@
-import { dirname, join } from 'node:path'
-import { fileURLToPath } from 'node:url'
-import { defineConfig } from '@rspack/cli'
-import { rspack } from '@rspack/core'
-import RefreshPlugin from '@rspack/plugin-react-refresh'
 import WebExtension from 'webpack-target-webextension'
+import CopyPlugin from 'copy-webpack-plugin'
+import webpack from 'webpack'
+import { dirname, join } from 'path'
+import ReactRefreshPlugin from '@pmmmwh/react-refresh-webpack-plugin'
+import HtmlWebpackPlugin from 'html-webpack-plugin'
+import { fileURLToPath } from 'url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
-export default (_, env) => {
+/** @returns {webpack.Configuration} */
+const config = (_, env) => {
   const isProduction = env.mode === 'production'
-  return defineConfig({
+  return {
     devtool: 'source-map',
     context: __dirname,
     output: {
@@ -33,7 +35,7 @@ export default (_, env) => {
           test: /\.(jsx?|tsx?)$/,
           use: [
             {
-              loader: 'builtin:swc-loader',
+              loader: 'swc-loader',
               options: {
                 jsc: {
                   parser: { syntax: 'typescript', tsx: true },
@@ -49,16 +51,17 @@ export default (_, env) => {
       ],
     },
     plugins: [
-      new rspack.HtmlRspackPlugin({ filename: 'options.html', chunks: ['options'] }),
-      new rspack.CopyRspackPlugin({
+      new HtmlWebpackPlugin({ filename: 'options.html', chunks: ['options'] }),
+      new CopyPlugin({
         patterns: [{ from: 'manifest.json' }],
       }),
       new WebExtension({
         background: { serviceWorkerEntry: 'background' },
       }),
-      isProduction ? null : new RefreshPlugin(),
+      isProduction ? null : new ReactRefreshPlugin(),
     ].filter(Boolean),
     optimization: { minimizer: [false] },
     experiments: { css: true },
-  })
+  }
 }
+export default config

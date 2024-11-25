@@ -135,21 +135,21 @@ __webpack_require__.d = function(exports, definition) {
 // webpack/runtime/get_chunk_update_filename
 (() => {
 __webpack_require__.hu = function (chunkId) {
-            return '' + chunkId + '.' + __webpack_require__.h() + '.hot-update.js';
+            return 'hot/' + chunkId + '.' + __webpack_require__.h() + '.js';
          };
         
 })();
 // webpack/runtime/get_full_hash
 (() => {
 __webpack_require__.h = function () {
-	return "7ad344d332efe111";
+	return "2a7954469ac359e9";
 };
 
 })();
 // webpack/runtime/get_main_filename/update manifest
 (() => {
 __webpack_require__.hmrF = function () {
-            return "762259432e9652fe." + __webpack_require__.h() + ".hot-update.json";
+            return "hot/762259432e9652fe." + __webpack_require__.h() + ".json";
          };
         
 })();

@@ -137,21 +137,21 @@ __webpack_require__.d = function(exports, definition) {
 // webpack/runtime/get_chunk_update_filename
 (() => {
 __webpack_require__.hu = function (chunkId) {
-            return '' + chunkId + '.' + __webpack_require__.h() + '.hot-update.js';
+            return 'hot/' + chunkId + '.' + __webpack_require__.h() + '.js';
          };
         
 })();
 // webpack/runtime/get_full_hash
 (() => {
 __webpack_require__.h = function () {
-	return "7ad344d332efe111";
+	return "2a7954469ac359e9";
 };
 
 })();
 // webpack/runtime/get_main_filename/update manifest
 (() => {
 __webpack_require__.hmrF = function () {
-            return "content." + __webpack_require__.h() + ".hot-update.json";
+            return "hot/content." + __webpack_require__.h() + ".json";
          };
         
 })();
@@ -545,12 +545,38 @@ function applyInvalidatedModules() {
 var isBrowser = !!(() => { try { return browser.runtime.getURL("/") } catch(e) {} })()
 var isChrome = !!(() => { try { return chrome.runtime.getURL("/") } catch(e) {} })()
 var runtime = isBrowser ? browser : isChrome ? chrome : { get runtime() { throw new Error("No chrome or browser runtime found") } }
+var bug816121warned, isNotIframe
+try { isNotIframe = typeof window === "object" ? window.top === window : true } catch(e) { isInIframe = false /* CORS error */ }
 var __send__ = (msg) => {
 	if (isBrowser) return runtime.runtime.sendMessage(msg)
 	return new Promise(r => runtime.runtime.sendMessage(msg, r))
 }
 var classicLoader = (url, done) => {
 	__send__({ type: 'WTW_INJECT', file: url }).then(done, (e) => done(Object.assign(e, { type: 'missing' })))
+}
+var dynamicImportLoader = (url, done, key, chunkId) => {
+	import(url).then(() => {
+		if (isNotIframe) return done()
+		try {
+			// It's a Chrome bug, if the import() is called in a sandboxed iframe, it _fails_ the script loading but _resolve_ the Promise.
+			// we call __webpack_require__.f.j(chunkId) to check if it is loaded.
+			// if it is, this is a no-op. if it is not, it will throw a TypeError because this function requires 2 parameters.
+			// This call will not trigger the chunk loading because it is already loading.
+			// see https://github.com/awesome-webextension/webpack-target-webextension/issues/41
+			chunkId !== undefined && __webpack_require__.f.j(chunkId)
+			done()
+		}
+		catch {
+			if (!bug816121warned) {
+				console.warn("Chrome bug https://crbug.com/816121 hit.")
+				bug816121warned = true
+			}
+			return fallbackLoader(url, done, key, chunkId)
+		}
+	}, (e) => {
+		console.warn('Dynamic import loader failed. Using fallback loader (see https://github.com/awesome-webextension/webpack-target-webextension#content-script).', e)
+		fallbackLoader(url, done, key, chunkId)
+	})
 }
 var scriptLoader = (url, done) => {
 	var script = document.createElement('script')
@@ -566,6 +592,8 @@ var isWorker = typeof importScripts === 'function'
 if (typeof location === 'object' && location.protocol.includes('-extension:')) __webpack_require__.l = isWorker ? workerLoader : scriptLoader
 else if (!isWorker) __webpack_require__.l = classicLoader
 else { throw new TypeError('Unable to determinate the chunk loader: content script + Worker') }
+var fallbackLoader = __webpack_require__.l
+__webpack_require__.l = dynamicImportLoader
 var finalLoader = __webpack_require__.l
 Object.defineProperty(__webpack_require__, "l", { configurable: true, get() { return finalLoader }, set() {} })
 })();

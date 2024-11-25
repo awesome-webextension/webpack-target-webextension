@@ -1,13 +1,10 @@
-- TODO: let's set output.environment.dynamicImport to `true` by default.
-- TODO: let's set hmr file names by default.
-
 # webpack-target-webextension
 
 [![npm-version](https://img.shields.io/npm/v/webpack-target-webextension.svg)](https://www.npmjs.com/package/webpack-target-webextension)
 
-This webpack 5 plugin provides reasonable preset and fixes things don't work for a WebExtension.
+This webpack 5 plugin provides reasonable presets and fixes things that don't work for a WebExtension.
 
-Looking for webpack 4 support? See 0.2.1. [Document for 0.2.1](https://github.com/awesome-webextension/webpack-target-webextension/tree/a738d2ce96795cd032eb0ad3d6b6be74376550db).
+If you are looking for webpack 4 support, please install 0.2.1. [Document for 0.2.1](https://github.com/awesome-webextension/webpack-target-webextension/tree/a738d2ce96795cd032eb0ad3d6b6be74376550db).
 
 The list of things we fixed in this plugin:
 
@@ -17,9 +14,7 @@ The list of things we fixed in this plugin:
 
 ## A quick guide
 
-This guide is a reasonable default for a modern WebExtension project.
-
-A minimal config should be like this:
+If you are familiar with WebExtension and webpack, this is a quick guide on how to configure this plugin and your `manifest.json`.
 
 > webpack.config.js
 
@@ -33,12 +28,14 @@ module.exports = {
     },
     output: {
         path: join(__dirname, './dist'),
-        publicPath: '/dist/',
     },
     plugins: [
-        new HtmlRspackPlugin({ filename: 'options.html', chunks: ['options'] }),
+        new HtmlPlugin({ filename: 'options.html', chunks: ['options'] }),
         new WebExtension({
             background: { pageEntry: 'background' },
+        }),
+        new CopyPlugin({
+            patterns: [{ from: 'manifest.json' }],
         }),
     ],
 }
@@ -52,38 +49,38 @@ module.exports = {
   "name": "Your extension",
   "version": "1.0.0",
   "background": {
-    "service_worker": "./dist/background.js"
-  },
-  // ⚠ Those files can be accessed by normal web sites too.
+    "service_worker": "./background.js"
+ },
+  // ⚠ Those files can be accessed by normal websites too.
   "web_accessible_resources": [
-    {
-      "resources": ["/dist/*.js"],
+ {
+      "resources": ["/*.js"],
       "matches": ["<all_urls>"]
-    },
+ },
     // only needed for development (hot module reload)
-    {
-      "resources": ["/dist/hot/*.js", "/dist/hot/*.json"],
+ {
+      "resources": ["/hot/*.js", "/hot/*.json"],
       "matches": ["<all_urls>"]
-    }
-  ],
+ }
+ ],
   "content_scripts": [
-    {
+ {
       "matches": ["<all_urls>"],
-      "js": ["./dist/content.js"]
-    }
-  ],
+      "js": ["./content.js"]
+ }
+ ],
   "permissions": ["scripting"],
   "host_permissions": ["<all_urls>"],
   "options_ui": {
     "page": "options.html",
     "open_in_tab": true
-  }
+ }
 }
 ```
 
 You can also refer to [./examples/react-hmr](./examples/react-hmr) which is a working project.
 
-## Features & How to configure
+## How to configure
 
 ### Code splitting
 
@@ -93,38 +90,33 @@ To load an async chunk in content scripts, you need to configure the chunk loade
 
 ##### (default) dynamic `import()`
 
-Compability: at least [Firefox 89](https://bugzilla.mozilla.org/show_bug.cgi?id=1536094) and Chrome 63.
+Compatibility: at least [Firefox 89](https://bugzilla.mozilla.org/show_bug.cgi?id=1536094) and Chrome 63.
 
-You can set [`output.environment.dynamicImport`](https://webpack.js.org/configuration/output/#outputenvironment) to `false` to disable this loader.
+To disable this loader, you can set [`output.environment.dynamicImport`](https://webpack.js.org/configuration/output/#outputenvironment) to `false`.
 
-You MUST add your JS files to `web_accessible_resources` in the `manifest.json`, otherwise the `import()` will fail.
+You MUST add your JS files to `web_accessible_resources` in the `manifest.json`, otherwise the `import()` call will fail.
 
 > [!WARNING]
-> Adding files to [`web_accessible_resources`](https://developer.chrome.com/docs/extensions/reference/manifest/web-accessible-resources) allows normal websites to access them.
+> Adding files to [`web_accessible_resources`](https://developer.chrome.com/docs/extensions/reference/manifest/web-accessible-resources) allows normal websites to fetch them.
 
-Example: [./examples/code-splitting-way-1](./examples/code-splitting-way-1)
+--------
 
 #### [`chrome.tabs.executeScript`](https://developer.chrome.com/docs/extensions/reference/api/tabs#method-executeScript) (Manifest V2 only)
 
-- This method requires [`options.background`](#options-background) to be configured.
-- This method requires [`options.background.classicLoader`](#options-background) is not **false** (defaults to **true**).
+This method requires [`options.background.pageEntry`](#optionsbackground) to be configured and [`options.background.classicLoader`](#optionsbackground) is not **false** (it defaults to **true**).
 
-Example: [./examples/code-splitting-way-2](./examples/code-splitting-way-2)
+--------
 
 #### [`chrome.scripting.executeScript`](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/scripting/executeScript) (Manifest V3 only)
 
-- This method will fallback to `chrome.tabs.executeScript` when there is no `chrome.scripting`.
-- This mehtod requires `"scripting"` permission in the `manifest.json`.
-- This method requires [`options.background`](#options-background) to be configured.
-- This method requires [`options.background.classicLoader`](#options-background) is not **false** (defaults to **true**).
+- This method will fall back to `chrome.tabs.executeScript` when there is no `chrome.scripting`.
+- This method requires `"scripting"` permission in the `manifest.json`.
+- This method requires [`options.background`](#optionsbackground) to be configured.
+- This method requires [`options.background.classicLoader`](#optionsbackground) is not **false** (defaults to **true**).
 
-Example: [./examples/code-splitting-way-3](./examples/code-splitting-way-3)
+#### [Main world](https://developer.chrome.com/docs/extensions/reference/api/scripting#type-ExecutionWorld) content script
 
-##### [Main world](https://developer.chrome.com/docs/extensions/reference/api/scripting#type-ExecutionWorld) content script
-
-You need to configure the content script by dynamic `import()`. You also need to set [`output.publicPath`](https://webpack.js.org/configuration/output/#outputpublicpath) manually (like `chrome-extension://jknoiechepeohmcaoeehjaecapdplcia/dist/`, the full URL is necessary).
-
-Example: [./examples/code-splitting-main-world](./examples/code-splitting-main-world).
+You must configure the content script by dynamic `import()`. You also need to set [`output.publicPath`](https://webpack.js.org/configuration/output/#outputpublicpath) manually (like `chrome-extension://jknoiechepeohmcaoeehjaecapdplcia/`, the full URL is necessary).
 
 #### Background worker (Manifest V3)
 
@@ -132,50 +124,49 @@ Example: [./examples/code-splitting-main-world](./examples/code-splitting-main-w
 > This plugin does not work with [`"background.type"`](https://developer.chrome.com/docs/extensions/reference/manifest/background) in `manifest.json` set to `"module"` (native ES Module service worker).
 > Tracking issue: [#24](https://github.com/awesome-webextenson/webpack-target-webextension/issues/24)
 
-Code splitting is supported for background service worker, but it will **load all chunks** initially.
+Code splitting is supported for background service workers, but it will **load all chunks** initially.
 See <https://bugs.chromium.org/p/chromium/issues/detail?id=1198822>.
 
-This fix can be turned off by set [`options.background.eagerChunkLoading`](#options-background) to **false**.
-If you turned of this fix, loading an async chunk will be a runtime error.
-
-Example: [./examples/code-splitting-way-3](./examples/code-splitting-way-3)
+To turn off this fix, set [`options.background.eagerChunkLoading`](#optionsbackground) to **false**.
+If you turn off this fix, loading an async chunk will be a runtime error.
 
 ### Hot Module Reload
 
 > [!WARNING]
-> It's not possible to support HMR for Manifest V3 background worker.
+> It's not possible to support HMR for Manifest V3 background workers.
+>
+> You will see
+>
+>     "[HMR] Update check failed: NetworkError: Failed to execute 'importScripts' on 'WorkerGlobalScope': The script at 'chrome-extension://...' failed to load."
+>
 > See <https://bugs.chromium.org/p/chromium/issues/detail?id=1198822>
 
 > [!WARNING]
-> The HMR WebSocket server might be blocked by the Content Security Policy and prevent the reset of the code to be executed.
-> Please disable hmr if you encountered this problem.
+> The HMR WebSocket server might be blocked by the Content Security Policy, which prevents the reset of the code from being executed.
+> Please disable HMR if you experience this problem.
 
-This plugin fixes Hot Module Reload and provide reasonable defaults for DevServer.
+This plugin fixes Hot Module Reload and provides reasonable defaults for DevServer.
 Please set `devServer.hot` to `false` to disable HMR support.
 
-To disable this fix, set [`options.hmrConfig`](#options-hmrConfig) to **false**.
+To disable this fix, set [`options.hmrConfig`](#optionshmrconfig) to **false**.
 
-You need to add `*.json` to your `web_accessible_resources` in order to make HMR work.
-
-Example: Manifest V2 [./examples/hmr-mv2](./examples/hmr-mv2)
-
-Example: Manifest V3 [./examples/hmr-mv3](./examples/hmr-mv3)
+You need to add `*.json` to your `web_accessible_resources` to make HMR work.
 
 Example: Draw UI in the content scripts with React and get React HRM. [./examples/react-hmr](./examples/react-hmr)
 
 ### Source map
 
 > [!WARNING]
-> No `eval` based source-map is available in Manifest v3.
+> No `eval` based source map is available in Manifest v3.
 
 > [!WARNING]
 > DO NOT add `unsafe-eval` to your CSP in production mode!
 
-To use source map based on `eval`, you must use Manifest v2 and have `script-src 'self' 'unsafe-eval';` in your [CSP (content security policy)](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/content_security_policy).
+To use source maps based on `eval`, you must use Manifest v2 and have `script-src 'self' 'unsafe-eval';` in your [CSP (content security policy)](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/content_security_policy).
 
 ### Public path
 
-This plugin fixes public path whether `output.path` is set or not.
+This plugin fixes the public path whether the `output.path` is set or not.
 
 ## Options
 
@@ -192,24 +183,7 @@ new WebExtensionPlugin({
 ```ts
 export interface BackgroundOptions {
   /** Undocumented. */
-  noWarningDynamicEntry?: boolean
-  /**
-   * The entry point of the background scripts
-   * in your webpack config.
-   * @deprecated
-   * Use pageEntry and serviceWorkerEntry instead.
-   */
-  entry?: string
-  /**
-   * Using Manifest V2 or V3.
-   *
-   * If using Manifest V3,
-   * the entry you provided will be packed as a Worker.
-   *
-   * @defaultValue 2
-   * @deprecated
-   */
-  manifest?: 2 | 3
+  noDynamicEntryWarning?: boolean
   /**
    * The entry point of the background page.
    */
@@ -224,6 +198,8 @@ export interface BackgroundOptions {
    * Load all chunks at the beginning
    * to workaround the chrome bug
    * https://bugs.chromium.org/p/chromium/issues/detail?id=1198822.
+   *
+   * NOT working for rspack.
    *
    * @defaultValue true
    */
@@ -244,19 +220,19 @@ export interface BackgroundOptions {
 
 Default value: **true**
 
-Example:
-
-```ts
-new WebExtensionPlugin({ hmrConfig: false })
-```
+This option provides reasonable defaults for HMR and DevServer.
 
 ### options.weakRuntimeCheck
 
-If you encountered compatibility issue with any of the following plugin, you can enable this option:
+If you experienced a compatibility issue with any of the following plugins, please this option:
 
 - [mini-css-extract-plugin](https://github.com/webpack-contrib/mini-css-extract-plugin)
 - [HtmlWebpackPlugin](https://github.com/jantimon/html-webpack-plugin)
 
-## rspack limitation
+## Rspack support
 
-rspack is missing
+Rspack support is provided as a best effort, please open an issue if you have encountered any problems.
+
+Here are known issues:
+
+- Chunk splitting is disabled for background service workers.

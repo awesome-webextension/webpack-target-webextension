@@ -65,23 +65,23 @@ test('Manifest v2 + Manifest v3 dual entry test', () => {
   })
 })
 
-test('Manifest v2 with native dynamic import enabled', () => {
+test('Manifest v2 with native dynamic import disabled', () => {
   return run({
     input: './fixtures/basic',
-    output: './snapshot/mv2-basic+esm',
+    output: './snapshot/mv2-basic-no-esm',
     touch(config) {
-      config.output.environment = { dynamicImport: true }
+      config.output.environment = { dynamicImport: false }
     },
     option: { background: { pageEntry: 'background' } },
   })
 })
 
-test('Manifest v3 with native dynamic import enabled', () => {
+test('Manifest v3 with native dynamic import disabled', () => {
   return run({
     input: './fixtures/basic',
-    output: './snapshot/mv3-basic+esm',
+    output: './snapshot/mv3-basic-no-esm',
     touch(config) {
-      config.output.environment = { dynamicImport: true }
+      config.output.environment = { dynamicImport: false }
     },
     option: { background: { serviceWorkerEntry: 'background' } },
   })

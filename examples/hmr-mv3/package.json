@@ -1,5 +1,0 @@
-{
-    "scripts": {
-        "start": "npx webpack serve --mode development"
-    }
-}
