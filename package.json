@@ -17,7 +17,7 @@
     "rspack"
   ],
   "scripts": {
-    "test": "vitest",
+    "test": "vitest --coverage --ui",
     "test-ci": "node ./tests/ci.js"
   },
   "main": "index.js",
@@ -43,6 +43,8 @@
   "devDependencies": {
     "@rspack/core": "^1.1.3",
     "@types/jest": "^29.5.14",
+    "@vitest/coverage-v8": "2.1.5",
+    "@vitest/ui": "^2.1.5",
     "copy-webpack-plugin": "^12.0.2",
     "vitest": "^2.1.5",
     "webpack": "^5.96.1",

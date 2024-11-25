@@ -190,7 +190,7 @@ __webpack_require__.d = function(exports, definition) {
           // return url for filenames not based on template
           
           // return url for filenames based on template
-          return "chunks-" + "b863a04fd4858c24" + ".js";
+          return "chunks-" + "237b3c5775383d0c" + ".js";
         };
       
 })();
@@ -204,7 +204,7 @@ __webpack_require__.hu = function (chunkId) {
 // webpack/runtime/get_full_hash
 (() => {
 __webpack_require__.h = function () {
-	return "3803ce7a59c17549";
+	return "247991cbcfbb3e5f";
 };
 
 })();
@@ -1112,37 +1112,28 @@ __webpack_require__.ruid = "bundler=rspack@1.1.3";
 })();
 // webpack/runtime/chunk loader fallback
 (() => {
-  const isBrowser = !!(() => {
-    try {
-      if (typeof browser.runtime.getURL === 'function') return true
-    } catch (err) { }
-  })()
-  const runtime = isBrowser ? browser : chrome
-  runtime.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    const cond = message && message.type === 'WTW_INJECT' && sender && sender.tab && sender.tab.id != null
-    if (!cond) return
-    let file = message.file
-    try {
-      file = new URL(file).pathname
-    } catch {}
-    if (!file) return
-    if (runtime.scripting) {
-      runtime.scripting
-        .executeScript({
-          target: { tabId: sender.tab.id, frameIds: [sender.frameId] },
-          files: [file],
-        })
-        .then(sendResponse)
-    } else {
-      const details = { frameId: sender.frameId, file, matchAboutBlank: true }
-      if (isBrowser) {
-        runtime.tabs.executeScript(sender.tab.id, details).then(sendResponse)
-      } else {
-        runtime.tabs.executeScript(sender.tab.id, details, sendResponse)
-      }
-    }
-    return true
-  })
+__webpack_require__.webExtRt.runtime.onMessage.addListener((message, sender, sendResponse) => {
+	if (message?.type != "WTW_INJECT" || typeof sender?.tab?.id != "number") return;
+	let file = message.file;
+	try {
+		file = new URL(file).pathname;
+	} catch (_) {}
+	if (!file) return;
+	if (__webpack_require__.webExtRt.scripting) {
+		__webpack_require__.webExtRt.scripting.executeScript({
+			target: { tabId: sender.tab.id, frameIds: [sender.frameId] },
+			files: [file],
+		}).then(sendResponse);
+	} else {
+		const details = { frameId: sender.frameId, file, matchAboutBlank: true };
+		if (__webpack_require__.webExtRtModern) {
+		__webpack_require__.webExtRt.tabs.executeScript(sender.tab.id, details).then(sendResponse);
+		} else {
+		__webpack_require__.webExtRt.tabs.executeScript(sender.tab.id, details, sendResponse);
+		}
+	}
+	return true;
+});
 })();
 /************************************************************************/
 // module cache are used so entry inlining is disabled
