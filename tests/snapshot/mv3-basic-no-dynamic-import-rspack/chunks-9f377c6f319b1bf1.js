@@ -5,19 +5,6 @@ var __webpack_modules__ = ({
 module.exports = __webpack_require__.p + "6c5b191a31c5a9fc.txt";
 
 }),
-"./log.js": (function (__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
-__webpack_require__.r(__webpack_exports__);
-__webpack_require__.d(__webpack_exports__, {
-  file: function() { return file; },
-  mod: function() { return /* reexport module object */ _log_js__WEBPACK_IMPORTED_MODULE_0__; }
-});
-/* ESM import */var _log_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./log.js */ "./log.js");
-
-
-const file = 'log.js'
-
-
-}),
 "./util.js": (function (__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
 __webpack_require__.r(__webpack_exports__);
 __webpack_require__.d(__webpack_exports__, {
@@ -70,24 +57,27 @@ __webpack_require__.m = __webpack_modules__;
 /************************************************************************/
 // webpack/runtime/WebExtensionBrowserRuntime
 (() => {
-var isBrowser, runtime;
+let isChrome, runtime;
 try {
-	if (typeof browser !== 'undefined' && typeof browser.runtime === 'object' && typeof browser.runtime.getURL === 'function') {
-		isBrowser = true
-		runtime = browser
+	if (typeof browser !== "undefined" && typeof browser.runtime?.getURL === "function") {
+		runtime = browser;
 	}
 } catch (_) {}
-if (!isBrowser) {
+if (!runtime) {
 	try {
-		if (typeof chrome !== 'undefined' && typeof chrome.runtime === 'object' && typeof chrome.runtime.getURL === 'function') {
-			runtime = chrome
+		if (typeof chrome !== "undefined" && typeof chrome.runtime?.getURL === "function") {
+			isChrome = true;
+			runtime = chrome;
 		}
 	} catch (_) {}
 }
-__webpack_require__.webExtRtModern = isBrowser
-__webpack_require__.webExtRt = runtime || { get runtime() {
-	throw new Error("No chrome or browser runtime found")
-} }
+__webpack_require__.webExtRtModern = !isChrome;
+__webpack_require__.webExtRt = runtime || {
+	get runtime() {
+		throw new Error("No chrome or browser runtime found");
+	},
+	e: 1
+}
 })();
 // webpack/runtime/define_property_getters
 (() => {
@@ -143,11 +133,11 @@ __webpack_require__.rv = function () {
 })();
 // webpack/runtime/publicPath
 (() => {
-var scriptUrl;
+let scriptUrl;
 if (__webpack_require__.g.importScripts) scriptUrl = __webpack_require__.g.location + "";
-var document = __webpack_require__.g.document;
-if (!scriptUrl && document && document.currentScript) {
-	scriptUrl = document.currentScript.src
+const document = __webpack_require__.g.document;
+if (!scriptUrl && document?.currentScript) {
+	scriptUrl = document.currentScript.src;
 }
 // When supporting browsers where an automatic publicPath is not supported you must specify an output.publicPath manually via configuration
 // or pass an empty string ("") and set the __webpack_public_path__ variable from your code to use your own logic.
@@ -183,13 +173,6 @@ Promise.resolve()
     (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Worker Test A: import.meta.url', () => {
       const url = new URL(/* asset import */__webpack_require__(/*! ./test.txt */ "./test.txt"), __webpack_require__.b).toString()
       ;(0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)(url.includes('-extension://'), "new URL('./test.txt', import.meta.url)\n", url)
-    })
-  )
-  .then(
-    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Worker Test B: dynamic import', async () => {
-      console.log("await import('./log.js')\n")
-      const mod = await Promise.resolve(/*! import() eager */).then(__webpack_require__.bind(__webpack_require__, /*! ./log.js */ "./log.js"))
-      ;(0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)('file' in mod, mod)
     })
   )
   .then(() => new Promise((resolve) => setTimeout(resolve, 100)))

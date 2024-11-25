@@ -70,24 +70,27 @@ function test(expr, ...args) {
 /************************************************************************/
 /******/ 	/* webpack/runtime/WebExtensionBrowserRuntime */
 /******/ 	(() => {
-/******/ 		var isBrowser, runtime;
+/******/ 		let isChrome, runtime;
 /******/ 		try {
-/******/ 			if (typeof browser !== 'undefined' && typeof browser.runtime === 'object' && typeof browser.runtime.getURL === 'function') {
-/******/ 				isBrowser = true
-/******/ 				runtime = browser
+/******/ 			if (typeof browser !== "undefined" && typeof browser.runtime?.getURL === "function") {
+/******/ 				runtime = browser;
 /******/ 			}
 /******/ 		} catch (_) {}
-/******/ 		if (!isBrowser) {
+/******/ 		if (!runtime) {
 /******/ 			try {
-/******/ 				if (typeof chrome !== 'undefined' && typeof chrome.runtime === 'object' && typeof chrome.runtime.getURL === 'function') {
-/******/ 					runtime = chrome
+/******/ 				if (typeof chrome !== "undefined" && typeof chrome.runtime?.getURL === "function") {
+/******/ 					isChrome = true;
+/******/ 					runtime = chrome;
 /******/ 				}
 /******/ 			} catch (_) {}
 /******/ 		}
-/******/ 		__webpack_require__.webExtRtModern = isBrowser
-/******/ 		__webpack_require__.webExtRt = runtime || { get runtime() {
-/******/ 			throw new Error("No chrome or browser runtime found")
-/******/ 		} }
+/******/ 		__webpack_require__.webExtRtModern = !isChrome;
+/******/ 		__webpack_require__.webExtRt = runtime || {
+/******/ 			get runtime() {
+/******/ 				throw new Error("No chrome or browser runtime found");
+/******/ 			},
+/******/ 			e: 1
+/******/ 		}
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/define property getters */
@@ -120,20 +123,8 @@ function test(expr, ...args) {
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames based on template
-/******/ 			return "chunks-" + "ed0dde4f184158f0d66f" + ".js";
+/******/ 			return "chunks-" + {"log_js":"ed0dde4f184158f0d66f","worker_js":"10f543f1356d4496e443"}[chunkId] + ".js";
 /******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/global */
-/******/ 	(() => {
-/******/ 		__webpack_require__.g = (function() {
-/******/ 			if (typeof globalThis === 'object') return globalThis;
-/******/ 			try {
-/******/ 				return this || new Function('return this')();
-/******/ 			} catch (e) {
-/******/ 				if (typeof window === 'object') return window;
-/******/ 			}
-/******/ 		})();
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
@@ -154,20 +145,9 @@ function test(expr, ...args) {
 /******/ 	
 /******/ 	/* webpack/runtime/publicPath */
 /******/ 	(() => {
-/******/ 		var scriptUrl;
-/******/ 		if (__webpack_require__.g.importScripts) scriptUrl = __webpack_require__.g.location + "";
-/******/ 		var document = __webpack_require__.g.document;
-/******/ 		if (!scriptUrl && document && document.currentScript) {
-/******/ 			scriptUrl = document.currentScript.src
+/******/ 		if (__webpack_require__.webExtRt && typeof importScripts !== 'function') {
+/******/ 			__webpack_require__.p = __webpack_require__.webExtRt.runtime.getURL("/");
 /******/ 		}
-/******/ 		// When supporting browsers where an automatic publicPath is not supported you must specify an output.publicPath manually via configuration
-/******/ 		// or pass an empty string ("") and set the __webpack_public_path__ variable from your code to use your own logic.
-/******/ 		if (!scriptUrl) {
-/******/ 			if (__webpack_require__.webExtRt) scriptUrl = __webpack_require__.webExtRt.runtime.getURL("/");
-/******/ 			else throw new Error("Automatic publicPath is not supported in this browser");
-/******/ 		}
-/******/ 		scriptUrl = scriptUrl.replace(/#.*$/, "").replace(/\?.*$/, "").replace(/\/[^\/]+$/, "/");
-/******/ 		__webpack_require__.p = scriptUrl;
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/importScripts chunk loading */
@@ -177,7 +157,7 @@ function test(expr, ...args) {
 /******/ 		// object to store loaded chunks
 /******/ 		// "1" means "already loaded"
 /******/ 		var installedChunks = {
-/******/ 			"worker_js": 1
+/******/ 			"background": 1
 /******/ 		};
 /******/ 		
 /******/ 		// importScripts chunk loading
@@ -211,42 +191,106 @@ function test(expr, ...args) {
 /******/ 		// no HMR manifest
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/chunk loader fallback */
+/******/ 	(() => {
+/******/ 		  const isBrowser = !!(() => {
+/******/ 		    try {
+/******/ 		      if (typeof browser.runtime.getURL === 'function') return true
+/******/ 		    } catch (err) { }
+/******/ 		  })()
+/******/ 		  const runtime = isBrowser ? browser : chrome
+/******/ 		  runtime.runtime.onMessage.addListener((message, sender, sendResponse) => {
+/******/ 		    const cond = message && message.type === 'WTW_INJECT' && sender && sender.tab && sender.tab.id != null
+/******/ 		    if (!cond) return
+/******/ 		    let file = message.file
+/******/ 		    try {
+/******/ 		      file = new URL(file).pathname
+/******/ 		    } catch {}
+/******/ 		    if (!file) return
+/******/ 		    if (runtime.scripting) {
+/******/ 		      runtime.scripting
+/******/ 		        .executeScript({
+/******/ 		          target: { tabId: sender.tab.id, frameIds: [sender.frameId] },
+/******/ 		          files: [file],
+/******/ 		        })
+/******/ 		        .then(sendResponse)
+/******/ 		    } else {
+/******/ 		      const details = { frameId: sender.frameId, file, matchAboutBlank: true }
+/******/ 		      if (isBrowser) {
+/******/ 		        runtime.tabs.executeScript(sender.tab.id, details).then(sendResponse)
+/******/ 		      } else {
+/******/ 		        runtime.tabs.executeScript(sender.tab.id, details, sendResponse)
+/******/ 		      }
+/******/ 		    }
+/******/ 		    return true
+/******/ 		  })
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/eagerly load chunks */
+/******/ 	(() => {
+/******/ 		__webpack_require__.f.i("log_js");
+/******/ 	})();
+/******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
 // This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
-/*!*******************!*\
-  !*** ./worker.js ***!
-  \*******************/
+/*!***********************!*\
+  !*** ./background.js ***!
+  \***********************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util.js */ "./util.js");
+/// <reference lib="dom" />
+// @ts-check
 
 
-let event
-addEventListener('message', (e) => (event = e))
 
 Promise.resolve()
   .then(
-    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Worker Test A: import.meta.url', () => {
+    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Test A: import.meta.url', () => {
       const url = new URL(/* asset import */ __webpack_require__(/*! ./test.txt */ "./test.txt"), __webpack_require__.b).toString()
       ;(0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)(url.includes('-extension://'), "new URL('./test.txt', import.meta.url)\n", url)
     })
   )
   .then(
-    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Worker Test B: dynamic import', async () => {
+    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Test B: __webpack_public_path__', () => {
+      (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)(__webpack_require__.p.includes('-extension://'), '__webpack_public_path__\n', __webpack_require__.p)
+    })
+  )
+  .then(
+    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Test C: dynamic import', async () => {
       console.log("await import('./log.js')\n")
       const mod = await __webpack_require__.e(/*! import() */ "log_js").then(__webpack_require__.bind(__webpack_require__, /*! ./log.js */ "./log.js"))
       ;(0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)('file' in mod, mod)
     })
   )
-  .then(() => new Promise((resolve) => setTimeout(resolve, 100)))
   .then(
-    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Worker Test C: message from background', () => {
-      (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)(event?.data === 'Hello from background!', event.data)
+    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Test D: new Worker()', async () => {
+      if (typeof Worker === 'undefined') {
+        console.log('Worker is not supported.')
+        return
+      }
+      console.log('new Worker(new URL("./worker", import.meta.url))')
+      const worker = new Worker(new URL(/* worker import */ __webpack_require__.p + __webpack_require__.u("worker_js"), __webpack_require__.b))
+      worker.postMessage('Hello from background!')
+      const messageFromWorker = await new Promise((resolve, reject) => {
+        worker.onerror = reject
+        worker.onmessage = (event) => {
+          resolve(event.data)
+        }
+      })
+      ;(0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)(messageFromWorker === 'Hello from worker!', messageFromWorker)
     })
   )
-  .finally(() => {
-    postMessage('Hello from worker!')
+  .then(() => {
+    setInterval(() => {
+      chrome.tabs.query({}, (tabs) => {
+        tabs.forEach((tab) => chrome.tabs.sendMessage(tab.id, 'Hello from background!'))
+      })
+    }, 1000)
+    chrome.runtime.onMessage.addListener((message) => {
+      console.log('Message from content script:', message)
+    })
   })
 
 })();

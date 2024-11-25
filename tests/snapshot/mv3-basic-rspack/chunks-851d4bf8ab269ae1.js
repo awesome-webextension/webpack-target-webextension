@@ -102,17 +102,6 @@ __webpack_require__.d = function(exports, definition) {
     }
 };
 })();
-// webpack/runtime/get javascript chunk filename
-(() => {
-// This function allow to reference chunks
-        __webpack_require__.u = function (chunkId) {
-          // return url for filenames not based on template
-          
-          // return url for filenames based on template
-          return "chunks-" + "100af9893c87e86c" + ".js";
-        };
-      
-})();
 // webpack/runtime/global
 (() => {
 __webpack_require__.g = (function () {
@@ -172,15 +161,11 @@ if (!scriptUrl) {
 scriptUrl = scriptUrl.replace(/#.*$/, "").replace(/\?.*$/, "").replace(/\/[^\/]+$/, "/");
 __webpack_require__.p = scriptUrl;
 })();
-// webpack/runtime/jsonp_chunk_loading
+// webpack/runtime/import_scripts_chunk_loading
 (() => {
-__webpack_require__.b = document.baseURI || self.location.href;
+__webpack_require__.b = self.location + "";
+var installedChunks = {"worker_js": 1,};
 
-      // object to store loaded and loading chunks
-      // undefined = chunk not loaded, null = chunk preloaded/prefetched
-      // [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
-      var installedChunks = {"background": 0,};
-      
 })();
 // webpack/runtime/rspack_unique_id
 (() => {
@@ -191,57 +176,33 @@ __webpack_require__.ruid = "bundler=rspack@1.1.3";
 var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* ESM import */var _util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util.js */ "./util.js");
-/// <reference lib="dom" />
-// @ts-check
 
 
+let event
+addEventListener('message', (e) => (event = e))
 
 Promise.resolve()
   .then(
-    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Test A: import.meta.url', () => {
+    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Worker Test A: import.meta.url', () => {
       const url = new URL(/* asset import */__webpack_require__(/*! ./test.txt */ "./test.txt"), __webpack_require__.b).toString()
       ;(0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)(url.includes('-extension://'), "new URL('./test.txt', import.meta.url)\n", url)
     })
   )
   .then(
-    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Test B: __webpack_public_path__', () => {
-      (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)(__webpack_require__.p.includes('-extension://'), '__webpack_public_path__\n', __webpack_require__.p)
-    })
-  )
-  .then(
-    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Test C: dynamic import', async () => {
+    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Worker Test B: dynamic import', async () => {
       console.log("await import('./log.js')\n")
       const mod = await Promise.resolve(/*! import() eager */).then(__webpack_require__.bind(__webpack_require__, /*! ./log.js */ "./log.js"))
       ;(0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)('file' in mod, mod)
     })
   )
+  .then(() => new Promise((resolve) => setTimeout(resolve, 100)))
   .then(
-    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Test D: new Worker()', async () => {
-      if (typeof Worker === 'undefined') {
-        console.log('Worker is not supported.')
-        return
-      }
-      console.log('new Worker(new URL("./worker", import.meta.url))')
-      const worker = new Worker(new URL(/* worker import */__webpack_require__.p + __webpack_require__.u("worker_js"), __webpack_require__.b))
-      worker.postMessage('Hello from background!')
-      const messageFromWorker = await new Promise((resolve, reject) => {
-        worker.onerror = reject
-        worker.onmessage = (event) => {
-          resolve(event.data)
-        }
-      })
-      ;(0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)(messageFromWorker === 'Hello from worker!', messageFromWorker)
+    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Worker Test C: message from background', () => {
+      (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)(event?.data === 'Hello from background!', event.data)
     })
   )
-  .then(() => {
-    setInterval(() => {
-      chrome.tabs.query({}, (tabs) => {
-        tabs.forEach((tab) => chrome.tabs.sendMessage(tab.id, 'Hello from background!'))
-      })
-    }, 1000)
-    chrome.runtime.onMessage.addListener((message) => {
-      console.log('Message from content script:', message)
-    })
+  .finally(() => {
+    postMessage('Hello from worker!')
   })
 
 })()

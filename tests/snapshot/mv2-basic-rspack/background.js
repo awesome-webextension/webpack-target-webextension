@@ -70,24 +70,27 @@ __webpack_require__.m = __webpack_modules__;
 /************************************************************************/
 // webpack/runtime/WebExtensionBrowserRuntime
 (() => {
-var isBrowser, runtime;
+let isChrome, runtime;
 try {
-	if (typeof browser !== 'undefined' && typeof browser.runtime === 'object' && typeof browser.runtime.getURL === 'function') {
-		isBrowser = true
-		runtime = browser
+	if (typeof browser !== "undefined" && typeof browser.runtime?.getURL === "function") {
+		runtime = browser;
 	}
 } catch (_) {}
-if (!isBrowser) {
+if (!runtime) {
 	try {
-		if (typeof chrome !== 'undefined' && typeof chrome.runtime === 'object' && typeof chrome.runtime.getURL === 'function') {
-			runtime = chrome
+		if (typeof chrome !== "undefined" && typeof chrome.runtime?.getURL === "function") {
+			isChrome = true;
+			runtime = chrome;
 		}
 	} catch (_) {}
 }
-__webpack_require__.webExtRtModern = isBrowser
-__webpack_require__.webExtRt = runtime || { get runtime() {
-	throw new Error("No chrome or browser runtime found")
-} }
+__webpack_require__.webExtRtModern = !isChrome;
+__webpack_require__.webExtRt = runtime || {
+	get runtime() {
+		throw new Error("No chrome or browser runtime found");
+	},
+	e: 1
+}
 })();
 // webpack/runtime/define_property_getters
 (() => {
@@ -106,7 +109,7 @@ __webpack_require__.d = function(exports, definition) {
           // return url for filenames not based on template
           
           // return url for filenames based on template
-          return "chunks-" + "cef0561f7598ee88" + ".js";
+          return "chunks-" + "9250daac562e789a" + ".js";
         };
       
 })();
@@ -154,11 +157,11 @@ __webpack_require__.rv = function () {
 })();
 // webpack/runtime/publicPath
 (() => {
-var scriptUrl;
+let scriptUrl;
 if (__webpack_require__.g.importScripts) scriptUrl = __webpack_require__.g.location + "";
-var document = __webpack_require__.g.document;
-if (!scriptUrl && document && document.currentScript) {
-	scriptUrl = document.currentScript.src
+const document = __webpack_require__.g.document;
+if (!scriptUrl && document?.currentScript) {
+	scriptUrl = document.currentScript.src;
 }
 // When supporting browsers where an automatic publicPath is not supported you must specify an output.publicPath manually via configuration
 // or pass an empty string ("") and set the __webpack_public_path__ variable from your code to use your own logic.
@@ -271,7 +274,7 @@ Promise.resolve()
       })
     }, 1000)
     chrome.runtime.onMessage.addListener((message) => {
-      console.log(`Message from content script:`, message)
+      console.log('Message from content script:', message)
     })
   })
 

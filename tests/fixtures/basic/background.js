@@ -47,6 +47,6 @@ Promise.resolve()
       })
     }, 1000)
     chrome.runtime.onMessage.addListener((message) => {
-      console.log(`Message from content script:`, message)
+      console.log('Message from content script:', message)
     })
   })

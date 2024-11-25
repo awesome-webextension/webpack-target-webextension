@@ -70,24 +70,27 @@ function test(expr, ...args) {
 /************************************************************************/
 /******/ 	/* webpack/runtime/WebExtensionBrowserRuntime */
 /******/ 	(() => {
-/******/ 		var isBrowser, runtime;
+/******/ 		let isChrome, runtime;
 /******/ 		try {
-/******/ 			if (typeof browser !== 'undefined' && typeof browser.runtime === 'object' && typeof browser.runtime.getURL === 'function') {
-/******/ 				isBrowser = true
-/******/ 				runtime = browser
+/******/ 			if (typeof browser !== "undefined" && typeof browser.runtime?.getURL === "function") {
+/******/ 				runtime = browser;
 /******/ 			}
 /******/ 		} catch (_) {}
-/******/ 		if (!isBrowser) {
+/******/ 		if (!runtime) {
 /******/ 			try {
-/******/ 				if (typeof chrome !== 'undefined' && typeof chrome.runtime === 'object' && typeof chrome.runtime.getURL === 'function') {
-/******/ 					runtime = chrome
+/******/ 				if (typeof chrome !== "undefined" && typeof chrome.runtime?.getURL === "function") {
+/******/ 					isChrome = true;
+/******/ 					runtime = chrome;
 /******/ 				}
 /******/ 			} catch (_) {}
 /******/ 		}
-/******/ 		__webpack_require__.webExtRtModern = isBrowser
-/******/ 		__webpack_require__.webExtRt = runtime || { get runtime() {
-/******/ 			throw new Error("No chrome or browser runtime found")
-/******/ 		} }
+/******/ 		__webpack_require__.webExtRtModern = !isChrome;
+/******/ 		__webpack_require__.webExtRt = runtime || {
+/******/ 			get runtime() {
+/******/ 				throw new Error("No chrome or browser runtime found");
+/******/ 			},
+/******/ 			e: 1
+/******/ 		}
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/define property getters */
@@ -141,31 +144,6 @@ function test(expr, ...args) {
 /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
 /******/ 	
-/******/ 	/* webpack/runtime/load script */
-/******/ 	(() => {
-/******/ 		var __send__ = (msg) => {
-/******/ 			if (isBrowser) return __webpack_require__.webExtRt.runtime.sendMessage(msg)
-/******/ 			return new Promise(r => __webpack_require__.webExtRt.runtime.sendMessage(msg, r))
-/******/ 		}
-/******/ 		var classicLoader = (url, done) => {
-/******/ 			__send__({ type: 'WTW_INJECT', file: url }).then(done, (e) => done(Object.assign(e, { type: 'missing' })))
-/******/ 		}
-/******/ 		var scriptLoader = (url, done) => {
-/******/ 			var script = document.createElement('script')
-/******/ 			script.src = url
-/******/ 			script.onload = done
-/******/ 			script.onerror = done
-/******/ 			document.body.appendChild(script)
-/******/ 		}
-/******/ 		var workerLoader = (url, done) => {
-/******/ 			try { importScripts(url); done() } catch (e) { done(e) }
-/******/ 		}
-/******/ 		var isWorker = typeof importScripts === 'function'
-/******/ 		if (typeof location === 'object' && location.protocol.includes('-extension:')) __webpack_require__.l = isWorker ? workerLoader : scriptLoader
-/******/ 		else if (!isWorker) __webpack_require__.l = classicLoader
-/******/ 		else { throw new TypeError('Unable to determinate the chunk loader: content script + Worker') }
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
@@ -177,13 +155,53 @@ function test(expr, ...args) {
 /******/ 		};
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/load script */
+/******/ 	(() => {
+/******/ 		const classicLoader = (url, done) => {
+/******/ 			const msg = { type: "WTW_INJECT", file: url };
+/******/ 			const onError = (e) => {
+/******/ 				done(Object.assign(e, { type: "missing" }))
+/******/ 			};
+/******/ 			if (__webpack_require__.webExtRtModern) {
+/******/ 				__webpack_require__.webExtRt.runtime.sendMessage(msg).then(done, onError);
+/******/ 			} else {
+/******/ 				__webpack_require__.webExtRt.runtime.sendMessage(msg, () => {
+/******/ 					const error = __webpack_require__.webExtRt.runtime.lastError;
+/******/ 					if (error) onError(error);
+/******/ 					else done();
+/******/ 				});
+/******/ 			}
+/******/ 		};
+/******/ 		const scriptLoader = (url, done) => {
+/******/ 			const script = document.createElement('script');
+/******/ 			script.src = url;
+/******/ 			script.onload = done;
+/******/ 			script.onerror = done;
+/******/ 			document.body.appendChild(script);
+/******/ 		}
+/******/ 		const workerLoader = (url, done) => {
+/******/ 			try {
+/******/ 				importScripts(url);
+/******/ 				done();
+/******/ 			} catch (e) {
+/******/ 				done(e);
+/******/ 			}
+/******/ 		}
+/******/ 		const isWorker = typeof importScripts === 'function'
+/******/ 		if (typeof location === 'object' && location.protocol.includes('-extension:')) {
+/******/ 			__webpack_require__.l = isWorker ? workerLoader : scriptLoader;
+/******/ 		}
+/******/ 		else if (!isWorker) __webpack_require__.l = classicLoader;
+/******/ 		else { throw new TypeError('Unable to determinate the chunk loader: content script + Worker'); }
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/publicPath */
 /******/ 	(() => {
-/******/ 		var scriptUrl;
+/******/ 		let scriptUrl;
 /******/ 		if (__webpack_require__.g.importScripts) scriptUrl = __webpack_require__.g.location + "";
-/******/ 		var document = __webpack_require__.g.document;
-/******/ 		if (!scriptUrl && document && document.currentScript) {
-/******/ 			scriptUrl = document.currentScript.src
+/******/ 		const document = __webpack_require__.g.document;
+/******/ 		if (!scriptUrl && document?.currentScript) {
+/******/ 			scriptUrl = document.currentScript.src;
 /******/ 		}
 /******/ 		// When supporting browsers where an automatic publicPath is not supported you must specify an output.publicPath manually via configuration
 /******/ 		// or pass an empty string ("") and set the __webpack_public_path__ variable from your code to use your own logic.
@@ -321,7 +339,7 @@ Promise.resolve()
   .then(() => {
     chrome.runtime.sendMessage('Hello from content script!')
     chrome.runtime.onMessage.addListener((message) => {
-      console.log(`Message from background:`, message)
+      console.log('Message from background:', message)
     })
   })
 

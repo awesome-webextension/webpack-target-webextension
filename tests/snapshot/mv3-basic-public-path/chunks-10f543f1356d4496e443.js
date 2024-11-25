@@ -70,24 +70,27 @@ function test(expr, ...args) {
 /************************************************************************/
 /******/ 	/* webpack/runtime/WebExtensionBrowserRuntime */
 /******/ 	(() => {
-/******/ 		var isBrowser, runtime;
+/******/ 		let isChrome, runtime;
 /******/ 		try {
-/******/ 			if (typeof browser !== 'undefined' && typeof browser.runtime === 'object' && typeof browser.runtime.getURL === 'function') {
-/******/ 				isBrowser = true
-/******/ 				runtime = browser
+/******/ 			if (typeof browser !== "undefined" && typeof browser.runtime?.getURL === "function") {
+/******/ 				runtime = browser;
 /******/ 			}
 /******/ 		} catch (_) {}
-/******/ 		if (!isBrowser) {
+/******/ 		if (!runtime) {
 /******/ 			try {
-/******/ 				if (typeof chrome !== 'undefined' && typeof chrome.runtime === 'object' && typeof chrome.runtime.getURL === 'function') {
-/******/ 					runtime = chrome
+/******/ 				if (typeof chrome !== "undefined" && typeof chrome.runtime?.getURL === "function") {
+/******/ 					isChrome = true;
+/******/ 					runtime = chrome;
 /******/ 				}
 /******/ 			} catch (_) {}
 /******/ 		}
-/******/ 		__webpack_require__.webExtRtModern = isBrowser
-/******/ 		__webpack_require__.webExtRt = runtime || { get runtime() {
-/******/ 			throw new Error("No chrome or browser runtime found")
-/******/ 		} }
+/******/ 		__webpack_require__.webExtRtModern = !isChrome;
+/******/ 		__webpack_require__.webExtRt = runtime || {
+/******/ 			get runtime() {
+/******/ 				throw new Error("No chrome or browser runtime found");
+/******/ 			},
+/******/ 			e: 1
+/******/ 		}
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/define property getters */
@@ -124,18 +127,6 @@ function test(expr, ...args) {
 /******/ 		};
 /******/ 	})();
 /******/ 	
-/******/ 	/* webpack/runtime/global */
-/******/ 	(() => {
-/******/ 		__webpack_require__.g = (function() {
-/******/ 			if (typeof globalThis === 'object') return globalThis;
-/******/ 			try {
-/******/ 				return this || new Function('return this')();
-/******/ 			} catch (e) {
-/******/ 				if (typeof window === 'object') return window;
-/******/ 			}
-/******/ 		})();
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
 /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
@@ -154,20 +145,9 @@ function test(expr, ...args) {
 /******/ 	
 /******/ 	/* webpack/runtime/publicPath */
 /******/ 	(() => {
-/******/ 		var scriptUrl;
-/******/ 		if (__webpack_require__.g.importScripts) scriptUrl = __webpack_require__.g.location + "";
-/******/ 		var document = __webpack_require__.g.document;
-/******/ 		if (!scriptUrl && document && document.currentScript) {
-/******/ 			scriptUrl = document.currentScript.src
+/******/ 		if (__webpack_require__.webExtRt && typeof importScripts !== 'function') {
+/******/ 			__webpack_require__.p = __webpack_require__.webExtRt.runtime.getURL("/");
 /******/ 		}
-/******/ 		// When supporting browsers where an automatic publicPath is not supported you must specify an output.publicPath manually via configuration
-/******/ 		// or pass an empty string ("") and set the __webpack_public_path__ variable from your code to use your own logic.
-/******/ 		if (!scriptUrl) {
-/******/ 			if (__webpack_require__.webExtRt) scriptUrl = __webpack_require__.webExtRt.runtime.getURL("/");
-/******/ 			else throw new Error("Automatic publicPath is not supported in this browser");
-/******/ 		}
-/******/ 		scriptUrl = scriptUrl.replace(/#.*$/, "").replace(/\?.*$/, "").replace(/\/[^\/]+$/, "/");
-/******/ 		__webpack_require__.p = scriptUrl;
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/importScripts chunk loading */

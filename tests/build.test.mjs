@@ -39,11 +39,22 @@ test('Manifest v3 basic test', () => {
   })
 })
 
+test('Manifest v3 basic test (with public_path)', () => {
+  return run({
+    input: './fixtures/basic',
+    output: './snapshot/mv3-basic-public-path',
+    option: { background: { serviceWorkerEntry: 'background' } },
+    touch(config) {
+      config.output.publicPath = '/'
+    },
+  })
+})
+
 test('Manifest v3 HMR test', () => {
   return run({
     input: './fixtures/basic',
     output: './snapshot/mv3-hmr',
-    option: { background: { serviceWorkerEntry: 'background' } },
+    option: { background: { serviceWorkerEntry: 'background' }, weakRuntimeCheck: true },
     touch(config, is_rspack) {
       if (is_rspack) {
         config.plugins.push(new rspack.HotModuleReplacementPlugin({}))

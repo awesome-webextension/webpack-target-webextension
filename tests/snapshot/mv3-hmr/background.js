@@ -70,24 +70,30 @@ function test(expr, ...args) {
 /************************************************************************/
 /******/ 	/* webpack/runtime/WebExtensionBrowserRuntime */
 /******/ 	(() => {
-/******/ 		var isBrowser, runtime;
+/******/ 		let isChrome, runtime;
 /******/ 		try {
-/******/ 			if (typeof browser !== 'undefined' && typeof browser.runtime === 'object' && typeof browser.runtime.getURL === 'function') {
-/******/ 				isBrowser = true
-/******/ 				runtime = browser
+/******/ 			if (typeof browser !== "undefined" && typeof browser.runtime?.getURL === "function") {
+/******/ 				runtime = browser;
 /******/ 			}
 /******/ 		} catch (_) {}
-/******/ 		if (!isBrowser) {
+/******/ 		if (!runtime) {
 /******/ 			try {
-/******/ 				if (typeof chrome !== 'undefined' && typeof chrome.runtime === 'object' && typeof chrome.runtime.getURL === 'function') {
-/******/ 					runtime = chrome
+/******/ 				if (typeof chrome !== "undefined" && typeof chrome.runtime?.getURL === "function") {
+/******/ 					isChrome = true;
+/******/ 					runtime = chrome;
 /******/ 				}
 /******/ 			} catch (_) {}
 /******/ 		}
-/******/ 		__webpack_require__.webExtRtModern = isBrowser
-/******/ 		__webpack_require__.webExtRt = runtime || { get runtime() {
-/******/ 			throw new Error("No chrome or browser runtime found")
-/******/ 		} }
+/******/ 		__webpack_require__.webExtRtModern = !isChrome;
+/******/ 		__webpack_require__.webExtRt = runtime || {
+/******/ 			get runtime() {
+/******/ 				throw new Error("No chrome or browser runtime found");
+/******/ 			},
+/******/ 			e: 1
+/******/ 		}
+/******/ 		if (__webpack_require__.webExtRt.e && (typeof self !== "object" || !self.addEventListener)) {
+/******/ 			__webpack_require__.webExtRt = { runtime: { getURL: String } };
+/******/ 		}
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/define property getters */
@@ -120,7 +126,7 @@ function test(expr, ...args) {
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames based on template
-/******/ 			return "chunks-" + {"log_js":"ed0dde4f184158f0d66f","worker_js":"d1dca3971a307dfaa279"}[chunkId] + ".js";
+/******/ 			return "chunks-" + {"log_js":"ed0dde4f184158f0d66f","worker_js":"928a0f75de77b96b42fc"}[chunkId] + ".js";
 /******/ 		};
 /******/ 	})();
 /******/ 	
@@ -154,11 +160,11 @@ function test(expr, ...args) {
 /******/ 	
 /******/ 	/* webpack/runtime/publicPath */
 /******/ 	(() => {
-/******/ 		var scriptUrl;
+/******/ 		let scriptUrl;
 /******/ 		if (__webpack_require__.g.importScripts) scriptUrl = __webpack_require__.g.location + "";
-/******/ 		var document = __webpack_require__.g.document;
-/******/ 		if (!scriptUrl && document && document.currentScript) {
-/******/ 			scriptUrl = document.currentScript.src
+/******/ 		const document = __webpack_require__.g.document;
+/******/ 		if (!scriptUrl && document?.currentScript) {
+/******/ 			scriptUrl = document.currentScript.src;
 /******/ 		}
 /******/ 		// When supporting browsers where an automatic publicPath is not supported you must specify an output.publicPath manually via configuration
 /******/ 		// or pass an empty string ("") and set the __webpack_public_path__ variable from your code to use your own logic.
@@ -248,7 +254,7 @@ function test(expr, ...args) {
 /******/ 	
 /******/ 	/* webpack/runtime/eagerly load chunks */
 /******/ 	(() => {
-/******/ 		__webpack_require__.f.i("log_js")
+/******/ 		__webpack_require__.f.i("log_js");
 /******/ 	})();
 /******/ 	
 /************************************************************************/
@@ -309,7 +315,7 @@ Promise.resolve()
       })
     }, 1000)
     chrome.runtime.onMessage.addListener((message) => {
-      console.log(`Message from content script:`, message)
+      console.log('Message from content script:', message)
     })
   })
 

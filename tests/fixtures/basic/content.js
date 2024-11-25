@@ -25,6 +25,6 @@ Promise.resolve()
   .then(() => {
     chrome.runtime.sendMessage('Hello from content script!')
     chrome.runtime.onMessage.addListener((message) => {
-      console.log(`Message from background:`, message)
+      console.log('Message from background:', message)
     })
   })

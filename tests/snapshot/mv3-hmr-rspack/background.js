@@ -57,7 +57,7 @@ Promise.resolve()
       })
     }, 1000)
     chrome.runtime.onMessage.addListener((message) => {
-      console.log(`Message from content script:`, message)
+      console.log('Message from content script:', message)
     })
   })
 
@@ -148,24 +148,30 @@ __webpack_require__.i = [];
 /************************************************************************/
 // webpack/runtime/WebExtensionBrowserRuntime
 (() => {
-var isBrowser, runtime;
+let isChrome, runtime;
 try {
-	if (typeof browser !== 'undefined' && typeof browser.runtime === 'object' && typeof browser.runtime.getURL === 'function') {
-		isBrowser = true
-		runtime = browser
+	if (typeof browser !== "undefined" && typeof browser.runtime?.getURL === "function") {
+		runtime = browser;
 	}
 } catch (_) {}
-if (!isBrowser) {
+if (!runtime) {
 	try {
-		if (typeof chrome !== 'undefined' && typeof chrome.runtime === 'object' && typeof chrome.runtime.getURL === 'function') {
-			runtime = chrome
+		if (typeof chrome !== "undefined" && typeof chrome.runtime?.getURL === "function") {
+			isChrome = true;
+			runtime = chrome;
 		}
 	} catch (_) {}
 }
-__webpack_require__.webExtRtModern = isBrowser
-__webpack_require__.webExtRt = runtime || { get runtime() {
-	throw new Error("No chrome or browser runtime found")
-} }
+__webpack_require__.webExtRtModern = !isChrome;
+__webpack_require__.webExtRt = runtime || {
+	get runtime() {
+		throw new Error("No chrome or browser runtime found");
+	},
+	e: 1
+}
+if (__webpack_require__.webExtRt.e && (typeof self !== "object" || !self.addEventListener)) {
+	__webpack_require__.webExtRt = { runtime: { getURL: String } };
+}
 })();
 // webpack/runtime/define_property_getters
 (() => {
@@ -184,7 +190,7 @@ __webpack_require__.d = function(exports, definition) {
           // return url for filenames not based on template
           
           // return url for filenames based on template
-          return "chunks-" + "a3cb2bde9ad5193e" + ".js";
+          return "chunks-" + "b863a04fd4858c24" + ".js";
         };
       
 })();
@@ -198,7 +204,7 @@ __webpack_require__.hu = function (chunkId) {
 // webpack/runtime/get_full_hash
 (() => {
 __webpack_require__.h = function () {
-	return "bc930bf295338096";
+	return "3803ce7a59c17549";
 };
 
 })();
@@ -619,11 +625,11 @@ __webpack_require__.rv = function () {
 })();
 // webpack/runtime/publicPath
 (() => {
-var scriptUrl;
+let scriptUrl;
 if (__webpack_require__.g.importScripts) scriptUrl = __webpack_require__.g.location + "";
-var document = __webpack_require__.g.document;
-if (!scriptUrl && document && document.currentScript) {
-	scriptUrl = document.currentScript.src
+const document = __webpack_require__.g.document;
+if (!scriptUrl && document?.currentScript) {
+	scriptUrl = document.currentScript.src;
 }
 // When supporting browsers where an automatic publicPath is not supported you must specify an output.publicPath manually via configuration
 // or pass an empty string ("") and set the __webpack_public_path__ variable from your code to use your own logic.

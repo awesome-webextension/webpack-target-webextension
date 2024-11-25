@@ -48,6 +48,7 @@ export function run(
       path: join(__dirname, '../', output),
       clean: true,
       chunkFilename: 'chunks-[chunkhash].js',
+      environment: { arrowFunction: true, const: true, optionalChaining: true, globalThis: true },
     },
     plugins: [new WebExtensionPlugin(option), new CopyPlugin(copyPluginOptions)],
   }
