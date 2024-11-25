@@ -60,6 +60,8 @@ export function run(
     output: {
       ...config.output,
       path: join(__dirname, '../', output + '-rspack'),
+      hotUpdateChunkFilename: 'hot/[id].js',
+      hotUpdateMainFilename: 'hot/[runtime].json',
     },
     plugins: [new WebExtensionPlugin(option), new rspack.CopyRspackPlugin(copyPluginOptions)],
   }

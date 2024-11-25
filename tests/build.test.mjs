@@ -23,8 +23,6 @@ test('Manifest v2 HMR test', () => {
   })
 })
 
-// This test crashes in content script, "No loader for content script is found."
-// This is expected. rspack version will not crash because it currently disables async chunks
 test('Manifest v2 basic test, no option', () => {
   return run({
     input: './fixtures/basic',
@@ -41,7 +39,19 @@ test('Manifest v3 basic test', () => {
   })
 })
 
-// This test crashes in service worker, "document is not defined", which is expected.
+test('Manifest v3 HMR test', () => {
+  return run({
+    input: './fixtures/basic',
+    output: './snapshot/mv3-hmr',
+    option: { background: { serviceWorkerEntry: 'background' } },
+    touch(config, is_rspack) {
+      if (is_rspack) {
+        config.plugins.push(new rspack.HotModuleReplacementPlugin({}))
+      }
+    },
+  })
+})
+
 test('Manifest v3 basic test, no option', () => {
   return run({
     input: './fixtures/basic',
@@ -50,7 +60,6 @@ test('Manifest v3 basic test, no option', () => {
   })
 })
 
-// TODO: this crashes
 test('Manifest v2 + Manifest v3 dual entry test', () => {
   return run({
     input: './fixtures/basic',

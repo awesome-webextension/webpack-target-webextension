@@ -2,7 +2,7 @@
 
 [![npm-version](https://img.shields.io/npm/v/webpack-target-webextension.svg)](https://www.npmjs.com/package/webpack-target-webextension)
 
-This webpack 5 plugin provides reasonable presets and fixes things that don't work for a WebExtension.
+This webpack 5 plugin (works on rspack!) provides reasonable presets and fixes things that don't work for a WebExtension.
 
 If you are looking for webpack 4 support, please install 0.2.1. [Document for 0.2.1](https://github.com/awesome-webextension/webpack-target-webextension/tree/a738d2ce96795cd032eb0ad3d6b6be74376550db).
 

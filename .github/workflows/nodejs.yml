@@ -20,4 +20,8 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'yarn'
     - run: yarn install
+    - run: yarn test
+    - run: git add .
+    - run: git restore --source=HEAD --staged --worktree -- tests/snapshot/mv2-hmr-rspack
+    - run: git restore --source=HEAD --staged --worktree -- tests/snapshot/mv3-hmr-rspack
     - run: yarn test-ci
