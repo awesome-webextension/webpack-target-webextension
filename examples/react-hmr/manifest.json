@@ -7,7 +7,7 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["/*.json", "/*.js", "/*.css"],
+      "resources": ["/*.json", "/*.js", "/*.css", "/*.map"],
       "matches": ["<all_urls>"]
     }
   ],

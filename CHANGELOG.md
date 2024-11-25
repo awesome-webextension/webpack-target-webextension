@@ -7,6 +7,7 @@
 - (Breaking) Deprecated option `BackgroundOptions.entry` is removed. Use `pageEntry` and/or `serviceWorkerEntry` instead.
 - (Breaking) Deprecated option `BackgroundOptions.manifest` is removed.
 - (Breaking) Option `noWarningDynamicEntry` has been renamed to `noDynamicEntryWarning`.
+- (Breaking) `background.pageEntry` cannot be the same as `background.serviceWorkerEntry`.
 - Now `devServer.hot` is set to `only` by default.
 - Now `output.environment.dynamicImport` is set to `true` by default.
 - Now `output.hotUpdateChunkFilename` is set to `hot/[id].[fullhash].js` by default.
