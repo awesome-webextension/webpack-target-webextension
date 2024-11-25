@@ -5,6 +5,19 @@ var __webpack_modules__ = ({
 module.exports = __webpack_require__.p + "6c5b191a31c5a9fc.txt";
 
 }),
+"./log.js": (function (__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+__webpack_require__.r(__webpack_exports__);
+__webpack_require__.d(__webpack_exports__, {
+  file: function() { return file; },
+  mod: function() { return /* reexport module object */ _log_js__WEBPACK_IMPORTED_MODULE_0__; }
+});
+/* ESM import */var _log_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./log.js */ "./log.js");
+
+
+const file = 'log.js'
+
+
+}),
 "./util.js": (function (__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
 __webpack_require__.r(__webpack_exports__);
 __webpack_require__.d(__webpack_exports__, {
@@ -77,6 +90,9 @@ __webpack_require__.webExtRt = runtime || {
 		throw new Error("No chrome or browser runtime found");
 	}
 }
+if (!runtime && (typeof self !== "object" || !self.addEventListener)) {
+	__webpack_require__.webExtRt = { runtime: { getURL: String } };
+}
 })();
 // webpack/runtime/define_property_getters
 (() => {
@@ -87,18 +103,6 @@ __webpack_require__.d = function(exports, definition) {
         }
     }
 };
-})();
-// webpack/runtime/global
-(() => {
-__webpack_require__.g = (function () {
-	if (typeof globalThis === 'object') return globalThis;
-	try {
-		return this || new Function('return this')();
-	} catch (e) {
-		if (typeof window === 'object') return window;
-	}
-})();
-
 })();
 // webpack/runtime/has_own_property
 (() => {
@@ -120,7 +124,7 @@ __webpack_require__.r = function(exports) {
 })();
 // webpack/runtime/public_path
 (() => {
-__webpack_require__.p = "";
+__webpack_require__.p = "/";
 
 })();
 // webpack/runtime/rspack_version
@@ -132,20 +136,9 @@ __webpack_require__.rv = function () {
 })();
 // webpack/runtime/publicPath
 (() => {
-let scriptUrl;
-if (__webpack_require__.g.importScripts) scriptUrl = __webpack_require__.g.location + "";
-const document = __webpack_require__.g.document;
-if (!scriptUrl && document?.currentScript) {
-	scriptUrl = document.currentScript.src;
+if (__webpack_require__.webExtRt && typeof importScripts !== 'function') {
+	__webpack_require__.p = __webpack_require__.webExtRt.runtime.getURL("/");
 }
-// When supporting browsers where an automatic publicPath is not supported you must specify an output.publicPath manually via configuration
-// or pass an empty string ("") and set the __webpack_public_path__ variable from your code to use your own logic.
-if (!scriptUrl) {
-	if (__webpack_require__.webExtRt) scriptUrl = __webpack_require__.webExtRt.runtime.getURL("/");
-	else throw new Error("Automatic publicPath is not supported in this browser");
-}
-scriptUrl = scriptUrl.replace(/#.*$/, "").replace(/\?.*$/, "").replace(/\/[^\/]+$/, "/");
-__webpack_require__.p = scriptUrl;
 })();
 // webpack/runtime/jsonp_chunk_loading
 (() => {
@@ -181,6 +174,13 @@ Promise.resolve()
   .then(
     (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Test B: __webpack_public_path__', () => {
       (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)(__webpack_require__.p.includes('-extension://'), '__webpack_public_path__\n', __webpack_require__.p)
+    })
+  )
+  .then(
+    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Test C: dynamic import', async () => {
+      console.log("await import('./log.js')\n")
+      const mod = await Promise.resolve(/*! import() eager */).then(__webpack_require__.bind(__webpack_require__, /*! ./log.js */ "./log.js"))
+      ;(0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)('file' in mod, mod)
     })
   )
   .then(() => {

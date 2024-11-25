@@ -150,63 +150,53 @@ function test(expr, ...args) {
 /******/ 		__webpack_require__.p = scriptUrl;
 /******/ 	})();
 /******/ 	
-/******/ 	/* webpack/runtime/jsonp chunk loading */
+/******/ 	/* webpack/runtime/importScripts chunk loading */
 /******/ 	(() => {
-/******/ 		__webpack_require__.b = document.baseURI || self.location.href;
+/******/ 		__webpack_require__.b = self.location + "";
 /******/ 		
-/******/ 		// object to store loaded and loading chunks
-/******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
-/******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
+/******/ 		// object to store loaded chunks
+/******/ 		// "1" means "already loaded"
 /******/ 		var installedChunks = {
-/******/ 			"content": 0
+/******/ 			"worker_js": 1
 /******/ 		};
 /******/ 		
-/******/ 		// no chunk on demand loading
-/******/ 		
-/******/ 		// no prefetching
-/******/ 		
-/******/ 		// no preloaded
+/******/ 		// no chunk install function needed
+/******/ 		// no chunk loading
 /******/ 		
 /******/ 		// no HMR
 /******/ 		
 /******/ 		// no HMR manifest
-/******/ 		
-/******/ 		// no on chunks loaded
-/******/ 		
-/******/ 		// no jsonp function
 /******/ 	})();
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
 // This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
-/*!********************!*\
-  !*** ./content.js ***!
-  \********************/
+/*!*******************!*\
+  !*** ./worker.js ***!
+  \*******************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util.js */ "./util.js");
-/// <reference lib="dom" />
-// @ts-check
 
 
+let event
+addEventListener('message', (e) => (event = e))
 
 Promise.resolve()
   .then(
-    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Test A: import.meta.url', () => {
+    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Worker Test A: import.meta.url', () => {
       const url = new URL(/* asset import */ __webpack_require__(/*! ./test.txt */ "./test.txt"), __webpack_require__.b).toString()
       ;(0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)(url.includes('-extension://'), "new URL('./test.txt', import.meta.url)\n", url)
     })
   )
+  .then(() => new Promise((resolve) => setTimeout(resolve, 100)))
   .then(
-    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Test B: __webpack_public_path__', () => {
-      (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)(__webpack_require__.p.includes('-extension://'), '__webpack_public_path__\n', __webpack_require__.p)
+    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Worker Test C: message from background', () => {
+      (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)(event?.data === 'Hello from background!', event.data)
     })
   )
-  .then(() => {
-    chrome.runtime.sendMessage('Hello from content script!')
-    chrome.runtime.onMessage.addListener((message) => {
-      console.log('Message from background:', message)
-    })
+  .finally(() => {
+    postMessage('Hello from worker!')
   })
 
 })();

@@ -88,8 +88,7 @@ function test(expr, ...args) {
 /******/ 		__webpack_require__.webExtRt = runtime || {
 /******/ 			get runtime() {
 /******/ 				throw new Error("No chrome or browser runtime found");
-/******/ 			},
-/******/ 			e: 1
+/******/ 			}
 /******/ 		}
 /******/ 	})();
 /******/ 	
@@ -123,7 +122,7 @@ function test(expr, ...args) {
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames based on template
-/******/ 			return "chunks-" + {"log_js":"ed0dde4f184158f0d66f","worker_js":"10f543f1356d4496e443"}[chunkId] + ".js";
+/******/ 			return "chunks-" + {"log_js":"ed0dde4f184158f0d66f","worker_js":"3d88b66964cd9ecc013c"}[chunkId] + ".js";
 /******/ 		};
 /******/ 	})();
 /******/ 	

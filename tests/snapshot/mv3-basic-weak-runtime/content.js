@@ -90,6 +90,9 @@ function test(expr, ...args) {
 /******/ 				throw new Error("No chrome or browser runtime found");
 /******/ 			}
 /******/ 		}
+/******/ 		if (!runtime && (typeof self !== "object" || !self.addEventListener)) {
+/******/ 			__webpack_require__.webExtRt = { runtime: { getURL: String } };
+/******/ 		}
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/define property getters */
@@ -126,18 +129,6 @@ function test(expr, ...args) {
 /******/ 		};
 /******/ 	})();
 /******/ 	
-/******/ 	/* webpack/runtime/global */
-/******/ 	(() => {
-/******/ 		__webpack_require__.g = (function() {
-/******/ 			if (typeof globalThis === 'object') return globalThis;
-/******/ 			try {
-/******/ 				return this || new Function('return this')();
-/******/ 			} catch (e) {
-/******/ 				if (typeof window === 'object') return window;
-/******/ 			}
-/******/ 		})();
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
 /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
@@ -156,6 +147,12 @@ function test(expr, ...args) {
 /******/ 	
 /******/ 	/* webpack/runtime/load script */
 /******/ 	(() => {
+/******/ 		let bug816121warned, isNotIframe;
+/******/ 		try {
+/******/ 			isNotIframe = typeof window === "object" ? window.top === window : true;
+/******/ 		} catch(e) {
+/******/ 			isNotIframe = false /* CORS error */;
+/******/ 		}
 /******/ 		const classicLoader = (url, done) => {
 /******/ 			const msg = { type: "WTW_INJECT", file: url };
 /******/ 			const onError = (e) => {
@@ -171,6 +168,30 @@ function test(expr, ...args) {
 /******/ 				});
 /******/ 			}
 /******/ 		};
+/******/ 		const dynamicImportLoader = (url, done, key, chunkId) => {
+/******/ 			import(url).then(() => {
+/******/ 				if (isNotIframe) return done();
+/******/ 				try {
+/******/ 					// It's a Chrome bug, if the import() is called in a sandboxed iframe, it _fails_ the script loading but _resolve_ the Promise.
+/******/ 					// we call __webpack_require__.f.j(chunkId) to check if it is loaded.
+/******/ 					// if it is, this is a no-op. if it is not, it will throw a TypeError because this function requires 2 parameters.
+/******/ 					// This call will not trigger the chunk loading because it is already loading.
+/******/ 					// see https://github.com/awesome-webextension/webpack-target-webextension/issues/41
+/******/ 					chunkId !== undefined && __webpack_require__.f.j(chunkId);
+/******/ 					done();
+/******/ 				}
+/******/ 				catch (_) {
+/******/ 					if (!bug816121warned) {
+/******/ 						console.warn("Chrome bug https://crbug.com/816121 hit.");
+/******/ 						bug816121warned = true;
+/******/ 					}
+/******/ 					return fallbackLoader(url, done, key, chunkId);
+/******/ 				}
+/******/ 			}, (e) => {
+/******/ 				console.warn("Dynamic import loader failed. Using fallback loader (see https://github.com/awesome-webextension/webpack-target-webextension#content-script).", e);
+/******/ 				fallbackLoader(url, done, key, chunkId);
+/******/ 			});
+/******/ 		}
 /******/ 		const scriptLoader = (url, done) => {
 /******/ 			const script = document.createElement('script');
 /******/ 			script.src = url;
@@ -192,24 +213,15 @@ function test(expr, ...args) {
 /******/ 		}
 /******/ 		else if (!isWorker) __webpack_require__.l = classicLoader;
 /******/ 		else { throw new TypeError('Unable to determinate the chunk loader: content script + Worker'); }
+/******/ 		const fallbackLoader = __webpack_require__.l;
+/******/ 		__webpack_require__.l = dynamicImportLoader;
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/publicPath */
 /******/ 	(() => {
-/******/ 		let scriptUrl;
-/******/ 		if (__webpack_require__.g.importScripts) scriptUrl = __webpack_require__.g.location + "";
-/******/ 		const document = __webpack_require__.g.document;
-/******/ 		if (!scriptUrl && document?.currentScript) {
-/******/ 			scriptUrl = document.currentScript.src;
+/******/ 		if (__webpack_require__.webExtRt && typeof importScripts !== 'function') {
+/******/ 			__webpack_require__.p = __webpack_require__.webExtRt.runtime.getURL("/");
 /******/ 		}
-/******/ 		// When supporting browsers where an automatic publicPath is not supported you must specify an output.publicPath manually via configuration
-/******/ 		// or pass an empty string ("") and set the __webpack_public_path__ variable from your code to use your own logic.
-/******/ 		if (!scriptUrl) {
-/******/ 			if (__webpack_require__.webExtRt) scriptUrl = __webpack_require__.webExtRt.runtime.getURL("/");
-/******/ 			else throw new Error("Automatic publicPath is not supported in this browser");
-/******/ 		}
-/******/ 		scriptUrl = scriptUrl.replace(/#.*$/, "").replace(/\?.*$/, "").replace(/\/[^\/]+$/, "/");
-/******/ 		__webpack_require__.p = scriptUrl;
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */

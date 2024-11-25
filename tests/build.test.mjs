@@ -50,6 +50,17 @@ test('Manifest v3 basic test (with public_path)', () => {
   })
 })
 
+test('Manifest v3 basic test (with weakRuntime)', () => {
+  return run({
+    input: './fixtures/basic',
+    output: './snapshot/mv3-basic-weak-runtime',
+    option: { background: { serviceWorkerEntry: 'background' }, weakRuntimeCheck: true },
+    touch(config) {
+      config.output.publicPath = '/'
+    },
+  })
+})
+
 test('Manifest v3 HMR test', () => {
   return run({
     input: './fixtures/basic',

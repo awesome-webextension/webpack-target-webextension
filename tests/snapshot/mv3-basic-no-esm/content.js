@@ -88,8 +88,7 @@ function test(expr, ...args) {
 /******/ 		__webpack_require__.webExtRt = runtime || {
 /******/ 			get runtime() {
 /******/ 				throw new Error("No chrome or browser runtime found");
-/******/ 			},
-/******/ 			e: 1
+/******/ 			}
 /******/ 		}
 /******/ 	})();
 /******/ 	

@@ -88,8 +88,10 @@ function test(expr, ...args) {
 /******/ 		__webpack_require__.webExtRt = runtime || {
 /******/ 			get runtime() {
 /******/ 				throw new Error("No chrome or browser runtime found");
-/******/ 			},
-/******/ 			e: 1
+/******/ 			}
+/******/ 		}
+/******/ 		if (!runtime && (typeof self !== "object" || !self.addEventListener)) {
+/******/ 			__webpack_require__.webExtRt = { runtime: { getURL: String } };
 /******/ 		}
 /******/ 	})();
 /******/ 	
@@ -123,7 +125,7 @@ function test(expr, ...args) {
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames based on template
-/******/ 			return "chunks-" + "ed0dde4f184158f0d66f" + ".js";
+/******/ 			return "chunks-" + {"log_js":"ed0dde4f184158f0d66f","worker_js":"d638c95a995336cdb6f2"}[chunkId] + ".js";
 /******/ 		};
 /******/ 	})();
 /******/ 	
@@ -157,7 +159,7 @@ function test(expr, ...args) {
 /******/ 		// object to store loaded chunks
 /******/ 		// "1" means "already loaded"
 /******/ 		var installedChunks = {
-/******/ 			"worker_js": 1
+/******/ 			"background": 1
 /******/ 		};
 /******/ 		
 /******/ 		// importScripts chunk loading
@@ -191,42 +193,97 @@ function test(expr, ...args) {
 /******/ 		// no HMR manifest
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/chunk loader fallback */
+/******/ 	(() => {
+/******/ 		__webpack_require__.webExtRt.runtime.onMessage.addListener((message, sender, sendResponse) => {
+/******/ 			if (message?.type != "WTW_INJECT" || typeof sender?.tab?.id != "number") return;
+/******/ 			let file = message.file;
+/******/ 			try {
+/******/ 				file = new URL(file).pathname;
+/******/ 			} catch (_) {}
+/******/ 			if (!file) return;
+/******/ 			if (__webpack_require__.webExtRt.scripting) {
+/******/ 				__webpack_require__.webExtRt.scripting.executeScript({
+/******/ 					target: { tabId: sender.tab.id, frameIds: [sender.frameId] },
+/******/ 					files: [file],
+/******/ 				}).then(sendResponse);
+/******/ 			} else {
+/******/ 				const details = { frameId: sender.frameId, file, matchAboutBlank: true };
+/******/ 				if (__webpack_require__.webExtRtModern) {
+/******/ 				__webpack_require__.webExtRt.tabs.executeScript(sender.tab.id, details).then(sendResponse);
+/******/ 				} else {
+/******/ 				__webpack_require__.webExtRt.tabs.executeScript(sender.tab.id, details, sendResponse);
+/******/ 				}
+/******/ 			}
+/******/ 			return true;
+/******/ 		});
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/eagerly load chunks */
+/******/ 	(() => {
+/******/ 		__webpack_require__.f.i("log_js");
+/******/ 	})();
+/******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
 // This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
-/*!*******************!*\
-  !*** ./worker.js ***!
-  \*******************/
+/*!***********************!*\
+  !*** ./background.js ***!
+  \***********************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util.js */ "./util.js");
+/// <reference lib="dom" />
+// @ts-check
 
 
-let event
-addEventListener('message', (e) => (event = e))
 
 Promise.resolve()
   .then(
-    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Worker Test A: import.meta.url', () => {
+    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Test A: import.meta.url', () => {
       const url = new URL(/* asset import */ __webpack_require__(/*! ./test.txt */ "./test.txt"), __webpack_require__.b).toString()
       ;(0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)(url.includes('-extension://'), "new URL('./test.txt', import.meta.url)\n", url)
     })
   )
   .then(
-    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Worker Test B: dynamic import', async () => {
+    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Test B: __webpack_public_path__', () => {
+      (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)(__webpack_require__.p.includes('-extension://'), '__webpack_public_path__\n', __webpack_require__.p)
+    })
+  )
+  .then(
+    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Test C: dynamic import', async () => {
       console.log("await import('./log.js')\n")
       const mod = await __webpack_require__.e(/*! import() */ "log_js").then(__webpack_require__.bind(__webpack_require__, /*! ./log.js */ "./log.js"))
       ;(0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)('file' in mod, mod)
     })
   )
-  .then(() => new Promise((resolve) => setTimeout(resolve, 100)))
   .then(
-    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Worker Test C: message from background', () => {
-      (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)(event?.data === 'Hello from background!', event.data)
+    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Test D: new Worker()', async () => {
+      if (typeof Worker === 'undefined') {
+        console.log('Worker is not supported.')
+        return
+      }
+      console.log('new Worker(new URL("./worker", import.meta.url))')
+      const worker = new Worker(new URL(/* worker import */ __webpack_require__.p + __webpack_require__.u("worker_js"), __webpack_require__.b))
+      worker.postMessage('Hello from background!')
+      const messageFromWorker = await new Promise((resolve, reject) => {
+        worker.onerror = reject
+        worker.onmessage = (event) => {
+          resolve(event.data)
+        }
+      })
+      ;(0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)(messageFromWorker === 'Hello from worker!', messageFromWorker)
     })
   )
-  .finally(() => {
-    postMessage('Hello from worker!')
+  .then(() => {
+    setInterval(() => {
+      chrome.tabs.query({}, (tabs) => {
+        tabs.forEach((tab) => chrome.tabs.sendMessage(tab.id, 'Hello from background!'))
+      })
+    }, 1000)
+    chrome.runtime.onMessage.addListener((message) => {
+      console.log('Message from content script:', message)
+    })
   })
 
 })();

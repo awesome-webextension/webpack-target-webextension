@@ -90,6 +90,9 @@ function test(expr, ...args) {
 /******/ 				throw new Error("No chrome or browser runtime found");
 /******/ 			}
 /******/ 		}
+/******/ 		if (!runtime && (typeof self !== "object" || !self.addEventListener)) {
+/******/ 			__webpack_require__.webExtRt = { runtime: { getURL: String } };
+/******/ 		}
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/define property getters */
@@ -154,46 +157,6 @@ function test(expr, ...args) {
 /******/ 		};
 /******/ 	})();
 /******/ 	
-/******/ 	/* webpack/runtime/load script */
-/******/ 	(() => {
-/******/ 		const classicLoader = (url, done) => {
-/******/ 			const msg = { type: "WTW_INJECT", file: url };
-/******/ 			const onError = (e) => {
-/******/ 				done(Object.assign(e, { type: "missing" }))
-/******/ 			};
-/******/ 			if (__webpack_require__.webExtRtModern) {
-/******/ 				__webpack_require__.webExtRt.runtime.sendMessage(msg).then(done, onError);
-/******/ 			} else {
-/******/ 				__webpack_require__.webExtRt.runtime.sendMessage(msg, () => {
-/******/ 					const error = __webpack_require__.webExtRt.runtime.lastError;
-/******/ 					if (error) onError(error);
-/******/ 					else done();
-/******/ 				});
-/******/ 			}
-/******/ 		};
-/******/ 		const scriptLoader = (url, done) => {
-/******/ 			const script = document.createElement('script');
-/******/ 			script.src = url;
-/******/ 			script.onload = done;
-/******/ 			script.onerror = done;
-/******/ 			document.body.appendChild(script);
-/******/ 		}
-/******/ 		const workerLoader = (url, done) => {
-/******/ 			try {
-/******/ 				importScripts(url);
-/******/ 				done();
-/******/ 			} catch (e) {
-/******/ 				done(e);
-/******/ 			}
-/******/ 		}
-/******/ 		const isWorker = typeof importScripts === 'function'
-/******/ 		if (typeof location === 'object' && location.protocol.includes('-extension:')) {
-/******/ 			__webpack_require__.l = isWorker ? workerLoader : scriptLoader;
-/******/ 		}
-/******/ 		else if (!isWorker) __webpack_require__.l = classicLoader;
-/******/ 		else { throw new TypeError('Unable to determinate the chunk loader: content script + Worker'); }
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/publicPath */
 /******/ 	(() => {
 /******/ 		let scriptUrl;
@@ -212,134 +175,83 @@ function test(expr, ...args) {
 /******/ 		__webpack_require__.p = scriptUrl;
 /******/ 	})();
 /******/ 	
-/******/ 	/* webpack/runtime/jsonp chunk loading */
+/******/ 	/* webpack/runtime/importScripts chunk loading */
 /******/ 	(() => {
-/******/ 		__webpack_require__.b = document.baseURI || self.location.href;
+/******/ 		__webpack_require__.b = self.location + "";
 /******/ 		
-/******/ 		// object to store loaded and loading chunks
-/******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
-/******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
+/******/ 		// object to store loaded chunks
+/******/ 		// "1" means "already loaded"
 /******/ 		var installedChunks = {
-/******/ 			"content": 0
+/******/ 			"worker_js": 1
 /******/ 		};
 /******/ 		
-/******/ 		__webpack_require__.f.j = (chunkId, promises) => {
-/******/ 				// JSONP chunk loading for javascript
-/******/ 				var installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
-/******/ 				if(installedChunkData !== 0) { // 0 means "already installed".
-/******/ 		
-/******/ 					// a Promise means "currently loading".
-/******/ 					if(installedChunkData) {
-/******/ 						promises.push(installedChunkData[2]);
-/******/ 					} else {
-/******/ 						if(true) { // all chunks have JS
-/******/ 							// setup Promise in chunk cache
-/******/ 							var promise = new Promise((resolve, reject) => (installedChunkData = installedChunks[chunkId] = [resolve, reject]));
-/******/ 							promises.push(installedChunkData[2] = promise);
-/******/ 		
-/******/ 							// start chunk loading
-/******/ 							var url = __webpack_require__.p + __webpack_require__.u(chunkId);
-/******/ 							// create error before stack unwound to get useful stacktrace later
-/******/ 							var error = new Error();
-/******/ 							var loadingEnded = (event) => {
-/******/ 								if(__webpack_require__.o(installedChunks, chunkId)) {
-/******/ 									installedChunkData = installedChunks[chunkId];
-/******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
-/******/ 									if(installedChunkData) {
-/******/ 										var errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 										var realSrc = event && event.target && event.target.src;
-/******/ 										error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
-/******/ 										error.name = 'ChunkLoadError';
-/******/ 										error.type = errorType;
-/******/ 										error.request = realSrc;
-/******/ 										installedChunkData[1](error);
-/******/ 									}
-/******/ 								}
-/******/ 							};
-/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
-/******/ 						}
-/******/ 					}
+/******/ 		// importScripts chunk loading
+/******/ 		var installChunk = (data) => {
+/******/ 			var [chunkIds, moreModules, runtime] = data;
+/******/ 			for(var moduleId in moreModules) {
+/******/ 				if(__webpack_require__.o(moreModules, moduleId)) {
+/******/ 					__webpack_require__.m[moduleId] = moreModules[moduleId];
 /******/ 				}
+/******/ 			}
+/******/ 			if(runtime) runtime(__webpack_require__);
+/******/ 			while(chunkIds.length)
+/******/ 				installedChunks[chunkIds.pop()] = 1;
+/******/ 			parentChunkLoadingFunction(data);
+/******/ 		};
+/******/ 		__webpack_require__.f.i = (chunkId, promises) => {
+/******/ 			// "1" is the signal for "already loaded"
+/******/ 			if(!installedChunks[chunkId]) {
+/******/ 				if(true) { // all chunks have JS
+/******/ 					importScripts(__webpack_require__.p + __webpack_require__.u(chunkId));
+/******/ 				}
+/******/ 			}
 /******/ 		};
 /******/ 		
-/******/ 		// no prefetching
-/******/ 		
-/******/ 		// no preloaded
+/******/ 		var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+/******/ 		var parentChunkLoadingFunction = chunkLoadingGlobal.push.bind(chunkLoadingGlobal);
+/******/ 		chunkLoadingGlobal.push = installChunk;
 /******/ 		
 /******/ 		// no HMR
 /******/ 		
 /******/ 		// no HMR manifest
-/******/ 		
-/******/ 		// no on chunks loaded
-/******/ 		
-/******/ 		// install a JSONP callback for chunk loading
-/******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
-/******/ 			var [chunkIds, moreModules, runtime] = data;
-/******/ 			// add "moreModules" to the modules object,
-/******/ 			// then flag all "chunkIds" as loaded and fire callback
-/******/ 			var moduleId, chunkId, i = 0;
-/******/ 			if(chunkIds.some((id) => (installedChunks[id] !== 0))) {
-/******/ 				for(moduleId in moreModules) {
-/******/ 					if(__webpack_require__.o(moreModules, moduleId)) {
-/******/ 						__webpack_require__.m[moduleId] = moreModules[moduleId];
-/******/ 					}
-/******/ 				}
-/******/ 				if(runtime) var result = runtime(__webpack_require__);
-/******/ 			}
-/******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
-/******/ 			for(;i < chunkIds.length; i++) {
-/******/ 				chunkId = chunkIds[i];
-/******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
-/******/ 					installedChunks[chunkId][0]();
-/******/ 				}
-/******/ 				installedChunks[chunkId] = 0;
-/******/ 			}
-/******/ 		
-/******/ 		}
-/******/ 		
-/******/ 		var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
-/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
-/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
 // This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
 (() => {
-/*!********************!*\
-  !*** ./content.js ***!
-  \********************/
+/*!*******************!*\
+  !*** ./worker.js ***!
+  \*******************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util.js */ "./util.js");
-/// <reference lib="dom" />
-// @ts-check
 
 
+let event
+addEventListener('message', (e) => (event = e))
 
 Promise.resolve()
   .then(
-    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Test A: import.meta.url', () => {
+    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Worker Test A: import.meta.url', () => {
       const url = new URL(/* asset import */ __webpack_require__(/*! ./test.txt */ "./test.txt"), __webpack_require__.b).toString()
       ;(0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)(url.includes('-extension://'), "new URL('./test.txt', import.meta.url)\n", url)
     })
   )
   .then(
-    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Test B: __webpack_public_path__', () => {
-      (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)(__webpack_require__.p.includes('-extension://'), '__webpack_public_path__\n', __webpack_require__.p)
-    })
-  )
-  .then(
-    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Test C: dynamic import', async () => {
+    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Worker Test B: dynamic import', async () => {
       console.log("await import('./log.js')\n")
       const mod = await __webpack_require__.e(/*! import() */ "log_js").then(__webpack_require__.bind(__webpack_require__, /*! ./log.js */ "./log.js"))
       ;(0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)('file' in mod, mod)
     })
   )
-  .then(() => {
-    chrome.runtime.sendMessage('Hello from content script!')
-    chrome.runtime.onMessage.addListener((message) => {
-      console.log('Message from background:', message)
+  .then(() => new Promise((resolve) => setTimeout(resolve, 100)))
+  .then(
+    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Worker Test C: message from background', () => {
+      (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)(event?.data === 'Hello from background!', event.data)
     })
+  )
+  .finally(() => {
+    postMessage('Hello from worker!')
   })
 
 })();

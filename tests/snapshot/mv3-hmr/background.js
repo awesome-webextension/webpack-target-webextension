@@ -88,10 +88,9 @@ function test(expr, ...args) {
 /******/ 		__webpack_require__.webExtRt = runtime || {
 /******/ 			get runtime() {
 /******/ 				throw new Error("No chrome or browser runtime found");
-/******/ 			},
-/******/ 			e: 1
+/******/ 			}
 /******/ 		}
-/******/ 		if (__webpack_require__.webExtRt.e && (typeof self !== "object" || !self.addEventListener)) {
+/******/ 		if (!runtime && (typeof self !== "object" || !self.addEventListener)) {
 /******/ 			__webpack_require__.webExtRt = { runtime: { getURL: String } };
 /******/ 		}
 /******/ 	})();
@@ -126,7 +125,7 @@ function test(expr, ...args) {
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames based on template
-/******/ 			return "chunks-" + {"log_js":"ed0dde4f184158f0d66f","worker_js":"928a0f75de77b96b42fc"}[chunkId] + ".js";
+/******/ 			return "chunks-" + {"log_js":"ed0dde4f184158f0d66f","worker_js":"391c2137275f664c597e"}[chunkId] + ".js";
 /******/ 		};
 /******/ 	})();
 /******/ 	

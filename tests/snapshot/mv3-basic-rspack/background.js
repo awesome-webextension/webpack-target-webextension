@@ -88,8 +88,7 @@ __webpack_require__.webExtRtModern = !isChrome;
 __webpack_require__.webExtRt = runtime || {
 	get runtime() {
 		throw new Error("No chrome or browser runtime found");
-	},
-	e: 1
+	}
 }
 })();
 // webpack/runtime/define_property_getters
@@ -109,7 +108,7 @@ __webpack_require__.d = function(exports, definition) {
           // return url for filenames not based on template
           
           // return url for filenames based on template
-          return "chunks-" + "5927b38e25b3119a" + ".js";
+          return "chunks-" + "727668d1c1146b93" + ".js";
         };
       
 })();
