@@ -2,11 +2,21 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./test.txt":
+/*!******************!*\
+  !*** ./test.txt ***!
+  \******************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+module.exports = __webpack_require__.p + "ae771fd2ba5e0558da2f.txt";
+
+/***/ }),
+
 /***/ "./util.js":
 /*!*****************!*\
   !*** ./util.js ***!
   \*****************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -25,16 +35,6 @@ function test(expr, ...args) {
   else console.error('[❌]', ...args)
 }
 
-
-/***/ }),
-
-/***/ "./test.txt":
-/*!******************!*\
-  !*** ./test.txt ***!
-  \******************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-module.exports = __webpack_require__.p + "ae771fd2ba5e0558da2f.txt";
 
 /***/ })
 
@@ -68,6 +68,28 @@ module.exports = __webpack_require__.p + "ae771fd2ba5e0558da2f.txt";
 /******/ 	__webpack_require__.m = __webpack_modules__;
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/WebExtensionBrowserRuntime */
+/******/ 	(() => {
+/******/ 		var isBrowser, runtime;
+/******/ 		try {
+/******/ 			if (typeof browser !== 'undefined' && typeof browser.runtime === 'object' && typeof browser.runtime.getURL === 'function') {
+/******/ 				isBrowser = true
+/******/ 				runtime = browser
+/******/ 			}
+/******/ 		} catch (_) {}
+/******/ 		if (!isBrowser) {
+/******/ 			try {
+/******/ 				if (typeof chrome !== 'undefined' && typeof chrome.runtime === 'object' && typeof chrome.runtime.getURL === 'function') {
+/******/ 					runtime = chrome
+/******/ 				}
+/******/ 			} catch (_) {}
+/******/ 		}
+/******/ 		__webpack_require__.webExtRtModern = isBrowser
+/******/ 		__webpack_require__.webExtRt = runtime || { get runtime() {
+/******/ 			throw new Error("No chrome or browser runtime found")
+/******/ 		} }
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -98,7 +120,7 @@ module.exports = __webpack_require__.p + "ae771fd2ba5e0558da2f.txt";
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames based on template
-/******/ 			return "chunks-" + "50f31a9487b49be79acc" + ".js";
+/******/ 			return "chunks-" + "ed0dde4f184158f0d66f" + ".js";
 /******/ 		};
 /******/ 	})();
 /******/ 	
@@ -121,14 +143,11 @@ module.exports = __webpack_require__.p + "ae771fd2ba5e0558da2f.txt";
 /******/ 	
 /******/ 	/* webpack/runtime/load script */
 /******/ 	(() => {
-/******/ 		var isBrowser = !!(() => { try { return browser.runtime.getURL("/") } catch(e) {} })()
-/******/ 		var isChrome = !!(() => { try { return chrome.runtime.getURL("/") } catch(e) {} })()
-/******/ 		var runtime = isBrowser ? browser : isChrome ? chrome : { get runtime() { throw new Error("No chrome or browser runtime found") } }
 /******/ 		var bug816121warned, isNotIframe
 /******/ 		try { isNotIframe = typeof window === "object" ? window.top === window : true } catch(e) { isInIframe = false /* CORS error */ }
 /******/ 		var __send__ = (msg) => {
-/******/ 			if (isBrowser) return runtime.runtime.sendMessage(msg)
-/******/ 			return new Promise(r => runtime.runtime.sendMessage(msg, r))
+/******/ 			if (isBrowser) return __webpack_require__.webExtRt.runtime.sendMessage(msg)
+/******/ 			return new Promise(r => __webpack_require__.webExtRt.runtime.sendMessage(msg, r))
 /******/ 		}
 /******/ 		var classicLoader = (url, done) => {
 /******/ 			__send__({ type: 'WTW_INJECT', file: url }).then(done, (e) => done(Object.assign(e, { type: 'missing' })))
@@ -188,9 +207,6 @@ module.exports = __webpack_require__.p + "ae771fd2ba5e0558da2f.txt";
 /******/ 	
 /******/ 	/* webpack/runtime/publicPath */
 /******/ 	(() => {
-/******/ 		var isBrowser = !!(() => { try { return browser.runtime.getURL("/") } catch(e) {} })()
-/******/ 		var isChrome = !!(() => { try { return chrome.runtime.getURL("/") } catch(e) {} })()
-/******/ 		var runtime = isBrowser ? browser : isChrome ? chrome : { get runtime() { throw new Error("No chrome or browser runtime found") } }
 /******/ 		var scriptUrl;
 /******/ 		if (__webpack_require__.g.importScripts) scriptUrl = __webpack_require__.g.location + "";
 /******/ 		var document = __webpack_require__.g.document;
@@ -200,7 +216,7 @@ module.exports = __webpack_require__.p + "ae771fd2ba5e0558da2f.txt";
 /******/ 		// When supporting browsers where an automatic publicPath is not supported you must specify an output.publicPath manually via configuration
 /******/ 		// or pass an empty string ("") and set the __webpack_public_path__ variable from your code to use your own logic.
 /******/ 		if (!scriptUrl) {
-/******/ 			if (isChrome || isBrowser) scriptUrl = runtime.runtime.getURL("/");
+/******/ 			if (__webpack_require__.webExtRt) scriptUrl = __webpack_require__.webExtRt.runtime.getURL("/");
 /******/ 			else throw new Error("Automatic publicPath is not supported in this browser");
 /******/ 		}
 /******/ 		scriptUrl = scriptUrl.replace(/#.*$/, "").replace(/\?.*$/, "").replace(/\/[^\/]+$/, "/");

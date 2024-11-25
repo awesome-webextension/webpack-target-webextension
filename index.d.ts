@@ -57,8 +57,8 @@ export interface WebExtensionPluginOptions {
    */
   weakRuntimeCheck?: boolean
 }
-export default class Webpack5 {
+export default class WebExtensionPlugin {
   constructor(options?: WebExtensionPluginOptions)
   apply(compiler: Compiler): void
 }
-export = Webpack5
+export = WebExtensionPlugin

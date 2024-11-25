@@ -43,7 +43,7 @@ module.exports = {
 
 > manifest.json
 
-```json
+```jsonc
 {
   "manifest_version": 3,
   "name": "Your extension",
