@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.0.0
+
+- Works on rspack now
+- (Breaking) Minimal Node.js requirement changed from 14.17.16 to 18.20.5
+- (Breaking) Deprecated option `BackgroundOptions.entry` is removed. Use `pageEntry` and/or `serviceWorkerEntry` instead.
+- (Breaking) Deprecated option `BackgroundOptions.manifest` is removed.
+- (Breaking) Option `noWarningDynamicEntry` has been renamed to `noDynamicEntryWarning`.
+- (Breaking) `background.pageEntry` cannot be the same as `background.serviceWorkerEntry`.
+- Now `devServer.hot` is set to `only` by default.
+- Now `output.environment.dynamicImport` is set to `true` by default.
+- Now `output.hotUpdateChunkFilename` is set to `hot/[id].[fullhash].js` by default.
+- Now `output.hotUpdateMainFilename` is set to `hot/[runtime].[fullhash].json` by default.
+
 ## 1.1.2
 
 - Support main world content script to be bundled. Also added a guide and example for this.

@@ -89,5 +89,4 @@ docs/.vuepress/dist
 typedoc
 
 examples/**/dist/*
-!examples/**/dist/manifest.json
 examples/hmr/js/

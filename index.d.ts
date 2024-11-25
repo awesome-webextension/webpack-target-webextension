@@ -2,24 +2,14 @@ import { Compiler } from 'webpack'
 
 export interface BackgroundOptions {
   /** Undocumented. */
-  noWarningDynamicEntry?: boolean
+  noDynamicEntryWarning?: boolean
   /**
-   * The entry point of the background scripts
-   * in your webpack config.
    * @deprecated
-   * Use pageEntry and serviceWorkerEntry instead.
+   * Use pageEntry and/or serviceWorkerEntry instead.
    */
-  entry?: string
-  /**
-   * Using Manifest V2 or V3.
-   *
-   * If using Manifest V3,
-   * the entry you provided will be packed as a Worker.
-   *
-   * @defaultValue 2
-   * @deprecated
-   */
-  manifest?: 2 | 3
+  entry?: never
+  /** @deprecated */
+  manifest?: never
   /**
    * The entry point of the background page.
    */
@@ -34,6 +24,8 @@ export interface BackgroundOptions {
    * Load all chunks at the beginning
    * to workaround the chrome bug
    * https://bugs.chromium.org/p/chromium/issues/detail?id=1198822.
+   *
+   * NOT working for rspack.
    *
    * @defaultValue true
    */
@@ -65,8 +57,8 @@ export interface WebExtensionPluginOptions {
    */
   weakRuntimeCheck?: boolean
 }
-export default class Webpack5 {
+export default class WebExtensionPlugin {
   constructor(options?: WebExtensionPluginOptions)
   apply(compiler: Compiler): void
 }
-export = Webpack5
+export = WebExtensionPlugin
