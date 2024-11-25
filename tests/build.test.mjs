@@ -74,6 +74,7 @@ test('Manifest v3 HMR test', () => {
   })
 })
 
+// This crashes at runtime. This is expected. ReferenceError: document is not defined
 test('Manifest v3 basic test, no option', () => {
   return run({
     input: './fixtures/basic',

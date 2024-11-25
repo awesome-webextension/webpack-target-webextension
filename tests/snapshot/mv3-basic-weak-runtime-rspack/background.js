@@ -111,7 +111,7 @@ __webpack_require__.d = function(exports, definition) {
           // return url for filenames not based on template
           
           // return url for filenames based on template
-          return "chunks-" + "48ec1212bc723f15" + ".js";
+          return "chunks-" + "21226f49a8a3b562" + ".js";
         };
       
 })();
@@ -147,7 +147,7 @@ __webpack_require__.rv = function () {
 })();
 // webpack/runtime/publicPath
 (() => {
-if (__webpack_require__.webExtRt && typeof importScripts !== 'function') {
+if (__webpack_require__.webExtRt) {
 	__webpack_require__.p = __webpack_require__.webExtRt.runtime.getURL("/");
 }
 })();

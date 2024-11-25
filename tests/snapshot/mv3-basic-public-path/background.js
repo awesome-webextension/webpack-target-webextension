@@ -122,7 +122,7 @@ function test(expr, ...args) {
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames based on template
-/******/ 			return "chunks-" + {"log_js":"ed0dde4f184158f0d66f","worker_js":"3d88b66964cd9ecc013c"}[chunkId] + ".js";
+/******/ 			return "chunks-" + {"log_js":"ed0dde4f184158f0d66f","worker_js":"04b9ee4c50091e096d86"}[chunkId] + ".js";
 /******/ 		};
 /******/ 	})();
 /******/ 	
@@ -144,7 +144,7 @@ function test(expr, ...args) {
 /******/ 	
 /******/ 	/* webpack/runtime/publicPath */
 /******/ 	(() => {
-/******/ 		if (__webpack_require__.webExtRt && typeof importScripts !== 'function') {
+/******/ 		if (__webpack_require__.webExtRt) {
 /******/ 			__webpack_require__.p = __webpack_require__.webExtRt.runtime.getURL("/");
 /******/ 		}
 /******/ 	})();

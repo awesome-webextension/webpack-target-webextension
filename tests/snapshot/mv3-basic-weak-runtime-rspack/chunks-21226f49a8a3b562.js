@@ -136,7 +136,7 @@ __webpack_require__.rv = function () {
 })();
 // webpack/runtime/publicPath
 (() => {
-if (__webpack_require__.webExtRt && typeof importScripts !== 'function') {
+if (__webpack_require__.webExtRt) {
 	__webpack_require__.p = __webpack_require__.webExtRt.runtime.getURL("/");
 }
 })();
