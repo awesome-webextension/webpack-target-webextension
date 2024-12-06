@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.1
+
+- Fix ServiceWorkerPlugin does not add eager chunks correctly in watch mode.
+
 ## 2.0.0
 
 - Works on rspack now
