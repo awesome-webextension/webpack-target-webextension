@@ -1,3 +1,4 @@
+/******/ try { // If the initial code of the serviceWorkerEntry throws, the console cannot be opened.
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
@@ -289,4 +290,7 @@ Promise.resolve()
 })();
 
 /******/ })()
-;
+
+/******/ } catch (e) {
+/******/ 	console.error(e);
+/******/ };

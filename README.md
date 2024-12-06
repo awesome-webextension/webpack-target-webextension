@@ -182,7 +182,6 @@ new WebExtensionPlugin({
 
 ```ts
 export interface BackgroundOptions {
-  /** Undocumented. */
   noDynamicEntryWarning?: boolean
   /**
    * The entry point of the background page.
@@ -213,6 +212,15 @@ export interface BackgroundOptions {
    * @defaultValue true
    */
   classicLoader?: boolean
+  /**
+   * Add a try-catch wrapper around the entry file of serviceWorkerEntry
+   * so if the initial code throws, you can still open the console of it.
+   *
+   * Does not work in rspack.
+   *
+   * @defaultValue true
+   */
+  tryCatchWrapper?: boolean
 }
 ```
 
