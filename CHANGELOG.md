@@ -8,6 +8,7 @@
 ## 2.0.1
 
 - Fix ServiceWorkerPlugin does not add eager chunks correctly in watch mode.
+- Fix `splitChunks: { chunks: 'all', minSize: 1 }` crashes rspack.
 
 ## 2.0.0
 

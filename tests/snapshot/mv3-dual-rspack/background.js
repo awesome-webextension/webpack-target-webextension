@@ -108,7 +108,7 @@ __webpack_require__.d = function(exports, definition) {
           // return url for filenames not based on template
           
           // return url for filenames based on template
-          return "chunks-" + "5260f91a68187c2a" + ".js";
+          return "chunks-" + "c51c360c38232c92" + ".js";
         };
       
 })();
@@ -150,7 +150,7 @@ __webpack_require__.p = "";
 // webpack/runtime/rspack_version
 (() => {
 __webpack_require__.rv = function () {
-	return "1.1.3";
+	return "1.1.5";
 };
 
 })();
@@ -183,7 +183,7 @@ __webpack_require__.b = document.baseURI || self.location.href;
 })();
 // webpack/runtime/rspack_unique_id
 (() => {
-__webpack_require__.ruid = "bundler=rspack@1.1.3";
+__webpack_require__.ruid = "bundler=rspack@1.1.5";
 
 })();
 // webpack/runtime/chunk loader fallback

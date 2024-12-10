@@ -108,7 +108,7 @@ __webpack_require__.d = function(exports, definition) {
           // return url for filenames not based on template
           
           // return url for filenames based on template
-          return "chunks-" + "727668d1c1146b93" + ".js";
+          return "chunks-" + "20a7335eb1d68f49" + ".js";
         };
       
 })();
@@ -150,7 +150,7 @@ __webpack_require__.p = "";
 // webpack/runtime/rspack_version
 (() => {
 __webpack_require__.rv = function () {
-	return "1.1.3";
+	return "1.1.5";
 };
 
 })();
@@ -179,7 +179,7 @@ var installedChunks = {"background": 1,};
 })();
 // webpack/runtime/rspack_unique_id
 (() => {
-__webpack_require__.ruid = "bundler=rspack@1.1.3";
+__webpack_require__.ruid = "bundler=rspack@1.1.5";
 
 })();
 // webpack/runtime/chunk loader fallback

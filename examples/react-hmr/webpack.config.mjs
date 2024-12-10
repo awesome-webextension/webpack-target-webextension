@@ -57,6 +57,7 @@ const config = (_, env) => {
       }),
       new WebExtension({
         background: { serviceWorkerEntry: 'background' },
+        weakRuntimeCheck: true, // because of HtmlWebpackPlugin
       }),
       isProduction ? null : new ReactRefreshPlugin(),
     ].filter(Boolean),

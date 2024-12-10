@@ -1,27 +1,39 @@
 (() => { // webpackBootstrap
 "use strict";
 var __webpack_modules__ = ({
-"./test.txt": (function (module, __unused_webpack_exports, __webpack_require__) {
-module.exports = __webpack_require__.p + "6c5b191a31c5a9fc.txt";
-
-}),
-"./util.js": (function (__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+"./content.js": (function (__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
 __webpack_require__.r(__webpack_exports__);
-__webpack_require__.d(__webpack_exports__, {
-  log: function() { return log; },
-  test: function() { return test; }
-});
-function log(label, f) {
-  return async () => {
-    console.group(label)
-    await Promise.resolve().then(f).catch(console.error)
-    console.groupEnd()
-  }
-}
-function test(expr, ...args) {
-  if (expr) console.log('[✅]', ...args)
-  else console.error('[❌]', ...args)
-}
+/* ESM import */var _util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util.js */ "./util.js");
+/// <reference lib="dom" />
+// @ts-check
+
+
+
+Promise.resolve()
+  .then(
+    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Test A: import.meta.url', () => {
+      const url = new URL(/* asset import */__webpack_require__(/*! ./test.txt */ "./test.txt"), __webpack_require__.b).toString()
+      ;(0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)(url.includes('-extension://'), "new URL('./test.txt', import.meta.url)\n", url)
+    })
+  )
+  .then(
+    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Test B: __webpack_public_path__', () => {
+      (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)(__webpack_require__.p.includes('-extension://'), '__webpack_public_path__\n', __webpack_require__.p)
+    })
+  )
+  .then(
+    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Test C: dynamic import', async () => {
+      console.log("await import('./log.js')\n")
+      const mod = await Promise.resolve(/*! import() eager */).then(__webpack_require__.bind(__webpack_require__, /*! ./log.js */ "./log.js"))
+      ;(0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)('file' in mod, mod)
+    })
+  )
+  .then(() => {
+    chrome.runtime.sendMessage('Hello from content script!')
+    chrome.runtime.onMessage.addListener((message) => {
+      console.log('Message from background:', message)
+    })
+  })
 
 
 }),
@@ -118,6 +130,46 @@ __webpack_require__.r = function(exports) {
 };
 
 })();
+// webpack/runtime/on_chunk_loaded
+(() => {
+var deferred = [];
+__webpack_require__.O = function (result, chunkIds, fn, priority) {
+	if (chunkIds) {
+		priority = priority || 0;
+		for (var i = deferred.length; i > 0 && deferred[i - 1][2] > priority; i--)
+			deferred[i] = deferred[i - 1];
+		deferred[i] = [chunkIds, fn, priority];
+		return;
+	}
+	var notFulfilled = Infinity;
+	for (var i = 0; i < deferred.length; i++) {
+		var chunkIds = deferred[i][0],
+			fn = deferred[i][1],
+			priority = deferred[i][2];
+		var fulfilled = true;
+		for (var j = 0; j < chunkIds.length; j++) {
+			if (
+				(priority & (1 === 0) || notFulfilled >= priority) &&
+				Object.keys(__webpack_require__.O).every(function (key) {
+					return __webpack_require__.O[key](chunkIds[j]);
+				})
+			) {
+				chunkIds.splice(j--, 1);
+			} else {
+				fulfilled = false;
+				if (priority < notFulfilled) notFulfilled = priority;
+			}
+		}
+		if (fulfilled) {
+			deferred.splice(i--, 1);
+			var r = fn();
+			if (r !== undefined) result = r;
+		}
+	}
+	return result;
+};
+
+})();
 // webpack/runtime/public_path
 (() => {
 __webpack_require__.p = "";
@@ -155,7 +207,48 @@ __webpack_require__.b = document.baseURI || self.location.href;
       // undefined = chunk not loaded, null = chunk preloaded/prefetched
       // [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
       var installedChunks = {"content": 0,};
-      
+      __webpack_require__.O.j = function (chunkId) {
+	return installedChunks[chunkId] === 0;
+};
+// install a JSONP callback for chunk loading
+var webpackJsonpCallback = function (parentChunkLoadingFunction, data) {
+	var chunkIds = data[0];
+	var moreModules = data[1];
+	var runtime = data[2];
+	// add "moreModules" to the modules object,
+	// then flag all "chunkIds" as loaded and fire callback
+	var moduleId,
+		chunkId,
+		i = 0;
+	if (chunkIds.some(function (id) { return installedChunks[id] !== 0 })) {
+		for (moduleId in moreModules) {
+			if (__webpack_require__.o(moreModules, moduleId)) {
+				__webpack_require__.m[moduleId] = moreModules[moduleId];
+			}
+		}
+		if (runtime) var result = runtime(__webpack_require__);
+	}
+	if (parentChunkLoadingFunction) parentChunkLoadingFunction(data);
+	for (; i < chunkIds.length; i++) {
+		chunkId = chunkIds[i];
+		if (
+			__webpack_require__.o(installedChunks, chunkId) &&
+			installedChunks[chunkId]
+		) {
+			installedChunks[chunkId][0]();
+		}
+		installedChunks[chunkId] = 0;
+	}
+	return __webpack_require__.O(result);
+};
+
+var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
+chunkLoadingGlobal.push = webpackJsonpCallback.bind(
+	null,
+	chunkLoadingGlobal.push.bind(chunkLoadingGlobal)
+);
+
 })();
 // webpack/runtime/rspack_unique_id
 (() => {
@@ -163,32 +256,10 @@ __webpack_require__.ruid = "bundler=rspack@1.1.5";
 
 })();
 /************************************************************************/
-var __webpack_exports__ = {};
-__webpack_require__.r(__webpack_exports__);
-/* ESM import */var _util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util.js */ "./util.js");
-/// <reference lib="dom" />
-// @ts-check
-
-
-
-Promise.resolve()
-  .then(
-    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Test A: import.meta.url', () => {
-      const url = new URL(/* asset import */__webpack_require__(/*! ./test.txt */ "./test.txt"), __webpack_require__.b).toString()
-      ;(0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)(url.includes('-extension://'), "new URL('./test.txt', import.meta.url)\n", url)
-    })
-  )
-  .then(
-    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Test B: __webpack_public_path__', () => {
-      (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)(__webpack_require__.p.includes('-extension://'), '__webpack_public_path__\n', __webpack_require__.p)
-    })
-  )
-  .then(() => {
-    chrome.runtime.sendMessage('Hello from content script!')
-    chrome.runtime.onMessage.addListener((message) => {
-      console.log('Message from background:', message)
-    })
-  })
-
+// startup
+// Load entry module and return exports
+// This entry module depends on other loaded chunks and execution need to be delayed
+var __webpack_exports__ = __webpack_require__.O(undefined, ["test_txt-log_js-util_js"], function() { return __webpack_require__("./content.js") });
+__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 })()
 ;

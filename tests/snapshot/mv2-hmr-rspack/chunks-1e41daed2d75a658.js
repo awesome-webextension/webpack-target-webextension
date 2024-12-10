@@ -144,9 +144,6 @@ __webpack_require__.webExtRt = runtime || {
 		throw new Error("No chrome or browser runtime found");
 	}
 }
-if (!runtime && (typeof self !== "object" || !self.addEventListener)) {
-	__webpack_require__.webExtRt = { runtime: { getURL: String } };
-}
 })();
 // webpack/runtime/define_property_getters
 (() => {
@@ -168,7 +165,7 @@ __webpack_require__.hu = function (chunkId) {
 // webpack/runtime/get_full_hash
 (() => {
 __webpack_require__.h = function () {
-	return "abb9ef3d4e15229e";
+	return "dad1561662c265b3";
 };
 
 })();
@@ -583,7 +580,7 @@ __webpack_require__.p = "";
 // webpack/runtime/rspack_version
 (() => {
 __webpack_require__.rv = function () {
-	return "1.1.3";
+	return "1.1.5";
 };
 
 })();
@@ -1071,7 +1068,7 @@ __webpack_require__.hmrM = function () {
 })();
 // webpack/runtime/rspack_unique_id
 (() => {
-__webpack_require__.ruid = "bundler=rspack@1.1.3";
+__webpack_require__.ruid = "bundler=rspack@1.1.5";
 
 })();
 /************************************************************************/

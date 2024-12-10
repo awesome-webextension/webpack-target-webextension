@@ -101,18 +101,6 @@ __webpack_require__.d = function(exports, definition) {
     }
 };
 })();
-// webpack/runtime/global
-(() => {
-__webpack_require__.g = (function () {
-	if (typeof globalThis === 'object') return globalThis;
-	try {
-		return this || new Function('return this')();
-	} catch (e) {
-		if (typeof window === 'object') return window;
-	}
-})();
-
-})();
 // webpack/runtime/has_own_property
 (() => {
 __webpack_require__.o = function (obj, prop) {
@@ -133,32 +121,21 @@ __webpack_require__.r = function(exports) {
 })();
 // webpack/runtime/public_path
 (() => {
-__webpack_require__.p = "";
+__webpack_require__.p = "/";
 
 })();
 // webpack/runtime/rspack_version
 (() => {
 __webpack_require__.rv = function () {
-	return "1.1.3";
+	return "1.1.5";
 };
 
 })();
 // webpack/runtime/publicPath
 (() => {
-let scriptUrl;
-if (__webpack_require__.g.importScripts) scriptUrl = __webpack_require__.g.location + "";
-const document = __webpack_require__.g.document;
-if (!scriptUrl && document?.currentScript) {
-	scriptUrl = document.currentScript.src;
+if (__webpack_require__.webExtRt) {
+	__webpack_require__.p = __webpack_require__.webExtRt.runtime.getURL("/");
 }
-// When supporting browsers where an automatic publicPath is not supported you must specify an output.publicPath manually via configuration
-// or pass an empty string ("") and set the __webpack_public_path__ variable from your code to use your own logic.
-if (!scriptUrl) {
-	if (__webpack_require__.webExtRt) scriptUrl = __webpack_require__.webExtRt.runtime.getURL("/");
-	else throw new Error("Automatic publicPath is not supported in this browser");
-}
-scriptUrl = scriptUrl.replace(/#.*$/, "").replace(/\?.*$/, "").replace(/\/[^\/]+$/, "/");
-__webpack_require__.p = scriptUrl;
 })();
 // webpack/runtime/import_scripts_chunk_loading
 (() => {
@@ -168,7 +145,7 @@ var installedChunks = {"worker_js": 1,};
 })();
 // webpack/runtime/rspack_unique_id
 (() => {
-__webpack_require__.ruid = "bundler=rspack@1.1.3";
+__webpack_require__.ruid = "bundler=rspack@1.1.5";
 
 })();
 /************************************************************************/

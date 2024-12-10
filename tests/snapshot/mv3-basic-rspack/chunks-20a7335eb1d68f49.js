@@ -5,6 +5,19 @@ var __webpack_modules__ = ({
 module.exports = __webpack_require__.p + "6c5b191a31c5a9fc.txt";
 
 }),
+"./log.js": (function (__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+__webpack_require__.r(__webpack_exports__);
+__webpack_require__.d(__webpack_exports__, {
+  file: function() { return file; },
+  mod: function() { return /* reexport module object */ _log_js__WEBPACK_IMPORTED_MODULE_0__; }
+});
+/* ESM import */var _log_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./log.js */ "./log.js");
+
+
+const file = 'log.js'
+
+
+}),
 "./util.js": (function (__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
 __webpack_require__.r(__webpack_exports__);
 __webpack_require__.d(__webpack_exports__, {
@@ -126,7 +139,7 @@ __webpack_require__.p = "";
 // webpack/runtime/rspack_version
 (() => {
 __webpack_require__.rv = function () {
-	return "1.1.3";
+	return "1.1.5";
 };
 
 })();
@@ -155,7 +168,7 @@ var installedChunks = {"worker_js": 1,};
 })();
 // webpack/runtime/rspack_unique_id
 (() => {
-__webpack_require__.ruid = "bundler=rspack@1.1.3";
+__webpack_require__.ruid = "bundler=rspack@1.1.5";
 
 })();
 /************************************************************************/
@@ -172,6 +185,13 @@ Promise.resolve()
     (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Worker Test A: import.meta.url', () => {
       const url = new URL(/* asset import */__webpack_require__(/*! ./test.txt */ "./test.txt"), __webpack_require__.b).toString()
       ;(0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)(url.includes('-extension://'), "new URL('./test.txt', import.meta.url)\n", url)
+    })
+  )
+  .then(
+    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Worker Test B: dynamic import', async () => {
+      console.log("await import('./log.js')\n")
+      const mod = await Promise.resolve(/*! import() eager */).then(__webpack_require__.bind(__webpack_require__, /*! ./log.js */ "./log.js"))
+      ;(0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)('file' in mod, mod)
     })
   )
   .then(() => new Promise((resolve) => setTimeout(resolve, 100)))

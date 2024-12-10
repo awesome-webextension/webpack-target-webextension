@@ -39,6 +39,17 @@ test('Manifest v3 basic test', () => {
   })
 })
 
+test('Manifest v3 (splitChunks: all) test', () => {
+  return run({
+    input: './fixtures/basic',
+    output: './snapshot/mv3-splitChunks-all',
+    option: { background: { serviceWorkerEntry: 'background' } },
+    touch(config) {
+      config.optimization = { splitChunks: { chunks: 'all', minSize: 1 } }
+    },
+  })
+})
+
 test('Manifest v3 basic test (with public_path)', () => {
   return run({
     input: './fixtures/basic',
