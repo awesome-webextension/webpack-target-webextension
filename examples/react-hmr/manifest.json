@@ -3,7 +3,7 @@
   "name": "React Web Extension HMR test",
   "version": "1.0.0",
   "background": {
-    "service_worker": "./background.js"
+    "service_worker": "./sw.js"
   },
   "web_accessible_resources": [
     {

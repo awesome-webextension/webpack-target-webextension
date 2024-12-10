@@ -1,6 +1,6 @@
 import rspack from '@rspack/core'
 import { run } from './utils/config.mjs'
-import { test } from 'vitest'
+import { expect, test } from 'vitest'
 
 test('Manifest v2 basic test', () => {
   return run({
@@ -46,6 +46,31 @@ test('Manifest v3 (splitChunks: all) test', () => {
     option: { background: { serviceWorkerEntry: 'background' } },
     touch(config) {
       config.optimization = { splitChunks: { chunks: 'all', minSize: 1 } }
+    },
+  })
+})
+
+test('Manifest v3 (splitChunks: all) + runtimeChunk test', () => {
+  return run({
+    input: './fixtures/basic',
+    output: './snapshot/mv3-splitChunks-runtimeChunk',
+    option: {
+      background: { serviceWorkerEntry: 'background', serviceWorkerEntryOutput: 'sw.js' },
+      weakRuntimeCheck: true,
+    },
+    touch(config) {
+      config.optimization = {
+        splitChunks: { chunks: 'all', minSize: 1 },
+        runtimeChunk: {
+          name({ name }) {
+            if (name === 'background') return 'background-runtime'
+            return 'runtime'
+          },
+        },
+      }
+    },
+    touchManifest(manifest) {
+      manifest.background.service_worker = 'sw.js'
     },
   })
 })

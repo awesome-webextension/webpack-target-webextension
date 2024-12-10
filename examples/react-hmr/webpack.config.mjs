@@ -56,12 +56,21 @@ const config = (_, env) => {
         patterns: [{ from: 'manifest.json' }],
       }),
       new WebExtension({
-        background: { serviceWorkerEntry: 'background' },
+        background: { serviceWorkerEntry: 'background', serviceWorkerEntryOutput: 'sw.js' },
         weakRuntimeCheck: true, // because of HtmlWebpackPlugin
       }),
       isProduction ? null : new ReactRefreshPlugin(),
     ].filter(Boolean),
-    optimization: { minimizer: [false] },
+    optimization: {
+      minimizer: [false],
+      // runtimeChunk: {
+      //   name: (entrypoint) => `runtime-${entrypoint.name}`,
+      // },
+      splitChunks: {
+        chunks: 'all',
+        // minSize: 1,
+      },
+    },
     experiments: { css: true },
   }
 }

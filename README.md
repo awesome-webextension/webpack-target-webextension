@@ -192,6 +192,14 @@ export interface BackgroundOptions {
    */
   serviceWorkerEntry?: string
   /**
+   * The output of the service worker entry.
+   *
+   * Usually used with splitChunks.chunks or splitChunks.runtimeChunk.
+   *
+   * Set to "false" to disable the warning.
+   */
+  serviceWorkerEntryOutput?: string | false
+  /**
    * Only affects in Manifest V3.
    *
    * Load all chunks at the beginning

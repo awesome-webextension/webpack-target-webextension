@@ -10,7 +10,7 @@ const __dirname = join(fileURLToPath(import.meta.url), '..')
  * @typedef {Object} Run
  * @property {string} input - The input path.
  * @property {string} output - The output path.
- * @property {(config: import('webpack').Configuration | import('@rspack/core').Configuration, isRspack: boolean) => void} [touch] - Change the default option.
+ * @property {(config: import('webpack').Configuration | import('@rspack/core').Configuration, rspack: undefined | typeof import('@rspack/core')) => void} [touch] - Change the default option.
  * @property {import('../../index.js').WebExtensionPluginOptions} option - Option of WebExtensionPluginOptions.
  * @property {(manifest: any) => void} [touchManifest] - Change the manifest file.
  */
@@ -52,7 +52,7 @@ export function run(
     },
     plugins: [new WebExtensionPlugin(option), new CopyPlugin(copyPluginOptions)],
   }
-  touch && touch(config, false)
+  touch && touch(config, undefined)
 
   /** @type {import('webpack').Configuration} */
   const rspackConfig = {
@@ -66,7 +66,7 @@ export function run(
     },
     plugins: [new WebExtensionPlugin(option), new rspack.CopyRspackPlugin(copyPluginOptions)],
   }
-  touch && touch(rspackConfig, true)
+  touch && touch(rspackConfig, rspack)
 
   return Promise.all([
     //
