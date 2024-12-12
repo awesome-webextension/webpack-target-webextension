@@ -1,0 +1,500 @@
+import rspack from '@rspack/core'
+import { run } from './config.mjs'
+import { expect, test } from 'vitest'
+
+test('Manifest v2 basic test', async () => {
+  const result = await run({
+    input: './fixtures/basic',
+    output: './snapshot/mv2-basic',
+    option: { background: { pageEntry: 'background' } },
+  })
+  expect(result).toMatchInlineSnapshot(`
+    [
+      {
+        "status": "fulfilled",
+        "value": [],
+      },
+      {
+        "status": "fulfilled",
+        "value": [],
+      },
+    ]
+  `)
+})
+
+test('Manifest v2 HMR test', async () => {
+  const result = await run({
+    input: './fixtures/basic',
+    output: './snapshot/mv2-hmr',
+    option: { background: { pageEntry: 'background' } },
+    touch(_, rc) {
+      rc.plugins!.push(new rspack.HotModuleReplacementPlugin())
+    },
+  })
+  expect(result).toMatchInlineSnapshot(`
+    [
+      {
+        "status": "fulfilled",
+        "value": [],
+      },
+      {
+        "status": "fulfilled",
+        "value": [],
+      },
+    ]
+  `)
+})
+
+test('Manifest v2 basic test, no option', async () => {
+  const result = await run({
+    input: './fixtures/basic',
+    output: './snapshot/mv2-basic-none',
+    option: {},
+  })
+  expect(result).toMatchInlineSnapshot(`
+    [
+      {
+        "status": "fulfilled",
+        "value": [],
+      },
+      {
+        "status": "fulfilled",
+        "value": [],
+      },
+    ]
+  `)
+})
+
+test('Manifest v3 basic test', async () => {
+  const result = await run({
+    input: './fixtures/basic',
+    output: './snapshot/mv3-basic',
+    option: { background: { serviceWorkerEntry: 'background' } },
+  })
+  expect(result).toMatchInlineSnapshot(`
+    [
+      {
+        "status": "fulfilled",
+        "value": [],
+      },
+      {
+        "status": "fulfilled",
+        "value": [],
+      },
+    ]
+  `)
+})
+
+test('Manifest v3 (splitChunks: all) test', async () => {
+  const result = await run({
+    input: './fixtures/basic',
+    output: './snapshot/mv3-splitChunks-all',
+    option: { background: { serviceWorkerEntry: 'background' } },
+    touch(c, rc) {
+      c.optimization = rc.optimization = { splitChunks: { chunks: 'all', minSize: 1 } }
+    },
+  })
+  expect(result).toMatchInlineSnapshot(`
+    [
+      {
+        "status": "fulfilled",
+        "value": [
+          [Error: [webpack-extension-target] Webpack generates multiple initial chunks for the Service Worker entry point (background). This is usually caused by splitChunks.chunks or optimization.runtimeChunk. In normal SPA/MPA builds, you need to use HtmlWebpackPlugin or ChunksWebpackPlugin to generate an HTML file to load all initial chunks, otherwise the entry point will not load.
+
+    You can set background.serviceWorkerEntryOutput: 'sw.js' to create an entry file, and change "background.service_worker" to it in your manifest.json.
+    You can also ignore this warning by setting background.serviceWorkerEntryOutput to false.
+
+    Here are all initial chunks for the Service Worker entry point background:
+        test_txt-util_js.js
+        background.js],
+        ],
+      },
+      {
+        "status": "fulfilled",
+        "value": [
+          {
+            "message": "  ⚠ Error: [webpack-extension-target] Webpack generates multiple initial chunks for the Service Worker entry point (background). This is usually caused by splitChunks.chunks or optimization.runtimeChunk. In normal SPA/MPA builds, you need to use HtmlWebpackPlugin or ChunksWebpackPlugin to generate an HTML file to load all initial chunks, otherwise the entry point will not load.
+      │ 
+      │ You can set background.serviceWorkerEntryOutput: 'sw.js' to create an entry file, and change "background.service_worker" to it in your manifest.json.
+      │ You can also ignore this warning by setting background.serviceWorkerEntryOutput to false.
+      │ 
+      │ Here are all initial chunks for the Service Worker entry point background:
+      │     test_txt-log_js-util_js.js
+      │     background.js
+    ",
+            "name": "Error",
+          },
+        ],
+      },
+    ]
+  `)
+})
+
+// Not working on rspack, see https://github.com/web-infra-dev/rspack/issues/8683
+test('Manifest v3 (splitChunks: all) + runtimeChunk test', async () => {
+  const result = await run({
+    input: './fixtures/basic',
+    output: './snapshot/mv3-splitChunks-runtimeChunk',
+    option: {
+      background: { serviceWorkerEntry: 'background', serviceWorkerEntryOutput: 'sw.js' },
+      weakRuntimeCheck: true,
+    },
+    touch(c, rc) {
+      c.optimization = rc.optimization = {
+        splitChunks: { chunks: 'all', minSize: 1 },
+        runtimeChunk: {
+          name({ name }) {
+            if (name === 'background') return 'background-runtime'
+            return 'runtime'
+          },
+        },
+      }
+    },
+    touchManifest(manifest) {
+      manifest.background.service_worker = 'sw.js'
+    },
+  })
+  expect(result).toMatchInlineSnapshot(`
+    [
+      {
+        "status": "fulfilled",
+        "value": [],
+      },
+      {
+        "status": "fulfilled",
+        "value": [],
+      },
+    ]
+  `)
+})
+
+// Not working on rspack, see https://github.com/web-infra-dev/rspack/issues/8683
+test('Manifest v3 contentScript test (string)', async () => {
+  const result = await run({
+    input: './fixtures/basic',
+    output: './snapshot/mv3-contentScript-string',
+    option: {
+      background: { serviceWorkerEntry: 'background', serviceWorkerEntryOutput: 'sw.js' },
+      contentScript: { experimental_output: { content: 'cs.js' } },
+      weakRuntimeCheck: true,
+    },
+    touch(c, rc) {
+      c.optimization = rc.optimization = {
+        splitChunks: { chunks: 'all', minSize: 1 },
+        runtimeChunk: {
+          name({ name }) {
+            if (name === 'background') return 'background-runtime'
+            return 'runtime'
+          },
+        },
+      }
+    },
+    touchManifest(manifest) {
+      manifest.background.service_worker = 'sw.js'
+      manifest.content_scripts[0].js = ['cs.js']
+    },
+  })
+  expect(result).toMatchInlineSnapshot(`
+    [
+      {
+        "status": "fulfilled",
+        "value": [],
+      },
+      {
+        "status": "fulfilled",
+        "value": [],
+      },
+    ]
+  `)
+})
+
+// Not working on rspack, see https://github.com/web-infra-dev/rspack/issues/8683
+test('Manifest v3 contentScript test (function)', async () => {
+  const result = await run({
+    input: './fixtures/basic',
+    output: './snapshot/mv3-contentScript-function',
+    option: {
+      background: { serviceWorkerEntry: 'background', serviceWorkerEntryOutput: 'sw.js' },
+      contentScript: {
+        experimental_output: {
+          content(manifest, files) {
+            manifest.content_scripts[0].js = files
+          },
+        },
+      },
+      weakRuntimeCheck: true,
+    },
+    touch(c, rc) {
+      c.optimization = rc.optimization = {
+        splitChunks: { chunks: 'all', minSize: 1 },
+        runtimeChunk: {
+          name({ name }) {
+            if (name === 'background') return 'background-runtime'
+            return 'runtime'
+          },
+        },
+      }
+    },
+    touchManifest(manifest) {
+      manifest.background.service_worker = 'sw.js'
+    },
+  })
+  expect(result).toMatchInlineSnapshot(`
+    [
+      {
+        "status": "fulfilled",
+        "value": [],
+      },
+      {
+        "status": "fulfilled",
+        "value": [],
+      },
+    ]
+  `)
+})
+
+test('Manifest v3 contentScript test (false) (should throw)', async () => {
+  const result = await run({
+    input: './fixtures/basic',
+    output: './snapshot/mv3-contentScript-false',
+    option: {
+      background: { serviceWorkerEntry: 'background', serviceWorkerEntryOutput: 'sw.js' },
+      contentScript: { experimental_output: { content: false } },
+      weakRuntimeCheck: true,
+    },
+    touch(c, rc) {
+      c.optimization = rc.optimization = {
+        splitChunks: { chunks: 'all', minSize: 1 },
+        runtimeChunk: {
+          name({ name }) {
+            if (name === 'background') return 'background-runtime'
+            return 'runtime'
+          },
+        },
+      }
+    },
+  })
+  expect(result).toMatchInlineSnapshot(`
+    [
+      {
+        "reason": [
+          [Error: [webpack-extension-target] Content script entry "content" emits more than one initial file which is prohibited by options.contentScript["content"].],
+        ],
+        "status": "rejected",
+      },
+      {
+        "reason": [
+          {
+            "message": "  × Error: [webpack-extension-target] Content script entry "content" emits more than one initial file which is prohibited by options.contentScript["content"].
+    ",
+            "name": "Error",
+          },
+        ],
+        "status": "rejected",
+      },
+    ]
+  `)
+})
+
+test('Manifest v3 basic test (with public_path)', async () => {
+  const result = await run({
+    input: './fixtures/basic',
+    output: './snapshot/mv3-basic-public-path',
+    option: { background: { serviceWorkerEntry: 'background' } },
+    touch(c, rc) {
+      c.output!.publicPath = rc.output!.publicPath = '/'
+    },
+  })
+  expect(result).toMatchInlineSnapshot(`
+    [
+      {
+        "status": "fulfilled",
+        "value": [],
+      },
+      {
+        "status": "fulfilled",
+        "value": [],
+      },
+    ]
+  `)
+})
+
+test('Manifest v3 basic test (with weakRuntime)', async () => {
+  const result = await run({
+    input: './fixtures/basic',
+    output: './snapshot/mv3-basic-weak-runtime',
+    option: { background: { serviceWorkerEntry: 'background' }, weakRuntimeCheck: true },
+    touch(c, rc) {
+      c.output!.publicPath = rc.output!.publicPath = '/'
+    },
+  })
+  expect(result).toMatchInlineSnapshot(`
+    [
+      {
+        "status": "fulfilled",
+        "value": [],
+      },
+      {
+        "status": "fulfilled",
+        "value": [],
+      },
+    ]
+  `)
+})
+
+test('Manifest v3 HMR test', async () => {
+  const result = await run({
+    input: './fixtures/basic',
+    output: './snapshot/mv3-hmr',
+    option: { background: { serviceWorkerEntry: 'background' }, weakRuntimeCheck: true },
+    touch(_, rc) {
+      rc.plugins!.push(new rspack.HotModuleReplacementPlugin())
+    },
+  })
+  expect(result).toMatchInlineSnapshot(`
+    [
+      {
+        "status": "fulfilled",
+        "value": [],
+      },
+      {
+        "status": "fulfilled",
+        "value": [],
+      },
+    ]
+  `)
+})
+
+// This crashes at runtime. This is expected. ReferenceError: document is not defined
+test('Manifest v3 basic test, no option', async () => {
+  const result = await run({
+    input: './fixtures/basic',
+    output: './snapshot/mv3-basic-none',
+    option: {},
+  })
+  expect(result).toMatchInlineSnapshot(`
+    [
+      {
+        "status": "fulfilled",
+        "value": [],
+      },
+      {
+        "status": "fulfilled",
+        "value": [],
+      },
+    ]
+  `)
+})
+
+test('Manifest v2 + Manifest v3 dual entry test', async () => {
+  const result = await run({
+    input: './fixtures/basic',
+    output: './snapshot/mv3-dual',
+    touch(c, rc) {
+      // @ts-expect-error
+      c.entry!.backgroundWorker = rc.entry!.backgroundWorker = './background.js'
+    },
+    option: { background: { pageEntry: 'background', serviceWorkerEntry: 'backgroundWorker' } },
+    touchManifest(manifest) {
+      manifest.background.service_worker = 'backgroundWorker.js'
+    },
+  })
+  expect(result).toMatchInlineSnapshot(`
+    [
+      {
+        "status": "fulfilled",
+        "value": [],
+      },
+      {
+        "status": "fulfilled",
+        "value": [],
+      },
+    ]
+  `)
+})
+
+test('Manifest v2 with native dynamic import disabled', async () => {
+  const result = await run({
+    input: './fixtures/basic',
+    output: './snapshot/mv2-basic-no-esm',
+    touch(c, rc) {
+      c.output!.environment = rc.output!.environment = { dynamicImport: false }
+    },
+    option: { background: { pageEntry: 'background' } },
+  })
+  expect(result).toMatchInlineSnapshot(`
+    [
+      {
+        "status": "fulfilled",
+        "value": [],
+      },
+      {
+        "status": "fulfilled",
+        "value": [],
+      },
+    ]
+  `)
+})
+
+test('Manifest v3 with native dynamic import disabled', async () => {
+  const result = await run({
+    input: './fixtures/basic',
+    output: './snapshot/mv3-basic-no-esm',
+    touch(c, rc) {
+      c.output!.environment = rc.output!.environment = { dynamicImport: false }
+    },
+    option: { background: { serviceWorkerEntry: 'background' } },
+  })
+  expect(result).toMatchInlineSnapshot(`
+    [
+      {
+        "status": "fulfilled",
+        "value": [],
+      },
+      {
+        "status": "fulfilled",
+        "value": [],
+      },
+    ]
+  `)
+})
+
+test('Manifest v2 with no dynamic import in code', async () => {
+  const result = await run({
+    input: './fixtures/basic-no-dynamic-import',
+    output: './snapshot/mv2-basic-no-dynamic-import',
+    option: { background: { pageEntry: 'background' } },
+  })
+  expect(result).toMatchInlineSnapshot(`
+    [
+      {
+        "status": "fulfilled",
+        "value": [],
+      },
+      {
+        "status": "fulfilled",
+        "value": [],
+      },
+    ]
+  `)
+})
+
+test('Manifest v3 with no dynamic import in code', async () => {
+  const result = await run({
+    input: './fixtures/basic-no-dynamic-import',
+    output: './snapshot/mv3-basic-no-dynamic-import',
+    option: { background: { serviceWorkerEntry: 'background' } },
+  })
+  expect(result).toMatchInlineSnapshot(`
+    [
+      {
+        "status": "fulfilled",
+        "value": [],
+      },
+      {
+        "status": "fulfilled",
+        "value": [],
+      },
+    ]
+  `)
+})

@@ -17,7 +17,7 @@
     "rspack"
   ],
   "scripts": {
-    "test": "vitest --coverage --ui",
+    "test": "vitest build.test.mts",
     "test-ci": "node ./tests/ci.js"
   },
   "main": "index.js",

@@ -5,6 +5,7 @@
 - Add a try-catch wrapper around the entry file of serviceWorkerEntry so if the initial code throws, you can still open the console of it.
   **Enabled by default**, set option `tryCatchWrapper` to `false` to disable it.
 - Add `background.serviceWorkerEntryOutput` to support service worker used with [`splitChunks.chunks`](https://webpack.js.org/plugins/split-chunks-plugin/#splitchunkschunks) or [`optimization.runtimeChunk`](https://webpack.js.org/configuration/optimization/#optimizationruntimechunk).
+- Add `options.contentScript.experimental_output` API.
 
 ## 2.0.1
 

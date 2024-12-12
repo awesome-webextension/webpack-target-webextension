@@ -200,7 +200,7 @@ export interface BackgroundOptions {
    */
   serviceWorkerEntryOutput?: string | false
   /**
-   * Only affects in Manifest V3.
+   * Only affects Manifest V3.
    *
    * Load all chunks at the beginning
    * to workaround the chrome bug
@@ -245,10 +245,104 @@ If you experienced a compatibility issue with any of the following plugins, plea
 - [mini-css-extract-plugin](https://github.com/webpack-contrib/mini-css-extract-plugin)
 - [HtmlWebpackPlugin](https://github.com/jantimon/html-webpack-plugin)
 
+### options.contentScript.experimental_output
+
+**This is an experimental API. API might change at any time. Please provide feedback!**
+
+#### TLDR: How to use this
+
+##### string
+
+If you don't strictly rely on [run_at](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/content_scripts#run_at),
+set it as the following
+
+```js
+export default {
+  entry: {
+    myContentScript: 'src/contentScript.ts',
+  },
+  // ...
+  plugins: [
+    // ...
+    new WebExtensionPlugin({
+      // ...
+      contentScript: {
+        experimental_output: {
+          myContentScript: 'cs.js'
+        },
+      },
+    })
+  ]
+}
+```
+
+```jsonc
+{
+  // ...
+  "content_scripts": [
+    {
+      "matches": ["..."],
+      "js": ["cs.js"]
+    }
+  ]
+}
+```
+
+##### function
+
+If you cannot use asynchronous loading, setup like below.
+This setup requires you having a `manifest.json` being emitted.
+
+```js
+export default {
+  entry: {
+    myContentScript: 'src/contentScript.ts',
+  },
+  // ...
+  plugins: [
+    // ...
+    new WebExtensionPlugin({
+      // ...
+      contentScript: {
+        experimental_output: {
+          myContentScript: (manifest, list) => {
+            manifest.content_scripts[0].js = list
+          }
+        },
+      },
+    })
+  ]
+}
+```
+
+
+#### Explanation
+
+This option helps the initial chunk loading of content script,
+usually needed when `optimization.runtimeChunk` or `optimization.splitChunks.chunks` is used.
+
+This option accepts an object, where the key are the entry name,
+and the value is a string, *false*, or a function.
+
+If the value is a string, it creates an extra entry file to load all files **asynchronously**,
+like HTMLWebpackPlugin but for content scripts.
+This asynchronously loading behavior is limited to platform limit and **breaks**
+[run_at](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/content_scripts#run_at).
+
+The file name specified MUST NOT be any existing file.
+
+If the value is a function, it requires you to have a "manifest.json" in the emitted files
+and letting you edit it on the fly to include all the initial chunks needed.
+
+If the value is **false**, it asserts that this entry does not have more than one initial file,
+otherwise it will be a compile error.
+
+You can also change your configuration to avoid `optimization.runtimeChunk` or `optimization.splitChunks.chunks`.
+
 ## Rspack support
 
 Rspack support is provided as a best effort, please open an issue if you have encountered any problems.
 
 Here are known issues:
 
-- Chunk splitting is disabled for background service workers.
+- Chunk splitting is not working for background service workers.
