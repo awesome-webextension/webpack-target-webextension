@@ -98,33 +98,11 @@ test('Manifest v3 (splitChunks: all) test', async () => {
     [
       {
         "status": "fulfilled",
-        "value": [
-          [Error: [webpack-extension-target] Webpack generates multiple initial chunks for the Service Worker entry point (background). This is usually caused by splitChunks.chunks or optimization.runtimeChunk. In normal SPA/MPA builds, you need to use HtmlWebpackPlugin or ChunksWebpackPlugin to generate an HTML file to load all initial chunks, otherwise the entry point will not load.
-
-    You can set background.serviceWorkerEntryOutput: 'sw.js' to create an entry file, and change "background.service_worker" to it in your manifest.json.
-    You can also ignore this warning by setting background.serviceWorkerEntryOutput to false.
-
-    Here are all initial chunks for the Service Worker entry point background:
-        test_txt-util_js.js
-        background.js],
-        ],
+        "value": [],
       },
       {
         "status": "fulfilled",
-        "value": [
-          {
-            "message": "  ⚠ Error: [webpack-extension-target] Webpack generates multiple initial chunks for the Service Worker entry point (background). This is usually caused by splitChunks.chunks or optimization.runtimeChunk. In normal SPA/MPA builds, you need to use HtmlWebpackPlugin or ChunksWebpackPlugin to generate an HTML file to load all initial chunks, otherwise the entry point will not load.
-      │ 
-      │ You can set background.serviceWorkerEntryOutput: 'sw.js' to create an entry file, and change "background.service_worker" to it in your manifest.json.
-      │ You can also ignore this warning by setting background.serviceWorkerEntryOutput to false.
-      │ 
-      │ Here are all initial chunks for the Service Worker entry point background:
-      │     test_txt-log_js-util_js.js
-      │     background.js
-    ",
-            "name": "Error",
-          },
-        ],
+        "value": [],
       },
     ]
   `)
@@ -136,7 +114,10 @@ test('Manifest v3 (splitChunks: all) + runtimeChunk test', async () => {
     input: './fixtures/basic',
     output: './snapshot/mv3-splitChunks-runtimeChunk',
     option: {
-      background: { serviceWorkerEntry: 'background', serviceWorkerEntryOutput: 'sw.js' },
+      background: { serviceWorkerEntry: 'background' },
+      experimental_output: {
+        background: 'sw.js',
+      },
       weakRuntimeCheck: true,
     },
     touch(c, rc) {
@@ -169,13 +150,16 @@ test('Manifest v3 (splitChunks: all) + runtimeChunk test', async () => {
 })
 
 // Not working on rspack, see https://github.com/web-infra-dev/rspack/issues/8683
-test('Manifest v3 contentScript test (string)', async () => {
+test('Manifest v3 output test (string)', async () => {
   const result = await run({
     input: './fixtures/basic',
-    output: './snapshot/mv3-contentScript-string',
+    output: './snapshot/mv3-output-string',
     option: {
-      background: { serviceWorkerEntry: 'background', serviceWorkerEntryOutput: 'sw.js' },
-      contentScript: { experimental_output: { content: 'cs.js' } },
+      background: { serviceWorkerEntry: 'background' },
+      experimental_output: {
+        background: 'sw.js',
+        content: 'cs.js',
+      },
       weakRuntimeCheck: true,
     },
     touch(c, rc) {
@@ -209,17 +193,16 @@ test('Manifest v3 contentScript test (string)', async () => {
 })
 
 // Not working on rspack, see https://github.com/web-infra-dev/rspack/issues/8683
-test('Manifest v3 contentScript test (function)', async () => {
+test('Manifest v3 output test (function)', async () => {
   const result = await run({
     input: './fixtures/basic',
-    output: './snapshot/mv3-contentScript-function',
+    output: './snapshot/mv3-output-function',
     option: {
-      background: { serviceWorkerEntry: 'background', serviceWorkerEntryOutput: 'sw.js' },
-      contentScript: {
-        experimental_output: {
-          content(manifest, files) {
-            manifest.content_scripts[0].js = files
-          },
+      background: { serviceWorkerEntry: 'background' },
+      experimental_output: {
+        background: 'sw.js',
+        content(manifest, files) {
+          manifest.content_scripts[0].js = files
         },
       },
       weakRuntimeCheck: true,
@@ -253,13 +236,65 @@ test('Manifest v3 contentScript test (function)', async () => {
   `)
 })
 
-test('Manifest v3 contentScript test (false) (should throw)', async () => {
+// Not working on rspack, see https://github.com/web-infra-dev/rspack/issues/8683
+test('Manifest v3 output test (object)', async () => {
   const result = await run({
     input: './fixtures/basic',
-    output: './snapshot/mv3-contentScript-false',
+    output: './snapshot/mv3-output-object',
     option: {
-      background: { serviceWorkerEntry: 'background', serviceWorkerEntryOutput: 'sw.js' },
-      contentScript: { experimental_output: { content: false } },
+      background: { serviceWorkerEntry: 'background' },
+      experimental_output: {
+        background: {
+          file: 'sw.js',
+          touch(manifest, file) {
+            manifest.background.service_worker = file
+          },
+        },
+        content(manifest, files) {
+          manifest.content_scripts[0].js = files
+        },
+      },
+      weakRuntimeCheck: true,
+    },
+    touch(c, rc) {
+      c.optimization = rc.optimization = {
+        splitChunks: { chunks: 'all', minSize: 1 },
+        runtimeChunk: {
+          name({ name }) {
+            if (name === 'background') return 'background-runtime'
+            return 'runtime'
+          },
+        },
+      }
+    },
+    touchManifest(manifest) {
+      manifest.background.service_worker = 'sw.js'
+    },
+  })
+  expect(result).toMatchInlineSnapshot(`
+    [
+      {
+        "status": "fulfilled",
+        "value": [],
+      },
+      {
+        "status": "fulfilled",
+        "value": [],
+      },
+    ]
+  `)
+})
+
+test('Manifest v3 output test (false) (should throw)', async () => {
+  const result = await run({
+    input: './fixtures/basic',
+    output: './snapshot/mv3-output-false',
+    option: {
+      background: { serviceWorkerEntry: 'background' },
+      experimental_output: {
+        background: 'sw.js',
+        content: false,
+      },
       weakRuntimeCheck: true,
     },
     touch(c, rc) {
@@ -278,14 +313,14 @@ test('Manifest v3 contentScript test (false) (should throw)', async () => {
     [
       {
         "reason": [
-          [Error: [webpack-extension-target] Content script entry "content" emits more than one initial file which is prohibited by options.contentScript["content"].],
+          [Error: [webpack-extension-target] Entry "content" emits more than one initial file which is prohibited (specified in options.experimental_output).],
         ],
         "status": "rejected",
       },
       {
         "reason": [
           {
-            "message": "  × Error: [webpack-extension-target] Content script entry "content" emits more than one initial file which is prohibited by options.contentScript["content"].
+            "message": "  × Error: [webpack-extension-target] Entry "content" emits more than one initial file which is prohibited (specified in options.experimental_output).
     ",
             "name": "Error",
           },

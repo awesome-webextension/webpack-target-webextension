@@ -7,7 +7,7 @@ import WebExtension from 'webpack-target-webextension'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
-export default (_, env) => {
+export default (/** @type {any} */ _, /** @type {{ mode: string; }} */ env) => {
   const isProduction = env.mode === 'production'
   return defineConfig({
     devtool: 'source-map',
@@ -54,7 +54,10 @@ export default (_, env) => {
         patterns: [{ from: 'manifest.json' }],
       }),
       new WebExtension({
-        background: { serviceWorkerEntry: 'background', serviceWorkerEntryOutput: 'sw.js' },
+        background: { serviceWorkerEntry: 'background' },
+        experimental_output: {
+          background: 'sw.js',
+        },
       }),
       isProduction ? null : new RefreshPlugin(),
     ].filter(Boolean),
