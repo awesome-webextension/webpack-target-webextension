@@ -21,7 +21,7 @@ export interface BackgroundOptions {
   /**
    * Only affects Manifest V3.
    *
-   * Load all chunks at the beginning to workaround the chrome bug
+   * Load all chunks at the beginning to workaround the Chrome bug
    * <https://bugs.chromium.org/p/chromium/issues/detail?id=1198822>.
    *
    * NOT working for rspack.
@@ -30,7 +30,7 @@ export interface BackgroundOptions {
    */
   eagerChunkLoading?: boolean
   /**
-   * Add the support code that use
+   * Add the support code that uses
    * `chrome.scripting.executeScript` (MV3) or
    * `chrome.tabs.executeScript` (MV2) when
    * dynamic import does not work for chunk loading in the content script.
@@ -57,17 +57,18 @@ export interface WebExtensionPluginOptions {
    */
   hmrConfig?: boolean
   /**
+   *
    * **This is an experimental API.**
    * **API might change at any time.**
    * **Please provide feedback!**
    *
-   * This option helps the initial chunk loading of content scripts/background service worker,
+   * This option helps the initial chunk loading of content scripts/the background service worker,
    * usually needed when `optimization.runtimeChunk` or `optimization.splitChunks.chunks` is used.
    *
    * This option accepts an object, where the keys are the entry name,
    * and the value is described below.
    *
-   * This option replaces the HTMLWebpackPlugin where background service worker and content scripts
+   * This option replaces the HTMLWebpackPlugin where the background service worker and content scripts
    * do not use HTML to load files.
    *
    * If the value is a `string` (an output file name), for content scripts, it creates an extra
@@ -75,15 +76,15 @@ export interface WebExtensionPluginOptions {
    * This asynchronous loading behavior is limited to the platform limit and **breaks**
    * [run_at](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/content_scripts#run_at).
    *
-   * If the value is a `string` (an output file name), for background service worker (specified
+   * If the value is a `string` (an output file name), for the background service worker (specified
    * via `options.background.serviceWorkerEntry`), it creates an extra entry file to load all
    * initial chunks **synchronously**.
    *
    * The file name specified MUST NOT be any existing file.
    *
    * If the value is a `function` (`(manifest: any, chunks: string[]) => void`), it requires
-   * a "manifest.json" in the emitted files and letting you edit it on the fly to include all
-   * the initial chunks. This option does not apply to background service worker because
+   * a "manifest.json" in the emitted files and lets you edit it on the fly to include all
+   * the initial chunks. This option does not apply to the background service worker because
    * `manifest.json` does not accept multiple files.
    *
    * If the value is an `object` (`{ file: string; touch(manifest: any, file: string): void }`),
@@ -91,12 +92,12 @@ export interface WebExtensionPluginOptions {
    * edit the `manifest.json` (see the behavior of `function` above).
    *
    * If the value is `false`, it asserts that this entry does not have more than one initial file,
-   * otherwise it will be a compile error.
+   * otherwise, it will be a compile error.
    *
-   * If the value is `undefined`, it silence the warning for background service worker.
+   * If the value is `undefined`, it silences the warning for the background service worker.
    *
-   * You can also change your configuration to avoid `optimization.runtimeChunk` or `optimization.splitChunks.chunks`, in this case, webpack only generate 1 initial file so you don't need this
-   * option.
+   * You can also change your configuration to avoid `optimization.runtimeChunk` or `optimization.splitChunks.chunks`,
+   * in this case, webpack only generates 1 initial file so you don't need this option.
    *
    * @defaultValue undefined
    * @example
