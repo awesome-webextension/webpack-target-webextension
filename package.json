@@ -1,6 +1,6 @@
 {
   "name": "webpack-target-webextension",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "type": "commonjs",
   "description": "WebExtension plugin for Webpack. Supports code-splitting and dynamic import.",
   "keywords": [
