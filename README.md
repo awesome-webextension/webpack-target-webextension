@@ -308,7 +308,7 @@ export default {
 ```js
 export default {
   entry: {
-    background: 'src/contentScript.ts',
+    background: 'src/background.ts',
   },
   // ...
   plugins: [
