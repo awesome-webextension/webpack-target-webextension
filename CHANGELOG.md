@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 2.1.0
 
 - Add a try-catch wrapper around the entry file of serviceWorkerEntry so if the initial code throws, you can still open the console of it.
   **Enabled by default**, set option `tryCatchWrapper` to `false` to disable it.
