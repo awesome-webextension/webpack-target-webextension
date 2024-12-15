@@ -2,7 +2,7 @@
 
 [![npm-version](https://img.shields.io/npm/v/webpack-target-webextension.svg)](https://www.npmjs.com/package/webpack-target-webextension)
 
-This webpack 5 plugin (works on rspack!) provides reasonable presets and fixes things that don't work for a WebExtension.
+This webpack 5 plugin (works on rspack!) provides reasonable presets and fixes things that don't work for a Web Extension.
 
 If you are looking for webpack 4 support, please install 0.2.1. [Document for 0.2.1](https://github.com/awesome-webextension/webpack-target-webextension/tree/a738d2ce96795cd032eb0ad3d6b6be74376550db).
 
@@ -192,18 +192,10 @@ export interface BackgroundOptions {
    */
   serviceWorkerEntry?: string
   /**
-   * The output of the service worker entry.
-   *
-   * Usually used with splitChunks.chunks or splitChunks.runtimeChunk.
-   *
-   * Set to "false" to disable the warning.
-   */
-  serviceWorkerEntryOutput?: string | false
-  /**
-   * Only affects in Manifest V3.
+   * Only affects Manifest V3.
    *
    * Load all chunks at the beginning
-   * to workaround the chrome bug
+   * to workaround the Chrome bug
    * https://bugs.chromium.org/p/chromium/issues/detail?id=1198822.
    *
    * NOT working for rspack.
@@ -212,7 +204,7 @@ export interface BackgroundOptions {
    */
   eagerChunkLoading?: boolean
   /**
-   * Add the support code that use
+   * Add the support code that uses
    * `chrome.scripting.executeScript` (MV3) or
    * `chrome.tabs.executeScript` (MV2) when
    * dynamic import does not work for chunk loading
@@ -245,10 +237,145 @@ If you experienced a compatibility issue with any of the following plugins, plea
 - [mini-css-extract-plugin](https://github.com/webpack-contrib/mini-css-extract-plugin)
 - [HtmlWebpackPlugin](https://github.com/jantimon/html-webpack-plugin)
 
+### options.experimental_output
+
+**This is an experimental API. API might change at any time. Please provide feedback!**
+
+#### TLDR: How to use this
+
+##### string
+
+If you don't strictly rely on [run_at](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/content_scripts#run_at),
+set it as the following
+
+```js
+export default {
+  entry: {
+    myContentScript: 'src/contentScript.ts',
+  },
+  // ...
+  plugins: [
+    // ...
+    new WebExtensionPlugin({
+      // ...
+      experimental_output: {
+        myContentScript: 'cs.js'
+      },
+    })
+  ]
+}
+```
+
+```jsonc
+{
+  // ...
+  "content_scripts": [
+    {
+      "matches": ["..."],
+      "js": ["cs.js"]
+    }
+  ]
+}
+```
+
+##### function
+
+If you cannot use asynchronous loading, set up like below.
+This setup requires you to have a `manifest.json` being emitted.
+
+```js
+export default {
+  entry: {
+    myContentScript: 'src/contentScript.ts',
+  },
+  // ...
+  plugins: [
+    // ...
+    new WebExtensionPlugin({
+      // ...
+      experimental_output: {
+        myContentScript: (manifest, list) => {
+          manifest.content_scripts[0].js = list
+        }
+      },
+    })
+  ]
+}
+```
+
+##### object
+
+```js
+export default {
+  entry: {
+    background: 'src/background.ts',
+  },
+  // ...
+  plugins: [
+    // ...
+    new WebExtensionPlugin({
+      // ...
+      experimental_output: {
+        background: {
+          file: 'sw.js',
+          touch(manifest, file) {
+            manifest.background.service_worker = file
+          }
+        },
+      },
+    })
+  ]
+}
+```
+
+
+#### Explanation
+
+**This is an experimental API.**
+**API might change at any time.**
+**Please provide feedback!**
+
+This option helps the initial chunk loading of content scripts/the background service worker,
+usually needed when `optimization.runtimeChunk` or `optimization.splitChunks.chunks` is used.
+
+This option accepts an object, where the keys are the entry name,
+and the value is described below.
+
+This option replaces the HTMLWebpackPlugin where the background service worker and content scripts
+do not use HTML to load files.
+
+If the value is a `string` (an output file name), for content scripts, it creates an extra
+entry file to load all initial chunks **asynchronously** via dynamic import.
+This asynchronous loading behavior is limited to the platform limit and **breaks**
+[run_at](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/content_scripts#run_at).
+
+If the value is a `string` (an output file name), for the background service worker (specified
+via `options.background.serviceWorkerEntry`), it creates an extra entry file to load all
+initial chunks **synchronously**.
+
+The file name specified MUST NOT be any existing file.
+
+If the value is a `function` (`(manifest: any, chunks: string[]) => void`), it requires
+a "manifest.json" in the emitted files and lets you edit it on the fly to include all
+the initial chunks. This option does not apply to the background service worker because
+`manifest.json` does not accept multiple files.
+
+If the value is an `object` (`{ file: string; touch(manifest: any, file: string): void }`),
+it generates a new file (see the behavior of `string` above) and provides a callback to
+edit the `manifest.json` (see the behavior of `function` above).
+
+If the value is `false`, it asserts that this entry does not have more than one initial file,
+otherwise, it will be a compile error.
+
+If the value is `undefined`, it silences the warning for the background service worker.
+
+You can also change your configuration to avoid `optimization.runtimeChunk` or `optimization.splitChunks.chunks`,
+in this case, webpack only generates 1 initial file so you don't need this option.
+
 ## Rspack support
 
 Rspack support is provided as a best effort, please open an issue if you have encountered any problems.
 
 Here are known issues:
 
-- Chunk splitting is disabled for background service workers.
+- Chunk splitting is not working for the background service worker.

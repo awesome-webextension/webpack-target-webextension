@@ -9,7 +9,7 @@ import { fileURLToPath } from 'url'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 /** @returns {webpack.Configuration} */
-const config = (_, env) => {
+const config = (/** @type {any} */ _, /** @type {{ mode: string; }} */ env) => {
   const isProduction = env.mode === 'production'
   return {
     devtool: 'source-map',
@@ -56,7 +56,10 @@ const config = (_, env) => {
         patterns: [{ from: 'manifest.json' }],
       }),
       new WebExtension({
-        background: { serviceWorkerEntry: 'background', serviceWorkerEntryOutput: 'sw.js' },
+        background: { serviceWorkerEntry: 'background' },
+        experimental_output: {
+          background: 'sw.js',
+        },
         weakRuntimeCheck: true, // because of HtmlWebpackPlugin
       }),
       isProduction ? null : new ReactRefreshPlugin(),
