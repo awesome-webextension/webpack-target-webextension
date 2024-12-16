@@ -41,7 +41,7 @@
     "node": ">=18.20.5"
   },
   "devDependencies": {
-    "@rspack/core": "^1.1.5",
+    "@rspack/core": "^1.1.6",
     "@types/jest": "^29.5.14",
     "@vitest/coverage-v8": "2.1.8",
     "@vitest/ui": "^2.1.8",
@@ -50,7 +50,7 @@
     "vitest": "^2.1.8",
     "webpack": "^5.97.1",
     "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.1.0",
+    "webpack-dev-server": "^5.2.0",
     "webpack-target-webextension": "link:."
   },
   "peerDependencies": {

@@ -164,7 +164,7 @@ __webpack_require__.e = function (chunkId) {
           // return url for filenames not based on template
           
           // return url for filenames based on template
-          return "chunks-" + "7ca842fb1cf7e29f" + ".js";
+          return "chunks-" + "a976d497fd75f0ce" + ".js";
         };
       
 })();
@@ -178,7 +178,7 @@ __webpack_require__.hu = function (chunkId) {
 // webpack/runtime/get_full_hash
 (() => {
 __webpack_require__.h = function () {
-	return "b5e6fb5a0f2fa891";
+	return "c4cb459eab10fa2b";
 };
 
 })();
@@ -593,7 +593,7 @@ __webpack_require__.p = "";
 // webpack/runtime/rspack_version
 (() => {
 __webpack_require__.rv = function () {
-	return "1.1.5";
+	return "1.1.6";
 };
 
 })();
@@ -1108,7 +1108,7 @@ __webpack_require__.hmrM = function () {
 })();
 // webpack/runtime/rspack_unique_id
 (() => {
-__webpack_require__.ruid = "bundler=rspack@1.1.5";
+__webpack_require__.ruid = "bundler=rspack@1.1.6";
 
 })();
 /************************************************************************/
