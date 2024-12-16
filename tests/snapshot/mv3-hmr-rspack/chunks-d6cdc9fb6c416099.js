@@ -5,19 +5,6 @@ var __webpack_modules__ = ({
 module.exports = __webpack_require__.p + "6c5b191a31c5a9fc.txt";
 
 }),
-"./log.js": (function (__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
-__webpack_require__.r(__webpack_exports__);
-__webpack_require__.d(__webpack_exports__, {
-  file: function() { return file; },
-  mod: function() { return /* reexport module object */ _log_js__WEBPACK_IMPORTED_MODULE_0__; }
-});
-/* ESM import */var _log_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./log.js */ "./log.js");
-
-
-const file = 'log.js'
-
-
-}),
 "./util.js": (function (__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
 __webpack_require__.r(__webpack_exports__);
 __webpack_require__.d(__webpack_exports__, {
@@ -56,7 +43,7 @@ Promise.resolve()
   .then(
     (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Worker Test B: dynamic import', async () => {
       console.log("await import('./log.js')\n")
-      const mod = await Promise.resolve(/*! import() eager */).then(__webpack_require__.bind(__webpack_require__, /*! ./log.js */ "./log.js"))
+      const mod = await __webpack_require__.e(/*! import() */ "log_js").then(__webpack_require__.bind(__webpack_require__, /*! ./log.js */ "./log.js"))
       ;(0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)('file' in mod, mod)
     })
   )
@@ -144,6 +131,9 @@ __webpack_require__.webExtRt = runtime || {
 		throw new Error("No chrome or browser runtime found");
 	}
 }
+if (!runtime && (typeof self !== "object" || !self.addEventListener)) {
+	__webpack_require__.webExtRt = { runtime: { getURL: String } };
+}
 })();
 // webpack/runtime/define_property_getters
 (() => {
@@ -155,6 +145,32 @@ __webpack_require__.d = function(exports, definition) {
     }
 };
 })();
+// webpack/runtime/ensure_chunk
+(() => {
+__webpack_require__.f = {};
+// This file contains only the entry chunk.
+// The chunk loading function for additional chunks
+__webpack_require__.e = function (chunkId) {
+	return Promise.all(
+		Object.keys(__webpack_require__.f).reduce(function (promises, key) {
+			__webpack_require__.f[key](chunkId, promises);
+			return promises;
+		}, [])
+	);
+};
+
+})();
+// webpack/runtime/get javascript chunk filename
+(() => {
+// This function allow to reference chunks
+        __webpack_require__.u = function (chunkId) {
+          // return url for filenames not based on template
+          
+          // return url for filenames based on template
+          return "chunks-" + "7ca842fb1cf7e29f" + ".js";
+        };
+      
+})();
 // webpack/runtime/get_chunk_update_filename
 (() => {
 __webpack_require__.hu = function (chunkId) {
@@ -165,7 +181,7 @@ __webpack_require__.hu = function (chunkId) {
 // webpack/runtime/get_full_hash
 (() => {
 __webpack_require__.h = function () {
-	return "dad1561662c265b3";
+	return "b773bcabf57328c7";
 };
 
 })();
@@ -605,6 +621,33 @@ __webpack_require__.p = scriptUrl;
 (() => {
 __webpack_require__.b = self.location + "";
 var installedChunks = __webpack_require__.hmrS_importScripts = __webpack_require__.hmrS_importScripts || {"worker_js": 1,};
+// importScripts chunk loading
+var installChunk = function (data) {
+    var chunkIds = data[0];
+    var moreModules = data[1];
+    var runtime = data[2];
+    for (var moduleId in moreModules) {
+        if (__webpack_require__.o(moreModules, moduleId)) {
+            __webpack_require__.m[moduleId] = moreModules[moduleId];
+        }
+    }
+    if (runtime) runtime(__webpack_require__);
+    while (chunkIds.length) installedChunks[chunkIds.pop()] = 1;
+    parentChunkLoadingFunction(data);
+};
+__webpack_require__.f.i = function (chunkId, promises) {
+    
+          // "1" is the signal for "already loaded
+          if (!installedChunks[chunkId]) {
+            if (true) {
+              importScripts(__webpack_require__.p + __webpack_require__.u(chunkId));
+            }
+          }
+          
+};
+var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+var parentChunkLoadingFunction = chunkLoadingGlobal.push.bind(chunkLoadingGlobal);
+chunkLoadingGlobal.push = installChunk;
 function loadUpdateChunk(chunkId, updatedModulesList) {
     var success = false;
     self["webpackHotUpdate"] = function (_, moreModules, runtime) {

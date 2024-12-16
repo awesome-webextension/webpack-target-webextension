@@ -5,19 +5,6 @@ var __webpack_modules__ = ({
 module.exports = __webpack_require__.p + "6c5b191a31c5a9fc.txt";
 
 }),
-"./log.js": (function (__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
-__webpack_require__.r(__webpack_exports__);
-__webpack_require__.d(__webpack_exports__, {
-  file: function() { return file; },
-  mod: function() { return /* reexport module object */ _log_js__WEBPACK_IMPORTED_MODULE_0__; }
-});
-/* ESM import */var _log_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./log.js */ "./log.js");
-
-
-const file = 'log.js'
-
-
-}),
 "./util.js": (function (__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
 __webpack_require__.r(__webpack_exports__);
 __webpack_require__.d(__webpack_exports__, {
@@ -101,6 +88,21 @@ __webpack_require__.d = function(exports, definition) {
     }
 };
 })();
+// webpack/runtime/ensure_chunk
+(() => {
+__webpack_require__.f = {};
+// This file contains only the entry chunk.
+// The chunk loading function for additional chunks
+__webpack_require__.e = function (chunkId) {
+	return Promise.all(
+		Object.keys(__webpack_require__.f).reduce(function (promises, key) {
+			__webpack_require__.f[key](chunkId, promises);
+			return promises;
+		}, [])
+	);
+};
+
+})();
 // webpack/runtime/get javascript chunk filename
 (() => {
 // This function allow to reference chunks
@@ -108,7 +110,7 @@ __webpack_require__.d = function(exports, definition) {
           // return url for filenames not based on template
           
           // return url for filenames based on template
-          return "chunks-" + "04fe915fb7a61aa1" + ".js";
+          return "chunks-" + {"log_js": "7ca842fb1cf7e29f","worker_js": "cbaab477b13ee245",}[chunkId] + ".js";
         };
       
 })();
@@ -128,6 +130,69 @@ __webpack_require__.g = (function () {
 (() => {
 __webpack_require__.o = function (obj, prop) {
 	return Object.prototype.hasOwnProperty.call(obj, prop);
+};
+
+})();
+// webpack/runtime/load_script
+(() => {
+var inProgress = {};
+
+
+// loadScript function to load a script via script tag
+__webpack_require__.l = function (url, done, key, chunkId) {
+	if (inProgress[url]) {
+		inProgress[url].push(done);
+		return;
+	}
+	var script, needAttach;
+	if (key !== undefined) {
+		var scripts = document.getElementsByTagName("script");
+		for (var i = 0; i < scripts.length; i++) {
+			var s = scripts[i];
+			if (s.getAttribute("src") == url) {
+				script = s;
+				break;
+			}
+		}
+	}
+	if (!script) {
+		needAttach = true;
+		script = document.createElement('script');
+		
+		script.charset = 'utf-8';
+		script.timeout = 120;
+		if (__webpack_require__.nc) {
+			script.setAttribute("nonce", __webpack_require__.nc);
+		}
+		
+		
+		script.src = url;
+
+		
+	}
+	inProgress[url] = [done];
+	var onScriptComplete = function (prev, event) {
+		script.onerror = script.onload = null;
+		clearTimeout(timeout);
+		var doneFns = inProgress[url];
+		delete inProgress[url];
+		script.parentNode && script.parentNode.removeChild(script);
+		doneFns &&
+			doneFns.forEach(function (fn) {
+				return fn(event);
+			});
+		if (prev) return prev(event);
+	};
+	var timeout = setTimeout(
+		onScriptComplete.bind(null, undefined, {
+			type: 'timeout',
+			target: script
+		}),
+		120000
+	);
+	script.onerror = onScriptComplete.bind(null, script.onerror);
+	script.onload = onScriptComplete.bind(null, script.onload);
+	needAttach && document.head.appendChild(script);
 };
 
 })();
@@ -153,6 +218,77 @@ __webpack_require__.rv = function () {
 	return "1.1.5";
 };
 
+})();
+// webpack/runtime/load script
+(() => {
+let bug816121warned, isNotIframe;
+try {
+	isNotIframe = typeof window === "object" ? window.top === window : true;
+} catch(e) {
+	isNotIframe = false /* CORS error */;
+}
+const classicLoader = (url, done) => {
+	const msg = { type: "WTW_INJECT", file: url };
+	const onError = (e) => {
+		done(Object.assign(e, { type: "missing" }))
+	};
+	if (__webpack_require__.webExtRtModern) {
+		__webpack_require__.webExtRt.runtime.sendMessage(msg).then(done, onError);
+	} else {
+		__webpack_require__.webExtRt.runtime.sendMessage(msg, () => {
+			const error = __webpack_require__.webExtRt.runtime.lastError;
+			if (error) onError(error);
+			else done();
+		});
+	}
+};
+const dynamicImportLoader = (url, done, key, chunkId) => {
+	import(url).then(() => {
+		if (isNotIframe) return done();
+		try {
+			// It's a Chrome bug, if the import() is called in a sandboxed iframe, it _fails_ the script loading but _resolve_ the Promise.
+			// we call __webpack_require__.f.j(chunkId) to check if it is loaded.
+			// if it is, this is a no-op. if it is not, it will throw a TypeError because this function requires 2 parameters.
+			// This call will not trigger the chunk loading because it is already loading.
+			// see https://github.com/awesome-webextension/webpack-target-webextension/issues/41
+			chunkId !== undefined && __webpack_require__.f.j(chunkId);
+			done();
+		}
+		catch (_) {
+			if (!bug816121warned) {
+				console.warn("Chrome bug https://crbug.com/816121 hit.");
+				bug816121warned = true;
+			}
+			return fallbackLoader(url, done, key, chunkId);
+		}
+	}, (e) => {
+		console.warn("Dynamic import loader failed. Using fallback loader (see https://github.com/awesome-webextension/webpack-target-webextension#content-script).", e);
+		fallbackLoader(url, done, key, chunkId);
+	});
+}
+const scriptLoader = (url, done) => {
+	const script = document.createElement('script');
+	script.src = url;
+	script.onload = done;
+	script.onerror = done;
+	document.body.appendChild(script);
+}
+const workerLoader = (url, done) => {
+	try {
+		importScripts(url);
+		done();
+	} catch (e) {
+		done(e);
+	}
+}
+const isWorker = typeof importScripts === 'function'
+if (typeof location === 'object' && location.protocol.includes('-extension:')) {
+	__webpack_require__.l = isWorker ? workerLoader : scriptLoader;
+}
+else if (!isWorker) __webpack_require__.l = classicLoader;
+else { throw new TypeError('Unable to determinate the chunk loader: content script + Worker'); }
+const fallbackLoader = __webpack_require__.l;
+__webpack_require__.l = dynamicImportLoader;
 })();
 // webpack/runtime/publicPath
 (() => {
@@ -180,6 +316,97 @@ __webpack_require__.b = document.baseURI || self.location.href;
       // [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
       var installedChunks = {"background": 0,};
       
+        __webpack_require__.f.j = function (chunkId, promises) {
+          // JSONP chunk loading for javascript
+var installedChunkData = __webpack_require__.o(installedChunks, chunkId)
+	? installedChunks[chunkId]
+	: undefined;
+if (installedChunkData !== 0) {
+	// 0 means "already installed".
+
+	// a Promise means "currently loading".
+	if (installedChunkData) {
+		promises.push(installedChunkData[2]);
+	} else {
+		if (true) {
+			// setup Promise in chunk cache
+			var promise = new Promise(function (resolve, reject) {
+				installedChunkData = installedChunks[chunkId] = [resolve, reject];
+			});
+			promises.push((installedChunkData[2] = promise));
+
+			// start chunk loading
+			var url = __webpack_require__.p + __webpack_require__.u(chunkId);
+			// create error before stack unwound to get useful stacktrace later
+			var error = new Error();
+			var loadingEnded = function (event) {
+				if (__webpack_require__.o(installedChunks, chunkId)) {
+					installedChunkData = installedChunks[chunkId];
+					if (installedChunkData !== 0) installedChunks[chunkId] = undefined;
+					if (installedChunkData) {
+						var errorType =
+							event && (event.type === 'load' ? 'missing' : event.type);
+						var realSrc = event && event.target && event.target.src;
+						error.message =
+							'Loading chunk ' +
+							chunkId +
+							' failed.\n(' +
+							errorType +
+							': ' +
+							realSrc +
+							')';
+						error.name = 'ChunkLoadError';
+						error.type = errorType;
+						error.request = realSrc;
+						installedChunkData[1](error);
+					}
+				}
+			};
+			__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
+		} 
+	}
+}
+
+        }
+        // install a JSONP callback for chunk loading
+var webpackJsonpCallback = function (parentChunkLoadingFunction, data) {
+	var chunkIds = data[0];
+	var moreModules = data[1];
+	var runtime = data[2];
+	// add "moreModules" to the modules object,
+	// then flag all "chunkIds" as loaded and fire callback
+	var moduleId,
+		chunkId,
+		i = 0;
+	if (chunkIds.some(function (id) { return installedChunks[id] !== 0 })) {
+		for (moduleId in moreModules) {
+			if (__webpack_require__.o(moreModules, moduleId)) {
+				__webpack_require__.m[moduleId] = moreModules[moduleId];
+			}
+		}
+		if (runtime) var result = runtime(__webpack_require__);
+	}
+	if (parentChunkLoadingFunction) parentChunkLoadingFunction(data);
+	for (; i < chunkIds.length; i++) {
+		chunkId = chunkIds[i];
+		if (
+			__webpack_require__.o(installedChunks, chunkId) &&
+			installedChunks[chunkId]
+		) {
+			installedChunks[chunkId][0]();
+		}
+		installedChunks[chunkId] = 0;
+	}
+	
+};
+
+var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
+chunkLoadingGlobal.push = webpackJsonpCallback.bind(
+	null,
+	chunkLoadingGlobal.push.bind(chunkLoadingGlobal)
+);
+
 })();
 // webpack/runtime/rspack_unique_id
 (() => {
@@ -210,7 +437,7 @@ Promise.resolve()
   .then(
     (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Test C: dynamic import', async () => {
       console.log("await import('./log.js')\n")
-      const mod = await Promise.resolve(/*! import() eager */).then(__webpack_require__.bind(__webpack_require__, /*! ./log.js */ "./log.js"))
+      const mod = await __webpack_require__.e(/*! import() */ "log_js").then(__webpack_require__.bind(__webpack_require__, /*! ./log.js */ "./log.js"))
       ;(0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)('file' in mod, mod)
     })
   )

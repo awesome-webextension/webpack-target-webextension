@@ -9,7 +9,7 @@
                 "<all_urls>"
             ],
             "js": [
-                "test_txt-log_js-util_js.js",
+                "test_txt-util_js.js",
                 "content.js",
                 "runtime.js"
             ]

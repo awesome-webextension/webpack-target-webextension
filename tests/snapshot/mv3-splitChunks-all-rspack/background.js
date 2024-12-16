@@ -24,7 +24,7 @@ Promise.resolve()
   .then(
     (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Test C: dynamic import', async () => {
       console.log("await import('./log.js')\n")
-      const mod = await Promise.resolve(/*! import() eager */).then(__webpack_require__.bind(__webpack_require__, /*! ./log.js */ "./log.js"))
+      const mod = await __webpack_require__.e(/*! import() */ "log_js").then(__webpack_require__.bind(__webpack_require__, /*! ./log.js */ "./log.js"))
       ;(0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)('file' in mod, mod)
     })
   )
@@ -92,7 +92,7 @@ __webpack_require__.m = __webpack_modules__;
 __webpack_require__.x = () => {
 // Load entry module and return exports
 // This entry module depends on other loaded chunks and execution need to be delayed
-var __webpack_exports__ = __webpack_require__.O(undefined, ["test_txt-log_js-util_js"], function() { return __webpack_require__("./background.js") });
+var __webpack_exports__ = __webpack_require__.O(undefined, ["test_txt-util_js"], function() { return __webpack_require__("./background.js") });
 __webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 return __webpack_exports__
 };
@@ -151,9 +151,9 @@ __webpack_require__.e = function (chunkId) {
 // This function allow to reference chunks
         __webpack_require__.u = function (chunkId) {
           // return url for filenames not based on template
-          if (chunkId === "test_txt-log_js-util_js") return "" + chunkId + ".js";
+          if (chunkId === "test_txt-util_js") return "" + chunkId + ".js";
           // return url for filenames based on template
-          return "chunks-" + "d9e4fafaebd46923" + ".js";
+          return "chunks-" + {"log_js": "7ca842fb1cf7e29f","worker_js": "9f9d13d91a842cf6",}[chunkId] + ".js";
         };
       
 })();
@@ -243,7 +243,7 @@ __webpack_require__.rv = function () {
 (() => {
 var next = __webpack_require__.x;
         __webpack_require__.x = function() {
-          return __webpack_require__.e("test_txt-log_js-util_js").then(next);
+          return __webpack_require__.e("test_txt-util_js").then(next);
         };
 })();
 // webpack/runtime/publicPath
