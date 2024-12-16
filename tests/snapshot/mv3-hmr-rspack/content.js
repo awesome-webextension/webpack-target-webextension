@@ -28,7 +28,7 @@ Promise.resolve()
   .then(
     (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Test C: dynamic import', async () => {
       console.log("await import('./log.js')\n")
-      const mod = await Promise.resolve(/*! import() eager */).then(__webpack_require__.bind(__webpack_require__, /*! ./log.js */ "./log.js"))
+      const mod = await __webpack_require__.e(/*! import() */ "log_js").then(__webpack_require__.bind(__webpack_require__, /*! ./log.js */ "./log.js"))
       ;(0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)('file' in mod, mod)
     })
   )
@@ -38,19 +38,6 @@ Promise.resolve()
       console.log('Message from background:', message)
     })
   })
-
-
-}),
-"./log.js": (function (__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
-__webpack_require__.r(__webpack_exports__);
-__webpack_require__.d(__webpack_exports__, {
-  file: function() { return file; },
-  mod: function() { return /* reexport module object */ _log_js__WEBPACK_IMPORTED_MODULE_0__; }
-});
-/* ESM import */var _log_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./log.js */ "./log.js");
-
-
-const file = 'log.js'
 
 
 }),
@@ -160,6 +147,32 @@ __webpack_require__.d = function(exports, definition) {
     }
 };
 })();
+// webpack/runtime/ensure_chunk
+(() => {
+__webpack_require__.f = {};
+// This file contains only the entry chunk.
+// The chunk loading function for additional chunks
+__webpack_require__.e = function (chunkId) {
+	return Promise.all(
+		Object.keys(__webpack_require__.f).reduce(function (promises, key) {
+			__webpack_require__.f[key](chunkId, promises);
+			return promises;
+		}, [])
+	);
+};
+
+})();
+// webpack/runtime/get javascript chunk filename
+(() => {
+// This function allow to reference chunks
+        __webpack_require__.u = function (chunkId) {
+          // return url for filenames not based on template
+          
+          // return url for filenames based on template
+          return "chunks-" + "7ca842fb1cf7e29f" + ".js";
+        };
+      
+})();
 // webpack/runtime/get_chunk_update_filename
 (() => {
 __webpack_require__.hu = function (chunkId) {
@@ -170,7 +183,7 @@ __webpack_require__.hu = function (chunkId) {
 // webpack/runtime/get_full_hash
 (() => {
 __webpack_require__.h = function () {
-	return "c6048ed87d46cc4b";
+	return "b773bcabf57328c7";
 };
 
 })();
@@ -748,7 +761,60 @@ __webpack_require__.b = document.baseURI || self.location.href;
       // undefined = chunk not loaded, null = chunk preloaded/prefetched
       // [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
       var installedChunks = __webpack_require__.hmrS_jsonp = __webpack_require__.hmrS_jsonp || {"content": 0,};
-      var currentUpdatedModulesList;
+      
+        __webpack_require__.f.j = function (chunkId, promises) {
+          // JSONP chunk loading for javascript
+var installedChunkData = __webpack_require__.o(installedChunks, chunkId)
+	? installedChunks[chunkId]
+	: undefined;
+if (installedChunkData !== 0) {
+	// 0 means "already installed".
+
+	// a Promise means "currently loading".
+	if (installedChunkData) {
+		promises.push(installedChunkData[2]);
+	} else {
+		if (true) {
+			// setup Promise in chunk cache
+			var promise = new Promise(function (resolve, reject) {
+				installedChunkData = installedChunks[chunkId] = [resolve, reject];
+			});
+			promises.push((installedChunkData[2] = promise));
+
+			// start chunk loading
+			var url = __webpack_require__.p + __webpack_require__.u(chunkId);
+			// create error before stack unwound to get useful stacktrace later
+			var error = new Error();
+			var loadingEnded = function (event) {
+				if (__webpack_require__.o(installedChunks, chunkId)) {
+					installedChunkData = installedChunks[chunkId];
+					if (installedChunkData !== 0) installedChunks[chunkId] = undefined;
+					if (installedChunkData) {
+						var errorType =
+							event && (event.type === 'load' ? 'missing' : event.type);
+						var realSrc = event && event.target && event.target.src;
+						error.message =
+							'Loading chunk ' +
+							chunkId +
+							' failed.\n(' +
+							errorType +
+							': ' +
+							realSrc +
+							')';
+						error.name = 'ChunkLoadError';
+						error.type = errorType;
+						error.request = realSrc;
+						installedChunkData[1](error);
+					}
+				}
+			};
+			__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
+		} 
+	}
+}
+
+        }
+        var currentUpdatedModulesList;
 var waitingUpdateResolves = {};
 function loadUpdateChunk(chunkId, updatedModulesList) {
 	currentUpdatedModulesList = updatedModulesList;
@@ -1240,6 +1306,44 @@ __webpack_require__.hmrM = function () {
 		}
 	);
 };
+// install a JSONP callback for chunk loading
+var webpackJsonpCallback = function (parentChunkLoadingFunction, data) {
+	var chunkIds = data[0];
+	var moreModules = data[1];
+	var runtime = data[2];
+	// add "moreModules" to the modules object,
+	// then flag all "chunkIds" as loaded and fire callback
+	var moduleId,
+		chunkId,
+		i = 0;
+	if (chunkIds.some(function (id) { return installedChunks[id] !== 0 })) {
+		for (moduleId in moreModules) {
+			if (__webpack_require__.o(moreModules, moduleId)) {
+				__webpack_require__.m[moduleId] = moreModules[moduleId];
+			}
+		}
+		if (runtime) var result = runtime(__webpack_require__);
+	}
+	if (parentChunkLoadingFunction) parentChunkLoadingFunction(data);
+	for (; i < chunkIds.length; i++) {
+		chunkId = chunkIds[i];
+		if (
+			__webpack_require__.o(installedChunks, chunkId) &&
+			installedChunks[chunkId]
+		) {
+			installedChunks[chunkId][0]();
+		}
+		installedChunks[chunkId] = 0;
+	}
+	
+};
+
+var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
+chunkLoadingGlobal.push = webpackJsonpCallback.bind(
+	null,
+	chunkLoadingGlobal.push.bind(chunkLoadingGlobal)
+);
 
 })();
 // webpack/runtime/rspack_unique_id

@@ -23,7 +23,7 @@ Promise.resolve()
   .then(
     (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Test C: dynamic import', async () => {
       console.log("await import('./log.js')\n")
-      const mod = await Promise.resolve(/*! import() eager */).then(__webpack_require__.bind(__webpack_require__, /*! ./log.js */ "./log.js"))
+      const mod = await __webpack_require__.e(/*! import() */ "log_js").then(__webpack_require__.bind(__webpack_require__, /*! ./log.js */ "./log.js"))
       ;(0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)('file' in mod, mod)
     })
   )
@@ -61,7 +61,7 @@ Promise.resolve()
 
 },function(__webpack_require__) {
 var __webpack_exec__ = function(moduleId) { return __webpack_require__(__webpack_require__.s = moduleId) }
-__webpack_require__.O(0, ["test_txt-log_js-util_js",], function() {
+__webpack_require__.O(0, ["test_txt-util_js",], function() {
         return __webpack_exec__("./background.js");
       });
 var __webpack_exports__ = __webpack_require__.O();

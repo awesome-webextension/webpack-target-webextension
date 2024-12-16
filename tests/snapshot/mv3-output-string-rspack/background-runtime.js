@@ -65,6 +65,21 @@ __webpack_require__.d = function(exports, definition) {
     }
 };
 })();
+// webpack/runtime/ensure_chunk
+(() => {
+__webpack_require__.f = {};
+// This file contains only the entry chunk.
+// The chunk loading function for additional chunks
+__webpack_require__.e = function (chunkId) {
+	return Promise.all(
+		Object.keys(__webpack_require__.f).reduce(function (promises, key) {
+			__webpack_require__.f[key](chunkId, promises);
+			return promises;
+		}, [])
+	);
+};
+
+})();
 // webpack/runtime/get javascript chunk filename
 (() => {
 // This function allow to reference chunks
@@ -72,7 +87,7 @@ __webpack_require__.d = function(exports, definition) {
           // return url for filenames not based on template
           
           // return url for filenames based on template
-          return "chunks-" + "76920494861fb673" + ".js";
+          return "chunks-" + {"log_js": "7ca842fb1cf7e29f","worker_js": "96e60e6a1be936ea",}[chunkId] + ".js";
         };
       
 })();
@@ -179,6 +194,33 @@ __webpack_require__.p = scriptUrl;
 (() => {
 __webpack_require__.b = self.location + "";
 var installedChunks = {"background-runtime": 1,};
+// importScripts chunk loading
+var installChunk = function (data) {
+    var chunkIds = data[0];
+    var moreModules = data[1];
+    var runtime = data[2];
+    for (var moduleId in moreModules) {
+        if (__webpack_require__.o(moreModules, moduleId)) {
+            __webpack_require__.m[moduleId] = moreModules[moduleId];
+        }
+    }
+    if (runtime) runtime(__webpack_require__);
+    while (chunkIds.length) installedChunks[chunkIds.pop()] = 1;
+    parentChunkLoadingFunction(data);
+};
+__webpack_require__.f.i = function (chunkId, promises) {
+    
+          // "1" is the signal for "already loaded
+          if (!installedChunks[chunkId]) {
+            if ("background-runtime" != chunkId) {
+              importScripts(__webpack_require__.p + __webpack_require__.u(chunkId));
+            }
+          }
+          
+};
+var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+var parentChunkLoadingFunction = chunkLoadingGlobal.push.bind(chunkLoadingGlobal);
+chunkLoadingGlobal.push = installChunk;
 
 })();
 // webpack/runtime/rspack_unique_id

@@ -108,7 +108,6 @@ test('Manifest v3 (splitChunks: all) test', async () => {
   `)
 })
 
-// Not working on rspack, see https://github.com/web-infra-dev/rspack/issues/8683
 test('Manifest v3 (splitChunks: all) + runtimeChunk test', async () => {
   const result = await run({
     input: './fixtures/basic',
@@ -117,6 +116,9 @@ test('Manifest v3 (splitChunks: all) + runtimeChunk test', async () => {
       background: { serviceWorkerEntry: 'background' },
       experimental_output: {
         background: 'sw.js',
+        content(manifest, list) {
+          manifest.content_scripts[0].js = list
+        },
       },
       weakRuntimeCheck: true,
     },
@@ -149,7 +151,6 @@ test('Manifest v3 (splitChunks: all) + runtimeChunk test', async () => {
   `)
 })
 
-// Not working on rspack, see https://github.com/web-infra-dev/rspack/issues/8683
 test('Manifest v3 output test (string)', async () => {
   const result = await run({
     input: './fixtures/basic',
@@ -192,7 +193,6 @@ test('Manifest v3 output test (string)', async () => {
   `)
 })
 
-// Not working on rspack, see https://github.com/web-infra-dev/rspack/issues/8683
 test('Manifest v3 output test (function)', async () => {
   const result = await run({
     input: './fixtures/basic',
@@ -236,7 +236,6 @@ test('Manifest v3 output test (function)', async () => {
   `)
 })
 
-// Not working on rspack, see https://github.com/web-infra-dev/rspack/issues/8683
 test('Manifest v3 output test (object)', async () => {
   const result = await run({
     input: './fixtures/basic',

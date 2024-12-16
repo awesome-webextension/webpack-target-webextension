@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Now rspack can use chunk splitting by `experimental_output`.
+
 ## 2.1.0
 
 - Add a try-catch wrapper around the entry file of serviceWorkerEntry so if the initial code throws, you can still open the console of it.

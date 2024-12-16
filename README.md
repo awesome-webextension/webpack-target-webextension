@@ -378,4 +378,4 @@ Rspack support is provided as a best effort, please open an issue if you have en
 
 Here are known issues:
 
-- Chunk splitting is not working for the background service worker.
+- `experimental_output` is necessary for chunk splitting.

@@ -1,37 +1,27 @@
 (() => { // webpackBootstrap
 "use strict";
 var __webpack_modules__ = ({
-"./worker.js": (function (__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+"./test.txt": (function (module, __unused_webpack_exports, __webpack_require__) {
+module.exports = __webpack_require__.p + "6c5b191a31c5a9fc.txt";
+
+}),
+"./util.js": (function (__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
 __webpack_require__.r(__webpack_exports__);
-/* ESM import */var _util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util.js */ "./util.js");
-
-
-let event
-addEventListener('message', (e) => (event = e))
-
-Promise.resolve()
-  .then(
-    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Worker Test A: import.meta.url', () => {
-      const url = new URL(/* asset import */__webpack_require__(/*! ./test.txt */ "./test.txt"), __webpack_require__.b).toString()
-      ;(0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)(url.includes('-extension://'), "new URL('./test.txt', import.meta.url)\n", url)
-    })
-  )
-  .then(
-    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Worker Test B: dynamic import', async () => {
-      console.log("await import('./log.js')\n")
-      const mod = await Promise.resolve(/*! import() eager */).then(__webpack_require__.bind(__webpack_require__, /*! ./log.js */ "./log.js"))
-      ;(0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)('file' in mod, mod)
-    })
-  )
-  .then(() => new Promise((resolve) => setTimeout(resolve, 100)))
-  .then(
-    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Worker Test C: message from background', () => {
-      (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)(event?.data === 'Hello from background!', event.data)
-    })
-  )
-  .finally(() => {
-    postMessage('Hello from worker!')
-  })
+__webpack_require__.d(__webpack_exports__, {
+  log: function() { return log; },
+  test: function() { return test; }
+});
+function log(label, f) {
+  return async () => {
+    console.group(label)
+    await Promise.resolve().then(f).catch(console.error)
+    console.groupEnd()
+  }
+}
+function test(expr, ...args) {
+  if (expr) console.log('[✅]', ...args)
+  else console.error('[❌]', ...args)
+}
 
 
 }),
@@ -64,15 +54,6 @@ return module.exports;
 // expose the modules object (__webpack_modules__)
 __webpack_require__.m = __webpack_modules__;
 
-// the startup function
-__webpack_require__.x = () => {
-// Load entry module and return exports
-// This entry module depends on other loaded chunks and execution need to be delayed
-var __webpack_exports__ = __webpack_require__.O(undefined, ["test_txt-log_js-util_js"], function() { return __webpack_require__("./worker.js") });
-__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
-return __webpack_exports__
-};
-
 /************************************************************************/
 // webpack/runtime/WebExtensionBrowserRuntime
 (() => {
@@ -95,9 +76,6 @@ __webpack_require__.webExtRt = runtime || {
 	get runtime() {
 		throw new Error("No chrome or browser runtime found");
 	}
-}
-if (!runtime && (typeof self !== "object" || !self.addEventListener)) {
-	__webpack_require__.webExtRt = { runtime: { getURL: String } };
 }
 })();
 // webpack/runtime/define_property_getters
@@ -132,7 +110,7 @@ __webpack_require__.e = function (chunkId) {
           // return url for filenames not based on template
           
           // return url for filenames based on template
-          return "" + chunkId + ".js";
+          return "chunks-" + "7ca842fb1cf7e29f" + ".js";
         };
       
 })();
@@ -166,46 +144,6 @@ __webpack_require__.r = function(exports) {
 };
 
 })();
-// webpack/runtime/on_chunk_loaded
-(() => {
-var deferred = [];
-__webpack_require__.O = function (result, chunkIds, fn, priority) {
-	if (chunkIds) {
-		priority = priority || 0;
-		for (var i = deferred.length; i > 0 && deferred[i - 1][2] > priority; i--)
-			deferred[i] = deferred[i - 1];
-		deferred[i] = [chunkIds, fn, priority];
-		return;
-	}
-	var notFulfilled = Infinity;
-	for (var i = 0; i < deferred.length; i++) {
-		var chunkIds = deferred[i][0],
-			fn = deferred[i][1],
-			priority = deferred[i][2];
-		var fulfilled = true;
-		for (var j = 0; j < chunkIds.length; j++) {
-			if (
-				(priority & (1 === 0) || notFulfilled >= priority) &&
-				Object.keys(__webpack_require__.O).every(function (key) {
-					return __webpack_require__.O[key](chunkIds[j]);
-				})
-			) {
-				chunkIds.splice(j--, 1);
-			} else {
-				fulfilled = false;
-				if (priority < notFulfilled) notFulfilled = priority;
-			}
-		}
-		if (fulfilled) {
-			deferred.splice(i--, 1);
-			var r = fn();
-			if (r !== undefined) result = r;
-		}
-	}
-	return result;
-};
-
-})();
 // webpack/runtime/public_path
 (() => {
 __webpack_require__.p = "";
@@ -217,13 +155,6 @@ __webpack_require__.rv = function () {
 	return "1.1.5";
 };
 
-})();
-// webpack/runtime/startup_chunk_dependencies
-(() => {
-var next = __webpack_require__.x;
-        __webpack_require__.x = function() {
-          return __webpack_require__.e("test_txt-log_js-util_js").then(next);
-        };
 })();
 // webpack/runtime/publicPath
 (() => {
@@ -281,7 +212,37 @@ __webpack_require__.ruid = "bundler=rspack@1.1.5";
 
 })();
 /************************************************************************/
-// run startup
-var __webpack_exports__ = __webpack_require__.x();
+var __webpack_exports__ = {};
+__webpack_require__.r(__webpack_exports__);
+/* ESM import */var _util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util.js */ "./util.js");
+
+
+let event
+addEventListener('message', (e) => (event = e))
+
+Promise.resolve()
+  .then(
+    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Worker Test A: import.meta.url', () => {
+      const url = new URL(/* asset import */__webpack_require__(/*! ./test.txt */ "./test.txt"), __webpack_require__.b).toString()
+      ;(0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)(url.includes('-extension://'), "new URL('./test.txt', import.meta.url)\n", url)
+    })
+  )
+  .then(
+    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Worker Test B: dynamic import', async () => {
+      console.log("await import('./log.js')\n")
+      const mod = await __webpack_require__.e(/*! import() */ "log_js").then(__webpack_require__.bind(__webpack_require__, /*! ./log.js */ "./log.js"))
+      ;(0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)('file' in mod, mod)
+    })
+  )
+  .then(() => new Promise((resolve) => setTimeout(resolve, 100)))
+  .then(
+    (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.log)('Worker Test C: message from background', () => {
+      (0,_util_js__WEBPACK_IMPORTED_MODULE_0__.test)(event?.data === 'Hello from background!', event.data)
+    })
+  )
+  .finally(() => {
+    postMessage('Hello from worker!')
+  })
+
 })()
 ;

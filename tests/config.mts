@@ -56,7 +56,7 @@ export function run({ input, output, option, touch, touchManifest }: Run) {
     context: join(__dirname, input),
     devtool: false,
     entry: { background: './background.js', content: './content.js' },
-    module: { parser: { javascript: { dynamicImportMode: 'eager' } } },
+    // module: { parser: { javascript: { dynamicImportMode: 'eager' } } },
     output: {
       clean: true,
       chunkFilename: 'chunks-[chunkhash].js',
