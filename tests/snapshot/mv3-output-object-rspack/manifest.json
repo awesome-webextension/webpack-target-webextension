@@ -9,9 +9,9 @@
                 "<all_urls>"
             ],
             "js": [
+                "runtime.js",
                 "test_txt-util_js.js",
-                "content.js",
-                "runtime.js"
+                "content.js"
             ]
         }
     ],

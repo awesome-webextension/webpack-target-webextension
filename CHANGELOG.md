@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.1.2
+
+- Fix experimental_output with HMR chunks
+- Fix experimental_output stack overflow
+
 ## 2.1.1
 
 - Now rspack can use chunk splitting by `experimental_output`.

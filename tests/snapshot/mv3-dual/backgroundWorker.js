@@ -312,5 +312,5 @@ Promise.resolve()
 /******/ })()
 
 /******/ } catch (e) {
-/******/ 	console.error(e);
+/******/ 	Promise.reject(e);
 /******/ };
