@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.3
+
+- Fix experimental_output stack overflow
+
 ## 2.1.2
 
 - Fix experimental_output with HMR chunks
