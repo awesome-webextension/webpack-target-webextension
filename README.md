@@ -122,7 +122,7 @@ You must configure the content script by dynamic `import()`. You also need to se
 
 > [!WARNING]
 > This plugin does not work with [`"background.type"`](https://developer.chrome.com/docs/extensions/reference/manifest/background) in `manifest.json` set to `"module"` (native ES Module service worker).
-> Tracking issue: [#24](https://github.com/awesome-webextenson/webpack-target-webextension/issues/24)
+> Tracking issue: [#24](https://github.com/awesome-webextension/webpack-target-webextension/issues/24)
 
 Code splitting is supported for background service workers, but it will **load all chunks** initially.
 See <https://bugs.chromium.org/p/chromium/issues/detail?id=1198822>.
