@@ -1,6 +1,10 @@
 "use strict";
-(self['webpackChunk'] = self['webpackChunk'] || []).push([["background"], {
-"./background.js": (function (__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+(self["webpackChunk"] = self["webpackChunk"] || []).push([["background"], {
+"./background.js": 
+/*!***********************!*\
+  !*** ./background.js ***!
+  \***********************/
+(function (__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
 __webpack_require__.r(__webpack_exports__);
 /* ESM import */var _util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util.js */ "./util.js");
 /// <reference lib="dom" />

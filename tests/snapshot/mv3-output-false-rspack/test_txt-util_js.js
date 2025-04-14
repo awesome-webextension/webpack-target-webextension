@@ -1,14 +1,22 @@
 "use strict";
-(self['webpackChunk'] = self['webpackChunk'] || []).push([["test_txt-util_js"], {
-"./test.txt": (function (module, __unused_webpack_exports, __webpack_require__) {
+(self["webpackChunk"] = self["webpackChunk"] || []).push([["test_txt-util_js"], {
+"./test.txt": 
+/*!******************!*\
+  !*** ./test.txt ***!
+  \******************/
+(function (module, __unused_webpack_exports, __webpack_require__) {
 module.exports = __webpack_require__.p + "6c5b191a31c5a9fc.txt";
 
 }),
-"./util.js": (function (__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+"./util.js": 
+/*!*****************!*\
+  !*** ./util.js ***!
+  \*****************/
+(function (__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
 __webpack_require__.r(__webpack_exports__);
 __webpack_require__.d(__webpack_exports__, {
-  log: function() { return log; },
-  test: function() { return test; }
+  log: () => (log),
+  test: () => (test)
 });
 function log(label, f) {
   return async () => {

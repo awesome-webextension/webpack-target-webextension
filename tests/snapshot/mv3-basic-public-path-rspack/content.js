@@ -1,15 +1,23 @@
 (() => { // webpackBootstrap
 "use strict";
 var __webpack_modules__ = ({
-"./test.txt": (function (module, __unused_webpack_exports, __webpack_require__) {
+"./test.txt": 
+/*!******************!*\
+  !*** ./test.txt ***!
+  \******************/
+(function (module, __unused_webpack_exports, __webpack_require__) {
 module.exports = __webpack_require__.p + "6c5b191a31c5a9fc.txt";
 
 }),
-"./util.js": (function (__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+"./util.js": 
+/*!*****************!*\
+  !*** ./util.js ***!
+  \*****************/
+(function (__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
 __webpack_require__.r(__webpack_exports__);
 __webpack_require__.d(__webpack_exports__, {
-  log: function() { return log; },
-  test: function() { return test; }
+  log: () => (log),
+  test: () => (test)
 });
 function log(label, f) {
   return async () => {
@@ -80,7 +88,7 @@ __webpack_require__.webExtRt = runtime || {
 })();
 // webpack/runtime/define_property_getters
 (() => {
-__webpack_require__.d = function(exports, definition) {
+__webpack_require__.d = (exports, definition) => {
 	for(var key in definition) {
         if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
             Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
@@ -93,33 +101,28 @@ __webpack_require__.d = function(exports, definition) {
 __webpack_require__.f = {};
 // This file contains only the entry chunk.
 // The chunk loading function for additional chunks
-__webpack_require__.e = function (chunkId) {
+__webpack_require__.e = (chunkId) => {
 	return Promise.all(
-		Object.keys(__webpack_require__.f).reduce(function (promises, key) {
+		Object.keys(__webpack_require__.f).reduce((promises, key) => {
 			__webpack_require__.f[key](chunkId, promises);
 			return promises;
 		}, [])
 	);
 };
-
 })();
 // webpack/runtime/get javascript chunk filename
 (() => {
 // This function allow to reference chunks
-        __webpack_require__.u = function (chunkId) {
-          // return url for filenames not based on template
-          
-          // return url for filenames based on template
-          return "chunks-" + "a976d497fd75f0ce" + ".js";
-        };
-      
+__webpack_require__.u = (chunkId) => {
+  // return url for filenames not based on template
+  
+  // return url for filenames based on template
+  return "chunks-" + "a6521d06986055d9" + ".js"
+}
 })();
 // webpack/runtime/has_own_property
 (() => {
-__webpack_require__.o = function (obj, prop) {
-	return Object.prototype.hasOwnProperty.call(obj, prop);
-};
-
+__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 })();
 // webpack/runtime/load_script
 (() => {
@@ -145,8 +148,9 @@ __webpack_require__.l = function (url, done, key, chunkId) {
 	}
 	if (!script) {
 		needAttach = true;
-		script = document.createElement('script');
 		
+    script = document.createElement('script');
+    
 		script.charset = 'utf-8';
 		script.timeout = 120;
 		if (__webpack_require__.nc) {
@@ -155,8 +159,8 @@ __webpack_require__.l = function (url, done, key, chunkId) {
 		
 		
 		script.src = url;
-
 		
+    
 	}
 	inProgress[url] = [done];
 	var onScriptComplete = function (prev, event) {
@@ -187,25 +191,20 @@ __webpack_require__.l = function (url, done, key, chunkId) {
 // webpack/runtime/make_namespace_object
 (() => {
 // define __esModule on exports
-__webpack_require__.r = function(exports) {
+__webpack_require__.r = (exports) => {
 	if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 	}
 	Object.defineProperty(exports, '__esModule', { value: true });
 };
-
 })();
 // webpack/runtime/public_path
 (() => {
 __webpack_require__.p = "/";
-
 })();
 // webpack/runtime/rspack_version
 (() => {
-__webpack_require__.rv = function () {
-	return "1.1.6";
-};
-
+__webpack_require__.rv = () => ("1.3.4")
 })();
 // webpack/runtime/load script
 (() => {
@@ -307,9 +306,7 @@ if (installedChunkData !== 0) {
 	} else {
 		if (true) {
 			// setup Promise in chunk cache
-			var promise = new Promise(function (resolve, reject) {
-				installedChunkData = installedChunks[chunkId] = [resolve, reject];
-			});
+			var promise = new Promise((resolve, reject) => (installedChunkData = installedChunks[chunkId] = [resolve, reject]));
 			promises.push((installedChunkData[2] = promise));
 
 			// start chunk loading
@@ -346,16 +343,12 @@ if (installedChunkData !== 0) {
 
         }
         // install a JSONP callback for chunk loading
-var webpackJsonpCallback = function (parentChunkLoadingFunction, data) {
-	var chunkIds = data[0];
-	var moreModules = data[1];
-	var runtime = data[2];
+var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
+	var [chunkIds, moreModules, runtime] = data;
 	// add "moreModules" to the modules object,
 	// then flag all "chunkIds" as loaded and fire callback
-	var moduleId,
-		chunkId,
-		i = 0;
-	if (chunkIds.some(function (id) { return installedChunks[id] !== 0 })) {
+	var moduleId, chunkId, i = 0;
+	if (chunkIds.some((id) => (installedChunks[id] !== 0))) {
 		for (moduleId in moreModules) {
 			if (__webpack_require__.o(moreModules, moduleId)) {
 				__webpack_require__.m[moduleId] = moreModules[moduleId];
@@ -387,11 +380,17 @@ chunkLoadingGlobal.push = webpackJsonpCallback.bind(
 })();
 // webpack/runtime/rspack_unique_id
 (() => {
-__webpack_require__.ruid = "bundler=rspack@1.1.6";
+__webpack_require__.ruid = "bundler=rspack@1.3.4";
 
 })();
 /************************************************************************/
 var __webpack_exports__ = {};
+// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
+(() => {
+
+/*!********************!*\
+  !*** ./content.js ***!
+  \********************/
 __webpack_require__.r(__webpack_exports__);
 /* ESM import */var _util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util.js */ "./util.js");
 /// <reference lib="dom" />
@@ -424,6 +423,8 @@ Promise.resolve()
       console.log('Message from background:', message)
     })
   })
+
+})();
 
 })()
 ;

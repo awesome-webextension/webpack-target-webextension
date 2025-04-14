@@ -1,11 +1,19 @@
 (() => { // webpackBootstrap
 "use strict";
 var __webpack_modules__ = ({
-"./test.txt": (function (module, __unused_webpack_exports, __webpack_require__) {
+"./test.txt": 
+/*!******************!*\
+  !*** ./test.txt ***!
+  \******************/
+(function (module, __unused_webpack_exports, __webpack_require__) {
 module.exports = __webpack_require__.p + "6c5b191a31c5a9fc.txt";
 
 }),
-"./background.js": (function (__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+"./background.js": 
+/*!***********************!*\
+  !*** ./background.js ***!
+  \***********************/
+(function (__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
 __webpack_require__.r(__webpack_exports__);
 /* ESM import */var _util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util.js */ "./util.js");
 /// <reference lib="dom" />
@@ -63,11 +71,15 @@ Promise.resolve()
 
 
 }),
-"./util.js": (function (__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+"./util.js": 
+/*!*****************!*\
+  !*** ./util.js ***!
+  \*****************/
+(function (__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
 __webpack_require__.r(__webpack_exports__);
 __webpack_require__.d(__webpack_exports__, {
-  log: function() { return log; },
-  test: function() { return test; }
+  log: () => (log),
+  test: () => (test)
 });
 function log(label, f) {
   return async () => {
@@ -161,7 +173,7 @@ if (!runtime && (typeof self !== "object" || !self.addEventListener)) {
 })();
 // webpack/runtime/define_property_getters
 (() => {
-__webpack_require__.d = function(exports, definition) {
+__webpack_require__.d = (exports, definition) => {
 	for(var key in definition) {
         if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
             Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
@@ -174,40 +186,32 @@ __webpack_require__.d = function(exports, definition) {
 __webpack_require__.f = {};
 // This file contains only the entry chunk.
 // The chunk loading function for additional chunks
-__webpack_require__.e = function (chunkId) {
+__webpack_require__.e = (chunkId) => {
 	return Promise.all(
-		Object.keys(__webpack_require__.f).reduce(function (promises, key) {
+		Object.keys(__webpack_require__.f).reduce((promises, key) => {
 			__webpack_require__.f[key](chunkId, promises);
 			return promises;
 		}, [])
 	);
 };
-
 })();
 // webpack/runtime/get javascript chunk filename
 (() => {
 // This function allow to reference chunks
-        __webpack_require__.u = function (chunkId) {
-          // return url for filenames not based on template
-          
-          // return url for filenames based on template
-          return "chunks-" + {"log_js": "a976d497fd75f0ce","worker_js": "543f1e4198abd113",}[chunkId] + ".js";
-        };
-      
+__webpack_require__.u = (chunkId) => {
+  // return url for filenames not based on template
+  
+  // return url for filenames based on template
+  return "chunks-" + {"log_js": "a6521d06986055d9","worker_js": "9ef5eb208f628586",}[chunkId] + ".js"
+}
 })();
 // webpack/runtime/get_chunk_update_filename
 (() => {
-__webpack_require__.hu = function (chunkId) {
-            return 'hot/' + chunkId + '.' + __webpack_require__.h() + '.js';
-         };
-        
+__webpack_require__.hu = (chunkId) => ('hot/' + chunkId + '.' + __webpack_require__.h() + '.js')
 })();
 // webpack/runtime/get_full_hash
 (() => {
-__webpack_require__.h = function () {
-	return "321933e31eb9d634";
-};
-
+__webpack_require__.h = () => ("275d0f50182a8053")
 })();
 // webpack/runtime/get_main_filename/update manifest
 (() => {
@@ -218,7 +222,7 @@ __webpack_require__.hmrF = function () {
 })();
 // webpack/runtime/global
 (() => {
-__webpack_require__.g = (function () {
+__webpack_require__.g = (() => {
 	if (typeof globalThis === 'object') return globalThis;
 	try {
 		return this || new Function('return this')();
@@ -226,14 +230,10 @@ __webpack_require__.g = (function () {
 		if (typeof window === 'object') return window;
 	}
 })();
-
 })();
 // webpack/runtime/has_own_property
 (() => {
-__webpack_require__.o = function (obj, prop) {
-	return Object.prototype.hasOwnProperty.call(obj, prop);
-};
-
+__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 })();
 // webpack/runtime/hot_module_replacement
 (() => {
@@ -604,25 +604,20 @@ function applyInvalidatedModules() {
 // webpack/runtime/make_namespace_object
 (() => {
 // define __esModule on exports
-__webpack_require__.r = function(exports) {
+__webpack_require__.r = (exports) => {
 	if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 	}
 	Object.defineProperty(exports, '__esModule', { value: true });
 };
-
 })();
 // webpack/runtime/public_path
 (() => {
 __webpack_require__.p = "";
-
 })();
 // webpack/runtime/rspack_version
 (() => {
-__webpack_require__.rv = function () {
-	return "1.1.6";
-};
-
+__webpack_require__.rv = () => ("1.3.4")
 })();
 // webpack/runtime/publicPath
 (() => {
@@ -646,10 +641,8 @@ __webpack_require__.p = scriptUrl;
 __webpack_require__.b = self.location + "";
 var installedChunks = __webpack_require__.hmrS_importScripts = __webpack_require__.hmrS_importScripts || {"background": 1,};
 // importScripts chunk loading
-var installChunk = function (data) {
-    var chunkIds = data[0];
-    var moreModules = data[1];
-    var runtime = data[2];
+var installChunk = (data) => {
+    var [chunkIds, moreModules, runtime] = data;
     for (var moduleId in moreModules) {
         if (__webpack_require__.o(moreModules, moduleId)) {
             __webpack_require__.m[moduleId] = moreModules[moduleId];
@@ -659,7 +652,7 @@ var installChunk = function (data) {
     while (chunkIds.length) installedChunks[chunkIds.pop()] = 1;
     parentChunkLoadingFunction(data);
 };
-__webpack_require__.f.i = function (chunkId, promises) {
+__webpack_require__.f.i = (chunkId, promises) => {
     
           // "1" is the signal for "already loaded
           if (!installedChunks[chunkId]) {
@@ -671,24 +664,22 @@ __webpack_require__.f.i = function (chunkId, promises) {
 };
 var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
 var parentChunkLoadingFunction = chunkLoadingGlobal.push.bind(chunkLoadingGlobal);
-chunkLoadingGlobal.push = installChunk;
-function loadUpdateChunk(chunkId, updatedModulesList) {
-    var success = false;
-    self["webpackHotUpdate"] = function (_, moreModules, runtime) {
-        for (var moduleId in moreModules) {
-            if (__webpack_require__.o(moreModules, moduleId)) {
-                currentUpdate[moduleId] = moreModules[moduleId];
-                if (updatedModulesList) updatedModulesList.push(moduleId);
-            }
-        }
-        if (runtime) currentUpdateRuntime.push(runtime);
-        success = true;
-    };
-    // start update chunk loading
-    importScripts(__webpack_require__.p + __webpack_require__.hu(chunkId));
-    if (!success) throw new Error("Loading update chunk failed for unknown reason");
-}
-var currentUpdateChunks;
+chunkLoadingGlobal.push = installChunk;function loadUpdateChunk(chunkId, updatedModulesList) {
+  var success = false;
+  self["webpackHotUpdate"] = (_, moreModules, runtime) => {
+      for (var moduleId in moreModules) {
+          if (__webpack_require__.o(moreModules, moduleId)) {
+              currentUpdate[moduleId] = moreModules[moduleId];
+              if (updatedModulesList) updatedModulesList.push(moduleId);
+          }
+      }
+      if (runtime) currentUpdateRuntime.push(runtime);
+      success = true;
+  };
+  // start update chunk loading
+  importScripts(__webpack_require__.p + __webpack_require__.hu(chunkId));
+  if (!success) throw new Error("Loading update chunk failed for unknown reason");
+}var currentUpdateChunks;
 var currentUpdate;
 var currentUpdateRemovedChunks;
 var currentUpdateRuntime;
@@ -1119,23 +1110,23 @@ __webpack_require__.hmrC.importScripts = function (
 		};
 	}
 };
-__webpack_require__.hmrM = function () {
-    if (typeof fetch === "undefined") throw new Error("No browser support: need fetch API");
-    return fetch(__webpack_require__.p + __webpack_require__.hmrF()).then(
-		function (response) {
-			if (response.status === 404) return; // no update available
-			if (!response.ok)
-				throw new Error(
-					"Failed to fetch update manifest " + response.statusText
-				);
-			return response.json();
-		}
-	);
+__webpack_require__.hmrM = () => {
+  if (typeof fetch === "undefined") throw new Error("No browser support: need fetch API");
+  return fetch(__webpack_require__.p + __webpack_require__.hmrF()).then(
+  (response) => {
+      if (response.status === 404) return; // no update available
+      if (!response.ok)
+        throw new Error(
+          "Failed to fetch update manifest " + response.statusText
+        );
+      return response.json();
+    }
+  );
 };
 })();
 // webpack/runtime/rspack_unique_id
 (() => {
-__webpack_require__.ruid = "bundler=rspack@1.1.6";
+__webpack_require__.ruid = "bundler=rspack@1.3.4";
 
 })();
 // webpack/runtime/chunk loader fallback

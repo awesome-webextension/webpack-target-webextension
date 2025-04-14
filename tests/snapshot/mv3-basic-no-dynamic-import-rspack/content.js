@@ -1,15 +1,23 @@
 (() => { // webpackBootstrap
 "use strict";
 var __webpack_modules__ = ({
-"./test.txt": (function (module, __unused_webpack_exports, __webpack_require__) {
+"./test.txt": 
+/*!******************!*\
+  !*** ./test.txt ***!
+  \******************/
+(function (module, __unused_webpack_exports, __webpack_require__) {
 module.exports = __webpack_require__.p + "6c5b191a31c5a9fc.txt";
 
 }),
-"./util.js": (function (__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+"./util.js": 
+/*!*****************!*\
+  !*** ./util.js ***!
+  \*****************/
+(function (__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
 __webpack_require__.r(__webpack_exports__);
 __webpack_require__.d(__webpack_exports__, {
-  log: function() { return log; },
-  test: function() { return test; }
+  log: () => (log),
+  test: () => (test)
 });
 function log(label, f) {
   return async () => {
@@ -80,7 +88,7 @@ __webpack_require__.webExtRt = runtime || {
 })();
 // webpack/runtime/define_property_getters
 (() => {
-__webpack_require__.d = function(exports, definition) {
+__webpack_require__.d = (exports, definition) => {
 	for(var key in definition) {
         if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
             Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
@@ -90,7 +98,7 @@ __webpack_require__.d = function(exports, definition) {
 })();
 // webpack/runtime/global
 (() => {
-__webpack_require__.g = (function () {
+__webpack_require__.g = (() => {
 	if (typeof globalThis === 'object') return globalThis;
 	try {
 		return this || new Function('return this')();
@@ -98,37 +106,28 @@ __webpack_require__.g = (function () {
 		if (typeof window === 'object') return window;
 	}
 })();
-
 })();
 // webpack/runtime/has_own_property
 (() => {
-__webpack_require__.o = function (obj, prop) {
-	return Object.prototype.hasOwnProperty.call(obj, prop);
-};
-
+__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 })();
 // webpack/runtime/make_namespace_object
 (() => {
 // define __esModule on exports
-__webpack_require__.r = function(exports) {
+__webpack_require__.r = (exports) => {
 	if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 	}
 	Object.defineProperty(exports, '__esModule', { value: true });
 };
-
 })();
 // webpack/runtime/public_path
 (() => {
 __webpack_require__.p = "";
-
 })();
 // webpack/runtime/rspack_version
 (() => {
-__webpack_require__.rv = function () {
-	return "1.1.6";
-};
-
+__webpack_require__.rv = () => ("1.3.4")
 })();
 // webpack/runtime/publicPath
 (() => {
@@ -159,11 +158,17 @@ __webpack_require__.b = document.baseURI || self.location.href;
 })();
 // webpack/runtime/rspack_unique_id
 (() => {
-__webpack_require__.ruid = "bundler=rspack@1.1.6";
+__webpack_require__.ruid = "bundler=rspack@1.3.4";
 
 })();
 /************************************************************************/
 var __webpack_exports__ = {};
+// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
+(() => {
+
+/*!********************!*\
+  !*** ./content.js ***!
+  \********************/
 __webpack_require__.r(__webpack_exports__);
 /* ESM import */var _util_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util.js */ "./util.js");
 /// <reference lib="dom" />
@@ -189,6 +194,8 @@ Promise.resolve()
       console.log('Message from background:', message)
     })
   })
+
+})();
 
 })()
 ;

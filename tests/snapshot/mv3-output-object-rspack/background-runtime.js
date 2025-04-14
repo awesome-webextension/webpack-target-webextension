@@ -57,7 +57,7 @@ if (!runtime && (typeof self !== "object" || !self.addEventListener)) {
 })();
 // webpack/runtime/define_property_getters
 (() => {
-__webpack_require__.d = function(exports, definition) {
+__webpack_require__.d = (exports, definition) => {
 	for(var key in definition) {
         if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
             Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
@@ -70,30 +70,28 @@ __webpack_require__.d = function(exports, definition) {
 __webpack_require__.f = {};
 // This file contains only the entry chunk.
 // The chunk loading function for additional chunks
-__webpack_require__.e = function (chunkId) {
+__webpack_require__.e = (chunkId) => {
 	return Promise.all(
-		Object.keys(__webpack_require__.f).reduce(function (promises, key) {
+		Object.keys(__webpack_require__.f).reduce((promises, key) => {
 			__webpack_require__.f[key](chunkId, promises);
 			return promises;
 		}, [])
 	);
 };
-
 })();
 // webpack/runtime/get javascript chunk filename
 (() => {
 // This function allow to reference chunks
-        __webpack_require__.u = function (chunkId) {
-          // return url for filenames not based on template
-          
-          // return url for filenames based on template
-          return "chunks-" + {"log_js": "a976d497fd75f0ce","worker_js": "bcda5815163fd749",}[chunkId] + ".js";
-        };
-      
+__webpack_require__.u = (chunkId) => {
+  // return url for filenames not based on template
+  
+  // return url for filenames based on template
+  return "chunks-" + {"log_js": "a6521d06986055d9","worker_js": "d6ac44faefde9399",}[chunkId] + ".js"
+}
 })();
 // webpack/runtime/global
 (() => {
-__webpack_require__.g = (function () {
+__webpack_require__.g = (() => {
 	if (typeof globalThis === 'object') return globalThis;
 	try {
 		return this || new Function('return this')();
@@ -101,30 +99,25 @@ __webpack_require__.g = (function () {
 		if (typeof window === 'object') return window;
 	}
 })();
-
 })();
 // webpack/runtime/has_own_property
 (() => {
-__webpack_require__.o = function (obj, prop) {
-	return Object.prototype.hasOwnProperty.call(obj, prop);
-};
-
+__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 })();
 // webpack/runtime/make_namespace_object
 (() => {
 // define __esModule on exports
-__webpack_require__.r = function(exports) {
+__webpack_require__.r = (exports) => {
 	if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
 		Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 	}
 	Object.defineProperty(exports, '__esModule', { value: true });
 };
-
 })();
 // webpack/runtime/on_chunk_loaded
 (() => {
 var deferred = [];
-__webpack_require__.O = function (result, chunkIds, fn, priority) {
+__webpack_require__.O = (result, chunkIds, fn, priority) => {
 	if (chunkIds) {
 		priority = priority || 0;
 		for (var i = deferred.length; i > 0 && deferred[i - 1][2] > priority; i--)
@@ -134,16 +127,12 @@ __webpack_require__.O = function (result, chunkIds, fn, priority) {
 	}
 	var notFulfilled = Infinity;
 	for (var i = 0; i < deferred.length; i++) {
-		var chunkIds = deferred[i][0],
-			fn = deferred[i][1],
-			priority = deferred[i][2];
+		var [chunkIds, fn, priority] = deferred[i];
 		var fulfilled = true;
 		for (var j = 0; j < chunkIds.length; j++) {
 			if (
 				(priority & (1 === 0) || notFulfilled >= priority) &&
-				Object.keys(__webpack_require__.O).every(function (key) {
-					return __webpack_require__.O[key](chunkIds[j]);
-				})
+				Object.keys(__webpack_require__.O).every((key) => (__webpack_require__.O[key](chunkIds[j])))
 			) {
 				chunkIds.splice(j--, 1);
 			} else {
@@ -164,14 +153,10 @@ __webpack_require__.O = function (result, chunkIds, fn, priority) {
 // webpack/runtime/public_path
 (() => {
 __webpack_require__.p = "";
-
 })();
 // webpack/runtime/rspack_version
 (() => {
-__webpack_require__.rv = function () {
-	return "1.1.6";
-};
-
+__webpack_require__.rv = () => ("1.3.4")
 })();
 // webpack/runtime/publicPath
 (() => {
@@ -195,10 +180,8 @@ __webpack_require__.p = scriptUrl;
 __webpack_require__.b = self.location + "";
 var installedChunks = {"background-runtime": 1,};
 // importScripts chunk loading
-var installChunk = function (data) {
-    var chunkIds = data[0];
-    var moreModules = data[1];
-    var runtime = data[2];
+var installChunk = (data) => {
+    var [chunkIds, moreModules, runtime] = data;
     for (var moduleId in moreModules) {
         if (__webpack_require__.o(moreModules, moduleId)) {
             __webpack_require__.m[moduleId] = moreModules[moduleId];
@@ -208,7 +191,7 @@ var installChunk = function (data) {
     while (chunkIds.length) installedChunks[chunkIds.pop()] = 1;
     parentChunkLoadingFunction(data);
 };
-__webpack_require__.f.i = function (chunkId, promises) {
+__webpack_require__.f.i = (chunkId, promises) => {
     
           // "1" is the signal for "already loaded
           if (!installedChunks[chunkId]) {
@@ -221,11 +204,10 @@ __webpack_require__.f.i = function (chunkId, promises) {
 var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
 var parentChunkLoadingFunction = chunkLoadingGlobal.push.bind(chunkLoadingGlobal);
 chunkLoadingGlobal.push = installChunk;
-
 })();
 // webpack/runtime/rspack_unique_id
 (() => {
-__webpack_require__.ruid = "bundler=rspack@1.1.6";
+__webpack_require__.ruid = "bundler=rspack@1.3.4";
 
 })();
 // webpack/runtime/chunk loader fallback
