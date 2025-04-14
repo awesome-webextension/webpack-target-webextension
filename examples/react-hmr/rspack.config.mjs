@@ -56,19 +56,16 @@ export default (/** @type {any} */ _, /** @type {{ mode: string; }} */ env) => {
       new WebExtension({
         background: { serviceWorkerEntry: 'background' },
         experimental_output: {
-          background: 'sw.js',
+          background: 'background_generated_entry.js',
+          content: 'content_script_generated_entry.js',
         },
       }),
       isProduction ? null : new RefreshPlugin(),
     ].filter(Boolean),
     optimization: {
       minimizer: [false],
-      // runtimeChunk: {
-      //   name: (entrypoint) => `runtime-${entrypoint.name}`,
-      // },
       splitChunks: {
         chunks: 'all',
-        // minSize: 1,
       },
     },
     experiments: { css: true },
